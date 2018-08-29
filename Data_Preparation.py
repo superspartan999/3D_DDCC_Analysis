@@ -43,8 +43,34 @@ def extract_slice(data, slice_var, slice_val, drop=False):
         slice_data = slice_data.drop(slice_var, axis=1)
     return slice_data
 
-directory = 'C:\\Users\\Christian\\Documents\\Github\\DDCC_3D_Project'
-file = 'My_Mesh.msh'
+def extract_data(directory, file, head_len, foot_len):
+    os.chdir(directory)
+    print('Directory Changed! Target Directory: ' + directory)
+    
+    my_data = pd.read_csv(file, skiprows=head_len, skipfooter=foot_len, 
+                          delim_whitespace=False, header=None, sep='  ',
+                          index_col=0, names=['Ec'], engine='python')
+    return my_data
 
-#df = write_space_df(directory, file)
-#my_df = extract_slice(df, 'y', 0, drop=True)
+def create_unified_data_file():
+    pass
+
+directory = 'C:\\Users\\Christian\\Box\\3DDCC_Simu\\Raw_Data\\Dislocation\\No Dislocation'
+os.chdir(directory)
+file = 'dislocation_line_2.msh'
+
+df = write_space_df(directory, file)
+my_df = extract_slice(df, 'y', 0)
+print(df.info())
+
+file = 'dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00.out'
+ec_data = extract_data(directory, file, 11, 1)
+print(mydat.info())
+
+file = 'dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00.nonRad'
+nr_data = pd.read_csv(file, header=None, skiprows=11, skipfooter=1, 
+                      delim_whitespace=True, index_col=0, names=['Non-Rad'], 
+                      engine='python')
+
+result = pd.concat([df, ec_data, nr_data], axis=1, join='outer')
+sliced_result = extract_slice(result, 'y', 0, drop=True)
