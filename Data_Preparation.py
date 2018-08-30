@@ -86,8 +86,9 @@ def extract_data(file, head_len=11):
     data_info = pd.read_csv(file, nrows=head_len, header=None)
     num_nodes = int(data_info.iloc[head_len-1, 0])
 
-    my_data = pd.read_csv(file, skiprows=head_len, nrows=num_nodes,
-                          header=None, sep='  ', names=[head], engine='python')
+    my_data = pd.read_csv(file, skiprows=head_len, nrows=num_nodes, 
+                          delim_whitespace=True, header=None, names=[head], 
+                          engine='python')
     return my_data
 
 
@@ -110,11 +111,14 @@ def extract_carriers(file, head_len=11):
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
 
+        print("Extracting electron concentration...")
         ndat = pd.read_csv(file, skiprows=head_len, nrows=num_nodes,
-                           header=None, names=['n'], sep='  ', engine='python')
+                           header=None, names=['n'], delim_whitespace=True, 
+                           engine='python')
+        print("Extracting hole concentration...")
         pdat = pd.read_csv(file, skiprows=2*head_len+num_nodes-1,
                            nrows=num_nodes, header=None, names=['p'],
-                           sep='  ', engine='python')
+                           delim_whitespace=True, engine='python')
 
         output = pd.concat([ndat, pdat], axis=1, join='outer')
 
@@ -214,7 +218,12 @@ def create_unified_data_file(model_ID, node_map):
             output_data = pd.concat([output_data, my_data], axis=1, join='outer')
 
         success = True
-        
+    
+    # Reorder the headers to be easier to read
+    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n',
+                               'p', 'Radiative', 'Non-Radiative', 'Auger',
+                               'Temperature']]
+    
     output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
         
