@@ -163,27 +163,6 @@ def extract_recombination(file, head_len=11):
     return rec_data
 
 
-def extract_slice(data, slice_var, slice_val, drop=False):
-
-    """
-    This function grabs a 2D slice of a 3D data set. The function can set the
-    variable and value as an argument.
-    """
-
-    if type(data) is not pd.DataFrame or type(slice_var) is not str:
-        print('Input parameters of incorrect type.')
-        return
-
-    print("Slicing data...")
-    my_filter = data[slice_var] == slice_val
-    slice_data = data[my_filter]
-
-    if drop:
-        slice_data = slice_data.drop(slice_var, axis=1)
-
-    return slice_data
-
-
 def create_unified_data_file(model_ID, node_map):
     
     """
