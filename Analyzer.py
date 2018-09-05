@@ -81,7 +81,8 @@ zlist= df1['z'].tolist()
 Eclist=df1['Ec'].tolist()
 
 #
-zslice=extract_slice(df1, 'z', 0 , drop=True)
+zslice=extract_slice(df1, 'z', 2.621729100152412e-07
+ , drop=True)
 xlist=zslice['x'].tolist()
 ylist=zslice['y'].tolist()
 Eclist=zslice['Ec'].tolist()
