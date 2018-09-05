@@ -75,18 +75,43 @@ os.chdir(directory)
 my_data=pd.read_csv(file)    
 num_rows = checkFrameRows(my_data)
 df1=my_data[['x','y','z','Ec']]
-xlist= df1['x'].tolist()
-ylist= df1['y'].tolist()
-zlist= df1['z'].tolist()
-Eclist=df1['Ec'].tolist()
+v=df1.values
+#df1=df1.sort_values(by='x')
+#xlist= df1['x'].tolist()
+#ylist= df1['y'].tolist()
+#zlist= df1['z'].tolist()
+#Eclist=df1['Ec'].tolist()
+#
+#dx = np.diff(xlist)
+#dy = np.diff(ylist)
+#dz = np.diff(zlist)
+#
+#
+E=np.gradient(v)
+
+Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
+Ed=Ed.sort_values(by='z')
+Ed.plot(x='z', y=['El'])
+
+#x=np.array(xlist)
+#y=np.array(ylist)
+#z=np.array(zlist)
+#Ec=np.array(Eclist)
+#
+#dx = np.diff(xlist)
+#dy = np.diff(ylist)
+#dz = np.diff(zlist)
+#
+#xx,yy,zz, Ecc=np.meshgrid(x, y, z,Ec,indexing='ij',sparse=True)
+
 
 #
-zslice=extract_slice(df1, 'z', 2.621729100152412e-07
- , drop=True)
-xlist=zslice['x'].tolist()
-ylist=zslice['y'].tolist()
-Eclist=zslice['Ec'].tolist()
-
-xx,yy=np.meshgrid(xlist,ylist)
-grad=(Eclist,xx,yy)
+#zslice=extract_slice(df1, 'z', 2.621729100152412e-07
+# , drop=True)
+#xlist=zslice['x'].tolist()
+#ylist=zslice['y'].tolist()
+#Eclist=zslice['Ec'].tolist()
+#
+#xx,yy=np.meshgrid(xlist,ylist)
+#grad=(Eclist,xx,yy)
 #mytab = extractFieldData(directory, file)
