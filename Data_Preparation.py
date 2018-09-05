@@ -17,8 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'C:\\Users\\Christian\\Box\\3DDCC_Simu\\' + \
-            'Raw_Data\\Dislocation\\No Dislocation'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm\\HoletransportAlGaN_0.17_30nm'
 os.chdir(directory)
 
 
@@ -207,5 +206,5 @@ def create_unified_data_file(model_ID, node_map):
     return output_data
         
 
-node_map = write_space_df('dislocation_line_2.msh')
-mydf = create_unified_data_file('dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.17_30nm.msh')
+mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_1.00.vs_0.00', node_map)

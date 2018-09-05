@@ -15,9 +15,8 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'C:\\Users\\Christian\\Box\\3DDCC_Simu\\' + \
-            'Raw_Data\\Dislocation\\No Dislocation'
-file = 'dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm\\HoletransportAlGaN_0.17_30nm'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.00.vs_0.00.unified'
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -58,16 +57,35 @@ def extractFieldData(directory, file):
     raw_data = pd.read_csv(file)
     
     num_rows = checkFrameRows(raw_data)
+    potential_data=pd.DataFrame(index=np.arange(num_rows), 
+                                 columns=['x', 'y', 'z', 'Ec'])
     electric_data = pd.DataFrame(index=np.arange(num_rows), 
                                  columns=['Ex', 'Ey', 'Ez', '|E|'])
-    
+
     mytable=pd.pivot_table(raw_data, 'Ec', index=['x', 'y'], columns='z')
     my_x = mytable.index.levels[0].values
+
     my_y = mytable.index.levels[1].values
     my_z = mytable.columns.values
     vals = mytable.values
 #    grad = np.gradient(mytable.values, [my_x, my_y, my_z])
     
     return mytable
+os.chdir(directory)
+my_data=pd.read_csv(file)    
+num_rows = checkFrameRows(my_data)
+df1=my_data[['x','y','z','Ec']]
+xlist= df1['x'].tolist()
+ylist= df1['y'].tolist()
+zlist= df1['z'].tolist()
+Eclist=df1['Ec'].tolist()
 
-mytab = extractFieldData(directory, file)
+#
+zslice=extract_slice(df1, 'z', 0 , drop=True)
+xlist=zslice['x'].tolist()
+ylist=zslice['y'].tolist()
+Eclist=zslice['Ec'].tolist()
+
+xx,yy=np.meshgrid(xlist,ylist)
+grad=(Eclist,xx,yy)
+#mytab = extractFieldData(directory, file)
