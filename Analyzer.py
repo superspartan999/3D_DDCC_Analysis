@@ -15,8 +15,8 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm\\HoletransportAlGaN_0.17_30nm'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.00.vs_0.00.unified'
+directory = 'C:\\Users\\Christian\\Box\\3DDCC_Simu\\Raw_Data\\Dislocation\\No Dislocation'
+file = 'dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -46,12 +46,6 @@ def extract_slice(data, slice_var, slice_val, drop=False):
 
     return slice_data
 
-def calculateField(raw_data, node, variable='x'):
-    val = raw_data.at[node, 'y']
-    print('Slice Value: ' + str(val))
-    finalData = extract_slice(raw_data, 'y', raw_data.at[node, 'y'])
-    return(finalData)
-
 def extractFieldData(directory, file):
     os.chdir(directory)
     raw_data = pd.read_csv(file)
@@ -71,47 +65,27 @@ def extractFieldData(directory, file):
 #    grad = np.gradient(mytable.values, [my_x, my_y, my_z])
     
     return mytable
+
+#TODO: get the nearest neighbors, check that node is not on boundary
+def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
+    node_x = raw_data.at[node_num-1, 'x']
+    node_y = raw_data.at[node_num-1, 'y']
+    node_z = raw_data.at[node_num-1, 'z']
+    
+    my_data = raw_data[['Node','x','y','z']]
+    my_filter = (abs(raw_data.x - node_x) < x_thresh) & \
+                (abs(raw_data.y - node_y) < y_thresh) & \
+                (abs(raw_data.z - node_z) < z_thresh)
+    neighborhood = my_data[my_filter]
+    
+    neighborhood['distance'] = neighborhood.apply(lambda row, node_x=node_x, node_y=node_y, node_z=node_z: \
+                ((row.x-node_x)**2+(row.y-node_y)**2+(row.z-node_z)**2)**0.5, axis=1)
+    
+    return neighborhood
+
 os.chdir(directory)
-my_data=pd.read_csv(file)    
-num_rows = checkFrameRows(my_data)
-df1=my_data[['x','y','z','Ec']]
-v=df1.values
-#df1=df1.sort_values(by='x')
-#xlist= df1['x'].tolist()
-#ylist= df1['y'].tolist()
-#zlist= df1['z'].tolist()
-#Eclist=df1['Ec'].tolist()
-#
-#dx = np.diff(xlist)
-#dy = np.diff(ylist)
-#dz = np.diff(zlist)
-#
-#
-E=np.gradient(v)
-
-Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
-Ed=Ed.sort_values(by='z')
-Ed.plot(x='z', y=['El'])
-
-#x=np.array(xlist)
-#y=np.array(ylist)
-#z=np.array(zlist)
-#Ec=np.array(Eclist)
-#
-#dx = np.diff(xlist)
-#dy = np.diff(ylist)
-#dz = np.diff(zlist)
-#
-#xx,yy,zz, Ecc=np.meshgrid(x, y, z,Ec,indexing='ij',sparse=True)
-
-
-#
-#zslice=extract_slice(df1, 'z', 2.621729100152412e-07
-# , drop=True)
-#xlist=zslice['x'].tolist()
-#ylist=zslice['y'].tolist()
-#Eclist=zslice['Ec'].tolist()
-#
-#xx,yy=np.meshgrid(xlist,ylist)
-#grad=(Eclist,xx,yy)
-#mytab = extractFieldData(directory, file)
+my_data=pd.read_csv(file)
+temp = getNearestNeighbor(my_data, 10, 1e-8, 1e-8, 1e-7)
+#num_rows = checkFrameRows(my_data)
+#df1=my_data[['x','y','z','Ec']]
+#v=df1.values
