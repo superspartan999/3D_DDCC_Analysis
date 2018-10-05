@@ -4,6 +4,7 @@
 import os
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 __author__ = "Christian Robertson, Guillaume Lheureux, Clayton Qwah"
 __copyright__ = "Copyright 2018"
@@ -75,23 +76,27 @@ os.chdir(directory)
 my_data=pd.read_csv(file)    
 num_rows = checkFrameRows(my_data)
 df1=my_data[['x','y','z','Ec']]
+
+mat=df1.values
+#X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
+
 v=df1.values
 #df1=df1.sort_values(by='x')
-#xlist= df1['x'].tolist()
-#ylist= df1['y'].tolist()
-#zlist= df1['z'].tolist()
-#Eclist=df1['Ec'].tolist()
-#
-#dx = np.diff(xlist)
-#dy = np.diff(ylist)
-#dz = np.diff(zlist)
-#
-#
-E=np.gradient(v)
 
-Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
-Ed=Ed.sort_values(by='z')
-Ed.plot(x='z', y=['El'])
+#ylist= np.array(df1['y'].tolist())
+#zlist= np.array(df1['z'].tolist())
+#Eclist=np.array(df1['Ec'].tolist())
+##
+#x, y, z = np.meshgrid(xlist, ylist, zlist, indexing='ij')
+#zslice=extract_slice(df1, 'z', 2.621729100152412e-07,drop=True)
+#Ec=np.meshgrid(x,y,z, Ec,)
+#
+#distances = [np.diff(x)[0], np.diff(y)[0], np.diff(z)[0]]
+#np.gradient(Ec, *distances)
+
+#Ed=pd.DataFrame(E[0],columns=['x','y','z', 'El'])
+#Ed=Ed.sort_values(by='z')
+#Ed.plot(x='z', y=['El'])
 
 #x=np.array(xlist)
 #y=np.array(ylist)
