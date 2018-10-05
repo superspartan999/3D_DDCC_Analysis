@@ -16,8 +16,8 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'C:\\Users\\Christian\\Box\\3DDCC_Simu\\Raw_Data\\Dislocation\\No Dislocation'
-file = 'dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm\\HoletransportAlGaN_0.17_30nm'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.00.vs_0.00.unified'
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -85,7 +85,6 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     return neighborhood
 
 os.chdir(directory)
-<<<<<<< HEAD
 my_data=pd.read_csv(file)    
 num_rows = checkFrameRows(my_data)
 df1=my_data[['x','y','z','Ec']]
@@ -133,10 +132,10 @@ v=df1.values
 #xx,yy=np.meshgrid(xlist,ylist)
 #grad=(Eclist,xx,yy)
 #mytab = extractFieldData(directory, file)
-=======
+
 my_data=pd.read_csv(file)
-temp = getNearestNeighbor(my_data, 10, 1e-8, 1e-8, 1e-7)
+temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
 #num_rows = checkFrameRows(my_data)
 #df1=my_data[['x','y','z','Ec']]
 #v=df1.values
->>>>>>> 4d86d79ccb98f5345afc5763753419039b0ca464
+
