@@ -15,8 +15,8 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm\\HoletransportAlGaN_0.17_30nm'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.00.vs_0.00.unified'
+directory = 'F:\\AlGaN_Band_Diagram\\3D Files\\HoletransportAlGaN_0.17_30nm'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.50.vs_0.00.unified'
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -87,11 +87,11 @@ v=df1.values
 #dz = np.diff(zlist)
 #
 #
-E=np.gradient(v)
-
-Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
-Ed=Ed.sort_values(by='z')
-Ed.plot(x='z', y=['El'])
+#E=np.gradient(v)
+#
+#Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
+#Ed=Ed.sort_values(by='z')
+#Ed.plot(x='z', y=['El'])
 
 #x=np.array(xlist)
 #y=np.array(ylist)
@@ -102,7 +102,7 @@ Ed.plot(x='z', y=['El'])
 #dy = np.diff(ylist)
 #dz = np.diff(zlist)
 #
-#xx,yy,zz, Ecc=np.meshgrid(x, y, z,Ec,indexing='ij',sparse=True)
+xx,yy,zz, Ecc=np.meshgrid(v[:,0], v[:,1], v[:,2],v[:,3],indexing='ij',sparse=True)
 
 
 #
