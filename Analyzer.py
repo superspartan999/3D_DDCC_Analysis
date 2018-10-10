@@ -4,6 +4,7 @@
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 
 __author__ = "Christian Robertson, Guillaume Lheureux, Clayton Qwah"
@@ -16,8 +17,8 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'F:\\AlGaN_Band_Diagram\\3D Files\\HoletransportAlGaN_0.17_30nm'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.50.vs_0.00.unified'
+directory = 'F:\\HoletransportAlGaN_0.17_10nm\\Bias6'
+file = 'p_structure_0.17_10nm-out.vg_0.00.vd_2.00.vs_0.00.unified'
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -87,12 +88,38 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
 os.chdir(directory)
 my_data=pd.read_csv(file)    
 num_rows = checkFrameRows(my_data)
-df1=my_data[['x','y','z','Ec']]
+df1=my_data[['x','y','z','Ec', 'Ev']]
 
-mat=df1.values
-#X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
 
-v=df1.values
+#mat=df1.values
+##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
+#
+#v=df1.values
+
+
+zvalues = df1['z'].unique()
+cols={}
+Ecvalues=pd.DataFrame(columns=['z','Ec'])
+Evvalues=pd.DataFrame(columns=['z','Ev'])
+i=0
+
+for z in zvalues:
+    zslice=extract_slice(df1,'z',z, drop=True)
+    averagezsliceEc=zslice['Ec'].mean()
+    averagezsliceEv=zslice['Ev'].mean()
+    d1={'z':z,'Ec':averagezsliceEc}
+    d2={'z':z,'Ev':averagezsliceEv}
+    Ecvalues.loc[i]=d1
+    Evvalues.loc[i]=d2
+    i=i+1
+
+axes = plt.gca()
+axes.set_xlabel('z(cm)')
+axes.set_ylabel('V(ev)')
+axes.set_xlim([0,8e-6])
+plt.scatter(Ecvalues['z'], Ecvalues['Ec'])
+plt.scatter(Evvalues['z'], Evvalues['Ev']) 
+   
 #df1=df1.sort_values(by='x')
 
 #ylist= np.array(df1['y'].tolist())
@@ -103,16 +130,16 @@ v=df1.values
 #zslice=extract_slice(df1, 'z', 2.621729100152412e-07,drop=True)
 #Ec=np.meshgrid(x,y,z, Ec,)
 #
-<<<<<<< HEAD
+
 #E=np.gradient(v)
 #
 #Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
-=======
+
 #distances = [np.diff(x)[0], np.diff(y)[0], np.diff(z)[0]]
 #np.gradient(Ec, *distances)
 
 #Ed=pd.DataFrame(E[0],columns=['x','y','z', 'El'])
->>>>>>> 36f8c786111a92c5c31e79a2e04f406b4f36c5f4
+
 #Ed=Ed.sort_values(by='z')
 #Ed.plot(x='z', y=['El'])
 
@@ -125,22 +152,22 @@ v=df1.values
 #dy = np.diff(ylist)
 #dz = np.diff(zlist)
 #
-xx,yy,zz, Ecc=np.meshgrid(v[:,0], v[:,1], v[:,2],v[:,3],indexing='ij',sparse=True)
-
-
+#xx,yy,zz, Ecc=np.meshgrid(v[:,0], v[:,1], v[:,2],v[:,3],indexing='ij',sparse=True)
 #
-#zslice=extract_slice(df1, 'z', 2.621729100152412e-07
-# , drop=True)
-#xlist=zslice['x'].tolist()
-#ylist=zslice['y'].tolist()
-#Eclist=zslice['Ec'].tolist()
 #
-#xx,yy=np.meshgrid(xlist,ylist)
-#grad=(Eclist,xx,yy)
-#mytab = extractFieldData(directory, file)
-
-my_data=pd.read_csv(file)
-temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
+##
+##zslice=extract_slice(df1, 'z', 2.621729100152412e-07
+## , drop=True)
+##xlist=zslice['x'].tolist()
+##ylist=zslice['y'].tolist()
+##Eclist=zslice['Ec'].tolist()
+##
+##xx,yy=np.meshgrid(xlist,ylist)
+##grad=(Eclist,xx,yy)
+##mytab = extractFieldData(directory, file)
+#
+#my_data=pd.read_csv(file)
+#temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
 #num_rows = checkFrameRows(my_data)
 #df1=my_data[['x','y','z','Ec']]
 #v=df1.values

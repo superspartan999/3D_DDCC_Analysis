@@ -17,7 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'F:\\AlGaN_Band_Diagram\\3D Files\\HoletransportAlGaN_0.17_30nm'
+directory = 'F:\\HoletransportAlGaN_0.17_10nm\\Bias6'
 os.chdir(directory)
 
 
@@ -206,5 +206,5 @@ def create_unified_data_file(model_ID, node_map):
     return output_data
         
 
-node_map = write_space_df('p_structure_0.17_30nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_1.50.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.17_10nm.msh')
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_2.00.vs_0.00', node_map)
