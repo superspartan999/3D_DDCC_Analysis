@@ -11,6 +11,10 @@ import pandas as pd
 import scipy
 import numpy as np
 
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
 #"Enter Input File of the structure"
 StructureFile = "p_structure.csv";
@@ -21,7 +25,7 @@ NameJob = "p_structure_0.17_10nm";
 #(*Enter Coefficient of the structure*)
 
 AugerCoefficient = "6.00000E-31";
-RecombinaisonCoefficient = "2.00E-11";
+RecombinationCoefficient = "2.00E-11";
  #=====================================================================================#
 
 
@@ -35,8 +39,8 @@ InputName =[ NameJob+".inp"];
 
 #(*Enter wanted Bias range *)
 
-StartBias = -4.0;
-EndBias = 6.0;
+StartBias = -5;
+EndBias = 5;
 DeltaBias = 0.5;
 
 
@@ -45,32 +49,19 @@ DeltaBias = 0.5;
 JobsPerFile = 2;
 #(**************************************************************)
 
-#(*Table of paramaters *)
+#(*Table of parameters *)
 #converts dataframe column to list
 Doping=np.array([x for pair in zip((Data['Doping'].tolist()),(Data['Doping'].tolist())) for x in pair])
 Activation=np.array([x for pair in zip((Data['Activation'].tolist()),(Data['Activation'].tolist())) for x in pair])
-#converts dataframe column to list
-I=np.array(Data['Impurity'].tolist())
-#duplicates element in the list
-Impurity=np.array([x for pair in zip(I,I) for x in pair])
-#converts dataframe column to list
-Me=np.array(Data['Mobilitye-'].tolist())
-#duplicates element in the list
-Emobility=np.array([x for pair in zip(Me,Me) for x in pair])
-#converts dataframe column to list
-Mh=np.array(Data['mobilityh+'].tolist())
-#duplicates element in the list
-Hmobility=np.array([x for pair in zip(Mh,Mh) for x in pair])
-#converts dataframe column to list
+Impurity=np.array([x for pair in zip((Data['Impurity'].tolist()),(Data['Impurity'].tolist())) for x in pair])
+Emobility=np.array([x for pair in zip((Data['Mobilitye-'].tolist()),(Data['Mobilitye-'].tolist())) for x in pair])
+Hmobility=np.array([x for pair in zip((Data['mobilityh+'].tolist()),(Data['mobilityh+'].tolist())) for x in pair])
+ENonRad=Activation=np.array([x for pair in zip((Data['NonRade-'].tolist()),(Data['NonRade-'].tolist())) for x in pair])
+HNonRad=np.array([x for pair in zip((Data['NonRadh+'].tolist()),(Data['NonRadh+'].tolist())) for x in pair])
 
-
-
-
-#(**************************************************************)
 
 #(*Calculation number files needed*)
-#NbPointBias = (EndBias - StartBias)/DeltaBias;
-#FilesNumber = NbPointBias/JobsPerFile;
-#PreBias = Table[{StartBias + DeltaBias + (i - 1)*(MaxPointPerFiles*DeltaBias), 
-#    StartBias + i*(MaxPointPerFiles*DeltaBias)}, {i, 2, FilesNumber}];
-#Bias = Prepend[PreBias, {StartBias, StartBias + (MaxPointPerFiles*DeltaBias)}];
+NbPointBias = (EndBias - StartBias)/DeltaBias;
+FilesNumber = NbPointBias/JobsPerFile;
+Biases=np.arange(StartBias, EndBias+DeltaBias, DeltaBias)
+BiasChunks=np.array_split(Biases,FilesNumber)

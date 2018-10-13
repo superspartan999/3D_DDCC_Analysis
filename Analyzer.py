@@ -16,8 +16,8 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm\\HoletransportAlGaN_0.17_30nm'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_1.00.vs_0.00.unified'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -81,8 +81,15 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     
     neighborhood['distance'] = neighborhood.apply(lambda row, node_x=node_x, node_y=node_y, node_z=node_z: \
                 ((row.x-node_x)**2+(row.y-node_y)**2+(row.z-node_z)**2)**0.5, axis=1)
+    neighborhood['delX'] = neighborhood.apply(lambda row, node_x=node_x: abs(row.x - node_x), axis=1)
+    neighborhood['delY'] = neighborhood.apply(lambda row, node_y=node_y: abs(row.y - node_y), axis=1)
+    neighborhood['delZ'] = neighborhood.apply(lambda row, node_z=node_z: abs(row.z - node_z), axis=1)
     
-    return neighborhood
+    neighborhood = (neighborhood.sort_values(by=['distance', 'delX']))[neighborhood.delX != 0]
+    
+
+    
+    return neighborhood.set_index('Node')
 
 os.chdir(directory)
 my_data=pd.read_csv(file)    
@@ -93,48 +100,13 @@ mat=df1.values
 #X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
 
 v=df1.values
-#df1=df1.sort_values(by='x')
 
-#ylist= np.array(df1['y'].tolist())
-#zlist= np.array(df1['z'].tolist())
-#Eclist=np.array(df1['Ec'].tolist())
-##
-#x, y, z = np.meshgrid(xlist, ylist, zlist, indexing='ij')
-#zslice=extract_slice(df1, 'z', 2.621729100152412e-07,drop=True)
-#Ec=np.meshgrid(x,y,z, Ec,)
-#
-#distances = [np.diff(x)[0], np.diff(y)[0], np.diff(z)[0]]
-#np.gradient(Ec, *distances)
-
-#Ed=pd.DataFrame(E[0],columns=['x','y','z', 'El'])
-#Ed=Ed.sort_values(by='z')
-#Ed.plot(x='z', y=['El'])
-
-#x=np.array(xlist)
-#y=np.array(ylist)
-#z=np.array(zlist)
-#Ec=np.array(Eclist)
-#
-#dx = np.diff(xlist)
-#dy = np.diff(ylist)
-#dz = np.diff(zlist)
-#
-#xx,yy,zz, Ecc=np.meshgrid(x, y, z,Ec,indexing='ij',sparse=True)
-
-
-#
-#zslice=extract_slice(df1, 'z', 2.621729100152412e-07
-# , drop=True)
-#xlist=zslice['x'].tolist()
-#ylist=zslice['y'].tolist()
-#Eclist=zslice['Ec'].tolist()
-#
-#xx,yy=np.meshgrid(xlist,ylist)
-#grad=(Eclist,xx,yy)
-#mytab = extractFieldData(directory, file)
 
 my_data=pd.read_csv(file)
-temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
+temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
+unique_x = np.sort(temp.delX.unique())
+unique_y = np.sort(temp.delY.unique())
+unique_z = np.sort(temp.delZ.unique())
 #num_rows = checkFrameRows(my_data)
 #df1=my_data[['x','y','z','Ec']]
 #v=df1.values
