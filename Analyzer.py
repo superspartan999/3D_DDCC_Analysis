@@ -4,6 +4,8 @@
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import scipy as scp
 from sklearn.preprocessing import StandardScaler
 
 __author__ = "Christian Robertson, Guillaume Lheureux, Clayton Qwah"
@@ -16,8 +18,13 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
+<<<<<<< HEAD
 directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+=======
+directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
+>>>>>>> e707868e22197f10a4957d06322a8902274585b2
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -94,11 +101,21 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
 os.chdir(directory)
 my_data=pd.read_csv(file)    
 num_rows = checkFrameRows(my_data)
-df1=my_data[['x','y','z','Ec']]
+EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
-mat=df1.values
-#X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
+tree=scp.spatial.cKDTree(node_map)
+dd, ii=tree.query(node_map,7)
+for n in ii:
+    p=EcEv.iloc[n[0]]
+    
+#nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
 
+#mat=df1.values
+##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
+#
+#v=df1.values
+
+<<<<<<< HEAD
 v=df1.values
 
 
@@ -107,6 +124,81 @@ temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
 unique_x = np.sort(temp.delX.unique())
 unique_y = np.sort(temp.delY.unique())
 unique_z = np.sort(temp.delZ.unique())
+=======
+#def band_diagram_z(df1):
+#    zvalues = df1['z'].unique()
+#    cols={}
+#    Ecvalues=pd.DataFrame(columns=['z','Ec'])
+#    Evvalues=pd.DataFrame(columns=['z','Ev'])
+#    i=0
+#    
+#    for z in zvalues:
+#        zslice=extract_slice(df1,'z',z, drop=True)
+#        averagezsliceEc=zslice['Ec'].mean()
+#        averagezsliceEv=zslice['Ev'].mean()
+#        d1={'z':z,'Ec':averagezsliceEc}
+#        d2={'z':z,'Ev':averagezsliceEv}
+#        Ecvalues.loc[i]=d1
+#        Evvalues.loc[i]=d2
+#        i=i+1
+#
+#    return Ecvalues,Evvalues 
+#axes = plt.gca()
+#axes.set_xlabel('z(cm)')
+#axes.set_ylabel('V(ev)')
+#axes.set_xlim([0,12e-6])
+#plt.scatter(banddiagram['z'], Ecvalues['Ec'])
+#plt.scatter(Evvalues['z'], Evvalues['Ev']) 
+   
+#df1=df1.sort_values(by='x')
+
+#ylist= np.array(df1['y'].tolist())
+#zlist= np.array(df1['z'].tolist())
+#Eclist=np.array(df1['Ec'].tolist())
+##
+#x, y, z = np.meshgrid(xlist, ylist, zlist, indexing='ij')
+#zslice=extract_slice(df1, 'z', 2.621729100152412e-07,drop=True)
+#Ec=np.meshgrid(x,y,z, Ec,)
+#
+
+#E=np.gradient(v)
+#
+#Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
+
+#distances = [np.diff(x)[0], np.diff(y)[0], np.diff(z)[0]]
+#np.gradient(Ec, *distances)
+
+#Ed=pd.DataFrame(E[0],columns=['x','y','z', 'El'])
+
+#Ed=Ed.sort_values(by='z')
+#Ed.plot(x='z', y=['El'])
+
+#x=np.array(xlist)
+#y=np.array(ylist)
+#z=np.array(zlist)
+#Ec=np.array(Eclist)
+#
+#dx = np.diff(xlist)
+#dy = np.diff(ylist)
+#dz = np.diff(zlist)
+#
+#xx,yy,zz, Ecc=np.meshgrid(v[:,0], v[:,1], v[:,2],v[:,3],indexing='ij',sparse=True)
+#
+#
+##
+##zslice=extract_slice(df1, 'z', 2.621729100152412e-07
+## , drop=True)
+##xlist=zslice['x'].tolist()
+##ylist=zslice['y'].tolist()
+##Eclist=zslice['Ec'].tolist()
+##
+##xx,yy=np.meshgrid(xlist,ylist)
+##grad=(Eclist,xx,yy)
+##mytab = extractFieldData(directory, file)
+#
+#my_data=pd.read_csv(file)
+temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
+>>>>>>> e707868e22197f10a4957d06322a8902274585b2
 #num_rows = checkFrameRows(my_data)
 #df1=my_data[['x','y','z','Ec']]
 #v=df1.values

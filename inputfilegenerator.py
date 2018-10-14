@@ -65,3 +65,5 @@ NbPointBias = (EndBias - StartBias)/DeltaBias;
 FilesNumber = NbPointBias/JobsPerFile;
 Biases=np.arange(StartBias, EndBias+DeltaBias, DeltaBias)
 BiasChunks=np.array_split(Biases,FilesNumber)
+
+f = open("", "a")
