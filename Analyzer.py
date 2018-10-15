@@ -18,13 +18,12 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-<<<<<<< HEAD
+
 directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-=======
-directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
->>>>>>> e707868e22197f10a4957d06322a8902274585b2
+#directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
+#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
+
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -108,15 +107,19 @@ dd, ii=tree.query(node_map,7)
 for n in ii:
     p=EcEv.iloc[n[0]]
     
-#nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
 
-#mat=df1.values
-##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
-#
-#v=df1.values
+#max values
+max_x=mydf.loc[mydf['x'].idxmax()]['x']
+max_y=mydf.loc[mydf['y'].idxmax()]['y']
+max_z=mydf.loc[mydf['z'].idxmax()]['z']
 
-<<<<<<< HEAD
-v=df1.values
+
+unique_x = df['x'].unique()
+unique_y = df['y'].unique()
+unique_z = df['z'].unique()
+
+
+new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
 
 my_data=pd.read_csv(file)
@@ -124,7 +127,13 @@ temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
 unique_x = np.sort(temp.delX.unique())
 unique_y = np.sort(temp.delY.unique())
 unique_z = np.sort(temp.delZ.unique())
-=======
+
+#nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
+
+#mat=df1.values
+##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
+#
+#v=df1.values
 #def band_diagram_z(df1):
 #    zvalues = df1['z'].unique()
 #    cols={}
@@ -198,7 +207,6 @@ unique_z = np.sort(temp.delZ.unique())
 #
 #my_data=pd.read_csv(file)
 temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
->>>>>>> e707868e22197f10a4957d06322a8902274585b2
 #num_rows = checkFrameRows(my_data)
 #df1=my_data[['x','y','z','Ec']]
 #v=df1.values
