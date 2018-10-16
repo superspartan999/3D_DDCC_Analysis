@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy as scp
 from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import axes3d, Axes3D 
 
 __author__ = "Christian Robertson, Guillaume Lheureux, Clayton Qwah"
 __copyright__ = "Copyright 2018"
@@ -91,12 +93,29 @@ my_data=pd.read_csv(file)
 num_rows = checkFrameRows(my_data)
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
+
 tree=scp.spatial.cKDTree(node_map)
 dd, ii=tree.query(node_map,7)
-for n in ii:
-    p=EcEv.iloc[n[0]]
-    
-#nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
+j=0
+neighbourhood_dis=pd.DataFrame(columns=['dx', 'dy', 'dz'])
+three_d=plt.figure().gca(projection='3d')
+temp = getNearestNeighbor(my_data, 100, 1e-6, 1e-6, 1e-6)
+nxyz=pd.DataFrame(columns=['n','x', 'y', 'z'])
+p=ii[100]
+i=1
+for i in range(len(p)):
+    temp={'x' : EcEv.iloc[p[i]]['x'],'y' : EcEv.iloc[p[i]]['y'],'z' : EcEv.iloc[p[i]]['z']}
+    nxyz=nxyz.append(temp,ignore_index=True)
+
+three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
+plt.show()
+#for n in ii:
+#    for i in n
+#        temp={'dx':(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),'dy':(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']), 'dz':(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])}
+#    
+#    
+#    neighbourhood=[EcEv.iloc[n[1]],EcEv.iloc[n[2]],EcEv.iloc[n[3]],EcEv.iloc[n[4]],EcEv.iloc[n[5]],EcEv.iloc[n[6]]])
+#    distances=[(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']),(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])])
 
 #mat=df1.values
 ##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
@@ -106,7 +125,7 @@ for n in ii:
 #def band_diagram_z(df1):
 #    zvalues = df1['z'].unique()
 #    cols={}
-#    Ecvalues=pd.DataFrame(columns=['z','Ec'])
+#    Ecvalues=pd.DataFrame(columns=['z','Ec']).
 #    Evvalues=pd.DataFrame(columns=['z','Ev'])
 #    i=0
 #    
