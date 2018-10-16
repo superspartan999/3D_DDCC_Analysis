@@ -20,8 +20,12 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
-directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
+
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+#directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
+#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
+
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
@@ -85,8 +89,15 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     
     neighborhood['distance'] = neighborhood.apply(lambda row, node_x=node_x, node_y=node_y, node_z=node_z: \
                 ((row.x-node_x)**2+(row.y-node_y)**2+(row.z-node_z)**2)**0.5, axis=1)
+    neighborhood['delX'] = neighborhood.apply(lambda row, node_x=node_x: abs(row.x - node_x), axis=1)
+    neighborhood['delY'] = neighborhood.apply(lambda row, node_y=node_y: abs(row.y - node_y), axis=1)
+    neighborhood['delZ'] = neighborhood.apply(lambda row, node_z=node_z: abs(row.z - node_z), axis=1)
     
-    return neighborhood
+    neighborhood = (neighborhood.sort_values(by=['distance', 'delX']))[neighborhood.delX != 0]
+    
+
+    
+    return neighborhood.set_index('Node')
 
 os.chdir(directory)
 my_data=pd.read_csv(file)    
@@ -96,6 +107,7 @@ EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 tree=scp.spatial.cKDTree(node_map)
 dd, ii=tree.query(node_map,7)
+<<<<<<< HEAD
 j=0
 neighbourhood_dis=pd.DataFrame(columns=['dx', 'dy', 'dz'])
 three_d=plt.figure().gca(projection='3d')
@@ -116,12 +128,38 @@ plt.show()
 #    
 #    neighbourhood=[EcEv.iloc[n[1]],EcEv.iloc[n[2]],EcEv.iloc[n[3]],EcEv.iloc[n[4]],EcEv.iloc[n[5]],EcEv.iloc[n[6]]])
 #    distances=[(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']),(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])])
+=======
+for n in ii:
+    p=EcEv.iloc[n[0]]
+    
+
+#max values
+max_x=mydf.loc[mydf['x'].idxmax()]['x']
+max_y=mydf.loc[mydf['y'].idxmax()]['y']
+max_z=mydf.loc[mydf['z'].idxmax()]['z']
+
+
+unique_x = df['x'].unique()
+unique_y = df['y'].unique()
+unique_z = df['z'].unique()
+
+
+new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
+
+
+my_data=pd.read_csv(file)
+temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
+unique_x = np.sort(temp.delX.unique())
+unique_y = np.sort(temp.delY.unique())
+unique_z = np.sort(temp.delZ.unique())
+
+#nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
+>>>>>>> 7ac5f21d67e2b235f2272e4c74d772c0d2bef4cc
 
 #mat=df1.values
 ##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
 #
 #v=df1.values
-
 #def band_diagram_z(df1):
 #    zvalues = df1['z'].unique()
 #    cols={}
