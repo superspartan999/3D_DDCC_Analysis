@@ -23,6 +23,8 @@ __status__ = "Development"
 
 directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias4'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
 
@@ -104,31 +106,30 @@ my_data=pd.read_csv(file)
 num_rows = checkFrameRows(my_data)
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
-
-tree=scp.spatial.cKDTree(node_map)
-dd, ii=tree.query(node_map,7)
-<<<<<<< HEAD
-j=0
-neighbourhood_dis=pd.DataFrame(columns=['dx', 'dy', 'dz'])
-three_d=plt.figure().gca(projection='3d')
-temp = getNearestNeighbor(my_data, 100, 1e-6, 1e-6, 1e-6)
-nxyz=pd.DataFrame(columns=['n','x', 'y', 'z'])
-p=ii[100]
-i=1
-for i in range(len(p)):
-    temp={'x' : EcEv.iloc[p[i]]['x'],'y' : EcEv.iloc[p[i]]['y'],'z' : EcEv.iloc[p[i]]['z']}
-    nxyz=nxyz.append(temp,ignore_index=True)
-
-three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
-plt.show()
+#
+#tree=scp.spatial.cKDTree(node_map)
+#dd, ii=tree.query(node_map,7)
+#
+#j=0
+#neighbourhood_dis=pd.DataFrame(columns=['dx', 'dy', 'dz'])
+#three_d=plt.figure().gca(projection='3d')
+#temp = getNearestNeighbor(my_data, 100, 1e-6, 1e-6, 1e-6)
+#nxyz=pd.DataFrame(columns=['n','x', 'y', 'z'])
+#p=ii[100]
+#i=1
+#for i in range(len(p)):
+#    temp={'x' : EcEv.iloc[p[i]]['x'],'y' : EcEv.iloc[p[i]]['y'],'z' : EcEv.iloc[p[i]]['z']}
+#    nxyz=nxyz.append(temp,ignore_index=True)
+#
+#three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
+#plt.show()
 #for n in ii:
 #    for i in n
 #        temp={'dx':(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),'dy':(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']), 'dz':(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])}
 #    
 #    
 #    neighbourhood=[EcEv.iloc[n[1]],EcEv.iloc[n[2]],EcEv.iloc[n[3]],EcEv.iloc[n[4]],EcEv.iloc[n[5]],EcEv.iloc[n[6]]])
-#    distances=[(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']),(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])])
-=======
+
 for n in ii:
     p=EcEv.iloc[n[0]]
     
@@ -138,91 +139,70 @@ max_x=mydf.loc[mydf['x'].idxmax()]['x']
 max_y=mydf.loc[mydf['y'].idxmax()]['y']
 max_z=mydf.loc[mydf['z'].idxmax()]['z']
 
-
-unique_x = df['x'].unique()
-unique_y = df['y'].unique()
-unique_z = df['z'].unique()
-
-
-new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
+#new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
 
 my_data=pd.read_csv(file)
 temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
-unique_x = np.sort(temp.delX.unique())
-unique_y = np.sort(temp.delY.unique())
-unique_z = np.sort(temp.delZ.unique())
+#unique_x = np.sort(temp.delX.unique())
+#unique_y = np.sort(temp.delY.unique())
+#unique_z = np.sort(temp.delZ.unique())
 
 #nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
->>>>>>> 7ac5f21d67e2b235f2272e4c74d772c0d2bef4cc
 
 #mat=df1.values
 ##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
 #
 #v=df1.values
-#def band_diagram_z(df1):
-#    zvalues = df1['z'].unique()
-#    cols={}
-#    Ecvalues=pd.DataFrame(columns=['z','Ec']).
-#    Evvalues=pd.DataFrame(columns=['z','Ev'])
-#    i=0
-#    
-#    for z in zvalues:
-#        zslice=extract_slice(df1,'z',z, drop=True)
-#        averagezsliceEc=zslice['Ec'].mean()
-#        averagezsliceEv=zslice['Ev'].mean()
-#        d1={'z':z,'Ec':averagezsliceEc}
-#        d2={'z':z,'Ev':averagezsliceEv}
-#        Ecvalues.loc[i]=d1
-#        Evvalues.loc[i]=d2
-#        i=i+1
-#
-#    return Ecvalues,Evvalues 
+def band_diagram_z(df1):
+    zvalues = df1['z'].unique()
+    cols={}
+    Ecvalues=pd.DataFrame(columns=['z','Ec'])
+    Evvalues=pd.DataFrame(columns=['z','Ev'])
+    i=0
+    
+    for z in zvalues:
+        zslice=extract_slice(df1,'z',z, drop=True)
+        averagezsliceEc=zslice['Ec'].mean()
+        averagezsliceEv=zslice['Ev'].mean()
+        d1={'z':z,'Ec':averagezsliceEc}
+        d2={'z':z,'Ev':averagezsliceEv}
+        Ecvalues.loc[i]=d1
+        Evvalues.loc[i]=d2
+        i=i+1
+
+    return Ecvalues,Evvalues 
+
+unique_x=node_map['x'].unique()
+unique_y=node_map['y'].unique()
+unique_z=node_map['z'].unique()
+
+rounded_x=pd.DataFrame(unique_x.round(decimals=10)).unique()
+rounded_y=pd.DataFrame(unique_y.round(decimals=10)).unique()
+rounded_z=pd.DataFrame(unique_z.round(decimals=10)).unique()
+
+def indexNN(node_map):
+    
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')
 #axes.set_xlim([0,12e-6])
 #plt.scatter(banddiagram['z'], Ecvalues['Ec'])
 #plt.scatter(Evvalues['z'], Evvalues['Ev']) 
-   
-#df1=df1.sort_values(by='x')
 
-#ylist= np.array(df1['y'].tolist())
-#zlist= np.array(df1['z'].tolist())
-#Eclist=np.array(df1['Ec'].tolist())
-##
-#x, y, z = np.meshgrid(xlist, ylist, zlist, indexing='ij')
-#zslice=extract_slice(df1, 'z', 2.621729100152412e-07,drop=True)
-#Ec=np.meshgrid(x,y,z, Ec,)
-#
 
-#E=np.gradient(v)
+#zvalues = rounded_nodes['z'].unique() 
+#size_zslice=pd.DataFrame(columns=['z','size'])  
+#j=0
 #
-#Ed=pd.DataFrame(E[0],columns=['x','y','z','El'])
+#for z in zvalues:
+#    zslice=extract_slice(rounded_nodes, 'z',0, drop=True)
+#    size=len(zslice)
+#    d={'z':z,'size':size}
+#    size_zslice.loc[j]=d
+#    j=j+1
+        
 
-#distances = [np.diff(x)[0], np.diff(y)[0], np.diff(z)[0]]
-#np.gradient(Ec, *distances)
-
-#Ed=pd.DataFrame(E[0],columns=['x','y','z', 'El'])
-
-#Ed=Ed.sort_values(by='z')
-#Ed.plot(x='z', y=['El'])
-
-#x=np.array(xlist)
-#y=np.array(ylist)
-#z=np.array(zlist)
-#Ec=np.array(Eclist)
-#
-#dx = np.diff(xlist)
-#dy = np.diff(ylist)
-#dz = np.diff(zlist)
-#
-#xx,yy,zz, Ecc=np.meshgrid(v[:,0], v[:,1], v[:,2],v[:,3],indexing='ij',sparse=True)
-#
-#
-##
-##zslice=extract_slice(df1, 'z', 2.621729100152412e-07
-## , drop=True)
 ##xlist=zslice['x'].tolist()
 ##ylist=zslice['y'].tolist()
 ##Eclist=zslice['Ec'].tolist()
