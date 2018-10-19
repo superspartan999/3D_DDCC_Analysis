@@ -21,8 +21,6 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
 directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias4'
 file = 'p_structure_0.17_30nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
@@ -130,8 +128,6 @@ EcEv=my_data[['x','y','z','Ec', 'Ev']]
 #    
 #    neighbourhood=[EcEv.iloc[n[1]],EcEv.iloc[n[2]],EcEv.iloc[n[3]],EcEv.iloc[n[4]],EcEv.iloc[n[5]],EcEv.iloc[n[6]]])
 
-for n in ii:
-    p=EcEv.iloc[n[0]]
     
 
 #max values
@@ -143,26 +139,24 @@ max_z=mydf.loc[mydf['z'].idxmax()]['z']
 
 
 my_data=pd.read_csv(file)
-temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
-#unique_x = np.sort(temp.delX.unique())
-#unique_y = np.sort(temp.delY.unique())
-#unique_z = np.sort(temp.delZ.unique())
 
-#nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
 
-#mat=df1.values
-##X,Y,Z=np.meshgrid(mat[:,0],mat[:,1],mat[:,2])
-#
-#v=df1.values
+
+#function to plot band diagram
 def band_diagram_z(df1):
+    #find all the values of z and put them in a list
     zvalues = df1['z'].unique()
     cols={}
+    #create dataframe for conduction band and valence band
     Ecvalues=pd.DataFrame(columns=['z','Ec'])
     Evvalues=pd.DataFrame(columns=['z','Ev'])
     i=0
-    
+    #loop through different z values along the device
     for z in zvalues:
+        #extract x-y plane for a z value
         zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average
         averagezsliceEc=zslice['Ec'].mean()
         averagezsliceEv=zslice['Ev'].mean()
         d1={'z':z,'Ec':averagezsliceEc}
@@ -173,16 +167,85 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues 
 
-unique_x=node_map['x'].unique()
-unique_y=node_map['y'].unique()
-unique_z=node_map['z'].unique()
 
-rounded_x=pd.DataFrame(unique_x.round(decimals=10)).unique()
-rounded_y=pd.DataFrame(unique_y.round(decimals=10)).unique()
-rounded_z=pd.DataFrame(unique_z.round(decimals=10)).unique()
 
-def indexNN(node_map):
+rounded_nodes=node_map.round(decimals=10)
+sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True])
+
+unique_x=rounded_nodes['x'].unique()
+unique_y=rounded_nodes['y'].unique()
+unique_z=rounded_nodes['z'].unique()
+
+
+
+xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
+yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
+zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
+
+def nodetocoord(index,rounded_nodes,unique_x,unique_y,unique_z):
     
+
+    
+    x_idx=index/(len(yvalues)*len(zvalues))
+    
+    x=rounded_x.iloc[x_idx]
+    
+    y_idx=(index/len(zvalues))%len(yvalues)
+    
+    y=rounded_y.iloc[y_idx]
+    
+    z_idx=index%len(rounded_z)
+    
+    z=rounded_z.iloc[z_idx]
+    
+    return float(x) , float(y) , float(z) , x_idx, y_idx, z_idx
+
+def coordtonode(x,y,z,rounded_nodes,unique_x,unique_y,unique_z):
+    
+    max_x=len(unique_x)
+    max_y=len(unique_y)
+    max_z=len(unique_z)
+    
+    index = x * max_y * max_z + y * max_z + z
+    return index
+    
+    
+def NNX(index):
+    
+    x_neg=x_idx-1
+    x_pos=x_idx+1
+    
+    return x_neg,x_pos
+
+def NNY(y_idx):
+    
+    y_neg=y_idx-1
+    y_pos=y_idx+1
+    
+    return y_neg,y_pos
+
+def NNZ(z_idx):
+    
+    z_neg=z_idx-1
+    z_pos=z_idx+1
+    
+    return z_neg,z_pos
+
+def E(sorted_nodes,index):
+    
+    xdiff=rounded_x.iloc[x_pos]-rounded_x.iloc[x_neg]
+    ydiff=rounded_x.iloc[y_pos]-rounded_x.iloc[y_neg]
+    zdiff=rounded_x.iloc[y_pos]-rounded_x.iloc[y_neg]
+    
+    Ex=sorted_nodes.iloc(x_pos)['Ec']-sorted_nodes.iloc(x_neg)['Ec']
+    Ey=sorted_nodes.iloc(y_pos)['Ec']-sorted_nodes.iloc(y_neg)['Ec']
+    Ez=sorted_nodes.iloc(z_pos)['Ec']-sorted_nodes.iloc(z_neg)['Ec']
+    
+    
+    
+g=nodetocoord(14400,rounded_nodes,unique_x,unique_y,unique_z)
+i=coordtonode(g[3],g[4],g[5],rounded_nodes,unique_x,unique_y,unique_z)
+
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')
@@ -212,7 +275,7 @@ def indexNN(node_map):
 ##mytab = extractFieldData(directory, file)
 #
 #my_data=pd.read_csv(file)
-temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
+#temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
 #num_rows = checkFrameRows(my_data)
 #df1=my_data[['x','y','z','Ec']]
 #v=df1.values
