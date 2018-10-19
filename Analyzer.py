@@ -102,31 +102,26 @@ my_data=pd.read_csv(file)
 num_rows = checkFrameRows(my_data)
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
-tree=scp.spatial.cKDTree(node_map)
-dd, ii=tree.query(node_map,7)
-for n in ii:
-    p=EcEv.iloc[n[0]]
-    
+for index in unique_z.iterrows():
+    if ((index+1)-index)<0.00
+#
+#tree=scp.spatial.cKDTree(node_map)
+#dd, ii=tree.query(node_map,7)
+#for n in ii:
+#    p=EcEv.iloc[n[0]]
+#    
 
 #max values
-max_x=mydf.loc[mydf['x'].idxmax()]['x']
-max_y=mydf.loc[mydf['y'].idxmax()]['y']
-max_z=mydf.loc[mydf['z'].idxmax()]['z']
+#max_x=mydf.loc[mydf['x'].idxmax()]['x']
+#max_y=mydf.loc[mydf['y'].idxmax()]['y']
+#max_z=mydf.loc[mydf['z'].idxmax()]['z']
 
 
-unique_x = df['x'].unique()
-unique_y = df['y'].unique()
-unique_z = df['z'].unique()
-
-
-new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
-
-
-my_data=pd.read_csv(file)
-temp = getNearestNeighbor(my_data, 100000, 1e-6, 1e-7, 5e-8)
-unique_x = np.sort(temp.delX.unique())
-unique_y = np.sort(temp.delY.unique())
-unique_z = np.sort(temp.delZ.unique())
+#my_data=pd.read_csv(file)
+#temp = getNearestNeighbor(node_map, 100000, 1e-7, 1e-7, 5e-8)
+#unique_x = np.sort(temp.delX.unique())
+#unique_y = np.sort(temp.delY.unique())
+#unique_z = np.sort(temp.delZ.unique())
 
 #nhood=getNearestNeighbor(df1,6,1e-7,1e-7,1e-7)
 
