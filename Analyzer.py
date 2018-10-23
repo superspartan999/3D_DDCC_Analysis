@@ -9,6 +9,7 @@ import scipy as scp
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D 
+from math import floor, sqrt
 
 __author__ = "Christian Robertson, Guillaume Lheureux, Clayton Qwah"
 __copyright__ = "Copyright 2018"
@@ -23,8 +24,6 @@ __status__ = "Development"
 
 directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias4'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
 
@@ -106,9 +105,7 @@ my_data=pd.read_csv(file)
 num_rows = checkFrameRows(my_data)
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
-<<<<<<< HEAD
-for index in unique_z.iterrows():
-    if ((index+1)-index)<0.00
+
 #
 #tree=scp.spatial.cKDTree(node_map)
 #dd, ii=tree.query(node_map,7)
@@ -127,7 +124,6 @@ for index in unique_z.iterrows():
 #unique_x = np.sort(temp.delX.unique())
 #unique_y = np.sort(temp.delY.unique())
 #unique_z = np.sort(temp.delZ.unique())
-=======
 #
 #tree=scp.spatial.cKDTree(node_map)
 #dd, ii=tree.query(node_map,7)
@@ -188,89 +184,162 @@ def band_diagram_z(df1):
         Ecvalues.loc[i]=d1
         Evvalues.loc[i]=d2
         i=i+1
->>>>>>> 4dee881c57e0a7a16f33e8cdfc71fb7bacffbf34
+
 
     return Ecvalues,Evvalues 
 
 
-
+#round up values in node map to prevent floating point errors
 rounded_nodes=node_map.round(decimals=10)
-sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True])
 
+#sort the nodes in ascending order
+sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index()
+sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index()
+
+#create dataframes for each xyz dimension in the mesh. this creates a dimension list 
+#that gives us the total no. of grid points in any given direction
 unique_x=rounded_nodes['x'].unique()
 unique_y=rounded_nodes['y'].unique()
 unique_z=rounded_nodes['z'].unique()
 
 
-
+#sort these dataframes in acsending order
 xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
 yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 
-def nodetocoord(index,rounded_nodes,unique_x,unique_y,unique_z):
-    
 
+#extract x,y,z coordinates and x,y,z indices. the indices indicate the position of the point along a specific dimension list
+def nodetocoord(index,xvalues,yvalues,zvalues):
     
-    x_idx=index/(len(yvalues)*len(zvalues))
+    #obtain x index, which is the position of the value in the x-dimension list
+    x_idx=int(floor(index/(len(yvalues)*len(zvalues))))
     
-    x=rounded_x.iloc[x_idx]
+    x=xvalues.loc[x_idx][0]
     
-    y_idx=(index/len(zvalues))%len(yvalues)
+    y_idx=int(floor(((index/len(zvalues))%len(yvalues))))
     
-    y=rounded_y.iloc[y_idx]
+    y=yvalues.loc[y_idx][0]
     
-    z_idx=index%len(rounded_z)
+    z_idx=int(floor(index%len(zvalues)))
     
-    z=rounded_z.iloc[z_idx]
+    z=zvalues.loc[z_idx][0]
     
     return float(x) , float(y) , float(z) , x_idx, y_idx, z_idx
 
-def coordtonode(x,y,z,rounded_nodes,unique_x,unique_y,unique_z):
+def coordtonode(x_idx,y_idx,z_idx,unique_x,unique_y,unique_z):
     
     max_x=len(unique_x)
     max_y=len(unique_y)
     max_z=len(unique_z)
     
-    index = x * max_y * max_z + y * max_z + z
+    index = x_idx * max_y * max_z + y_idx * max_z + z_idx
     return index
     
     
-def NNX(index):
+def NNX(index,x_values,y_values,z_values):
     
+    m=nodetocoord(index,x_values,y_values,z_values)
+    
+    x_idx=m[3]
+
     x_neg=x_idx-1
+    
     x_pos=x_idx+1
     
-    return x_neg,x_pos
-
-def NNY(y_idx):
+    if x_neg < 0:
+        
+        x_neg=x_idx
     
+    if x_pos >len(xvalues)-1:
+        
+        x_pos=x_idx
+    
+    x_neg_node=coordtonode(x_neg,m[4],m[5],x_values,y_values,z_values)
+    
+    x_pos_node=coordtonode(x_pos,m[4],m[5],x_values,y_values,z_values)
+    
+    
+    
+    return x_neg_node,x_pos_node
+
+def NNY(index,x_values,y_values,z_values):
+    
+    m=nodetocoord(index,x_values,y_values,z_values)
+    
+    y_idx=m[3]
+
     y_neg=y_idx-1
+    
     y_pos=y_idx+1
     
-    return y_neg,y_pos
-
-def NNZ(z_idx):
+    if y_neg < 0:
+        
+        y_neg=y_idx
     
+    if y_pos >len(yvalues):
+        
+        y_pos=y_idx
+    
+    y_neg_node=coordtonode(m[3],y_neg,m[5],x_values,y_values,z_values)
+    
+    y_pos_node=coordtonode(m[3],y_pos,m[5],x_values,y_values,z_values)
+    
+    
+    
+    return y_neg_node,y_pos_node
+
+
+def NNZ(index,x_values,y_values,z_values):
+    
+    m=nodetocoord(index,x_values,y_values,z_values)
+    
+    z_idx=m[3]
+    
+    
+
     z_neg=z_idx-1
+    
     z_pos=z_idx+1
     
-    return z_neg,z_pos
+    if z_neg < 0:
+        
+        z_neg=z_idx
+    
+    if z_pos >len(zvalues)-1:
+        
+        z_pos=z_idx
+         
+    z_neg_node=coordtonode(m[3],m[4],z_neg,x_values,y_values,z_values)
+    
+    z_pos_node=coordtonode(m[3],m[4],z_pos,x_values,y_values,z_values)
+    
+    return z_neg_node,z_pos_node
 
-def E(sorted_nodes,index):
-    
-    xdiff=rounded_x.iloc[x_pos]-rounded_x.iloc[x_neg]
-    ydiff=rounded_x.iloc[y_pos]-rounded_x.iloc[y_neg]
-    zdiff=rounded_x.iloc[y_pos]-rounded_x.iloc[y_neg]
-    
-    Ex=sorted_nodes.iloc(x_pos)['Ec']-sorted_nodes.iloc(x_neg)['Ec']
-    Ey=sorted_nodes.iloc(y_pos)['Ec']-sorted_nodes.iloc(y_neg)['Ec']
-    Ez=sorted_nodes.iloc(z_pos)['Ec']-sorted_nodes.iloc(z_neg)['Ec']
-    
-    
-    
-g=nodetocoord(14400,rounded_nodes,unique_x,unique_y,unique_z)
-i=coordtonode(g[3],g[4],g[5],rounded_nodes,unique_x,unique_y,unique_z)
+def E_field(index,xvalues,yvalues,zvalues,sorted_data):
 
+    
+    X_NN=NNX(index,xvalues,yvalues,zvalues)
+    Y_NN=NNY(index,xvalues,yvalues,zvalues)
+    Z_NN=NNZ(index,xvalues,yvalues,zvalues)
+    
+    
+    E_X=sorted_data.iloc[X_NN[1]]['Ec']-mydf.iloc[X_NN[0]]['Ec']
+    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-mydf.iloc[Y_NN[0]]['Ec']
+    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-mydf.iloc[Z_NN[0]]['Ec']
+    
+    E=np.sqrt(E_X*E_X+E_Y*E_Y+E_Z*E_Z)
+    
+    return E
+
+
+E=np.empty(len(mydf))
+for i, row in sorted_data.iterrows():    
+    x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+    E[i]=x
+    
+    
+    
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')
