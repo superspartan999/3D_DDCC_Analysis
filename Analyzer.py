@@ -113,17 +113,11 @@ EcEv=my_data[['x','y','z','Ec', 'Ev']]
 #    p=EcEv.iloc[n[0]]
 #    
 
-#max values
-#max_x=mydf.loc[mydf['x'].idxmax()]['x']
-#max_y=mydf.loc[mydf['y'].idxmax()]['y']
-#max_z=mydf.loc[mydf['z'].idxmax()]['z']
+
 
 
 #my_data=pd.read_csv(file)
-#temp = getNearestNeighbor(node_map, 100000, 1e-7, 1e-7, 5e-8)
-#unique_x = np.sort(temp.delX.unique())
-#unique_y = np.sort(temp.delY.unique())
-#unique_z = np.sort(temp.delZ.unique())
+
 #
 #tree=scp.spatial.cKDTree(node_map)
 #dd, ii=tree.query(node_map,7)
@@ -135,10 +129,7 @@ EcEv=my_data[['x','y','z','Ec', 'Ev']]
 #nxyz=pd.DataFrame(columns=['n','x', 'y', 'z'])
 #p=ii[100]
 #i=1
-#for i in range(len(p)):
-#    temp={'x' : EcEv.iloc[p[i]]['x'],'y' : EcEv.iloc[p[i]]['y'],'z' : EcEv.iloc[p[i]]['z']}
-#    nxyz=nxyz.append(temp,ignore_index=True)
-#
+
 #three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
 #plt.show()
 #for n in ii:
@@ -188,13 +179,36 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues 
 
+def electric_field_z(df1):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+    Evalues=pd.DataFrame(columns=['z','E'])
+
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average
+        averagezsliceE=zslice['E'].mean()
+        d1={'z':z,'Ec':averagezsliceE}
+        Evalues.loc[i]=d1
+        i=i+1
+
+
+    return E
+
 
 #round up values in node map to prevent floating point errors
 rounded_nodes=node_map.round(decimals=10)
 
 #sort the nodes in ascending order
-sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index()
-sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index()
+sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
 
 #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
 #that gives us the total no. of grid points in any given direction
@@ -338,8 +352,9 @@ for i, row in sorted_data.iterrows():
     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
     E[i]=x
     
-    
-    
+E=electric_field_z(sorted_data)    
+
+  
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')
