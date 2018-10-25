@@ -275,7 +275,7 @@ def NNY(index,x_values,y_values,z_values):
     
     m=nodetocoord(index,x_values,y_values,z_values)
     
-    y_idx=m[3]
+    y_idx=m[4]
 
     y_neg=y_idx-1
     
@@ -302,7 +302,7 @@ def NNZ(index,x_values,y_values,z_values):
     
     m=nodetocoord(index,x_values,y_values,z_values)
     
-    z_idx=m[3]
+    z_idx=m[5]
     
     
 
@@ -340,15 +340,31 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     
     return E
 
-
+def Neighbourhood(index,xvalues,yvalues,zvalues):
+    xneighs=NNX(index,xvalues,yvalues,zvalues)
+    yneighs=NNY(index,xvalues,yvalues,zvalues)
+    zneighs=NNZ(index,xvalues,yvalues,zvalues)
+    
+    center=nodetocoord(index,xvalues,yvalues,zvalues)
+    xmin=nodetocoord(xneighs[0],xvalues,yvalues,zvalues)
+    xplus=nodetocoord(xneighs[1],xvalues,yvalues,zvalues)
+    ymin=nodetocoord(yneighs[0],xvalues,yvalues,zvalues)
+    yplus=nodetocoord(yneighs[1],xvalues,yvalues,zvalues)
+    zmin=nodetocoord(zneighs[0],xvalues,yvalues,zvalues)
+    zplus=nodetocoord(zneighs[1],xvalues,yvalues,zvalues)
+    
+    
+    nn=pd.DataFrame([center,xmin,xplus,ymin,yplus,zmin,zplus],columns=('x','y','z','xn','yn', 'zn'))
+     
+    return nn
+    
 E=np.empty(len(mydf))
 for i, row in sorted_data.iterrows():    
     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
     E[i]=x
     
 E=electric_field_z(sorted_data)    
-
-  
+ 
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')
