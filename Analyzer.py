@@ -131,13 +131,7 @@ EcEv=my_data[['x','y','z','Ec', 'Ev']]
 #i=1
 
 #three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
-#plt.show()
-#for n in ii:
-#    for i in n
-#        temp={'dx':(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),'dy':(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']), 'dz':(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])}
-#    
-#    
-#    neighbourhood=[EcEv.iloc[n[1]],EcEv.iloc[n[2]],EcEv.iloc[n[3]],EcEv.iloc[n[4]],EcEv.iloc[n[5]],EcEv.iloc[n[6]]])
+
 
     
 
