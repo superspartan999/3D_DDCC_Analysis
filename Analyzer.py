@@ -22,10 +22,10 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-#directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
-#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
+#directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
 
 
 def checkFrameRows(raw_data):
@@ -201,28 +201,6 @@ def electric_field_z(df1):
 
     return E
 
-
-#round up values in node map to prevent floating point errors
-rounded_nodes=node_map.round(decimals=10)
-
-#sort the nodes in ascending order
-sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
-
-#create dataframes for each xyz dimension in the mesh. this creates a dimension list 
-#that gives us the total no. of grid points in any given direction
-unique_x=rounded_nodes['x'].unique()
-unique_y=rounded_nodes['y'].unique()
-unique_z=rounded_nodes['z'].unique()
-
-
-#sort these dataframes in acsending order
-xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
-yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
-zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
-
-
 #extract x,y,z coordinates and x,y,z indices. the indices indicate the position of the point along a specific dimension list
 def nodetocoord(index,xvalues,yvalues,zvalues):
     
@@ -346,14 +324,39 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     
     return E
 
-
-E=np.empty(len(mydf))
-for i, row in sorted_data.iterrows():    
-    x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
-    E[i]=x
+def Efieldcal(mydf,node_map):
+    #round up values in node map to prevent floating point errors
+    rounded_nodes=node_map.round(decimals=10)
     
-E=electric_field_z(sorted_data)    
+    #sort the nodes in ascending order
+    sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+    sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+    sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
+    
+    #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
+    #that gives us the total no. of grid points in any given direction
+    unique_x=rounded_nodes['x'].unique()
+    unique_y=rounded_nodes['y'].unique()
+    unique_z=rounded_nodes['z'].unique()
+    
+    
+    #sort these dataframes in acsending order
+    xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
+    yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
+    zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
+    
+    
 
+    
+    
+    E=np.empty(len(mydf))
+    for i, row in sorted_data.iterrows()-1:    
+        x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+        E[i]=x
+        
+    E=electric_field_z(sorted_data)    
+
+Efieldcal(mydf,node_map)
   
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
