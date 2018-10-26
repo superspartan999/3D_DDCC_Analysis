@@ -318,6 +318,7 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     
     return E
 
+<<<<<<< HEAD
 def Efieldcal(mydf,node_map):
     #round up values in node map to prevent floating point errors
     rounded_nodes=node_map.round(decimals=10)
@@ -352,6 +353,7 @@ def Efieldcal(mydf,node_map):
 
 Efieldcal(mydf,node_map)
   
+=======
 def Neighbourhood(index,xvalues,yvalues,zvalues):
     xneighs=NNX(index,xvalues,yvalues,zvalues)
     yneighs=NNY(index,xvalues,yvalues,zvalues)
