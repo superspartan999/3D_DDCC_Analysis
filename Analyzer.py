@@ -131,13 +131,7 @@ EcEv=my_data[['x','y','z','Ec', 'Ev']]
 #i=1
 
 #three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
-#plt.show()
-#for n in ii:
-#    for i in n
-#        temp={'dx':(EcEv.iloc[n[0]]['x']-EcEv.iloc[n[1]]['x']),'dy':(EcEv.iloc[n[0]]['y']-EcEv.iloc[n[1]]['y']), 'dz':(EcEv.iloc[n[0]]['z']-EcEv.iloc[n[1]]['z'])}
-#    
-#    
-#    neighbourhood=[EcEv.iloc[n[1]],EcEv.iloc[n[2]],EcEv.iloc[n[3]],EcEv.iloc[n[4]],EcEv.iloc[n[5]],EcEv.iloc[n[6]]])
+
 
     
 
@@ -259,7 +253,7 @@ def NNY(index,x_values,y_values,z_values):
     
     m=nodetocoord(index,x_values,y_values,z_values)
     
-    y_idx=m[3]
+    y_idx=m[4]
 
     y_neg=y_idx-1
     
@@ -286,7 +280,7 @@ def NNZ(index,x_values,y_values,z_values):
     
     m=nodetocoord(index,x_values,y_values,z_values)
     
-    z_idx=m[3]
+    z_idx=m[5]
     
     
 
@@ -358,6 +352,32 @@ def Efieldcal(mydf,node_map):
 
 Efieldcal(mydf,node_map)
   
+def Neighbourhood(index,xvalues,yvalues,zvalues):
+    xneighs=NNX(index,xvalues,yvalues,zvalues)
+    yneighs=NNY(index,xvalues,yvalues,zvalues)
+    zneighs=NNZ(index,xvalues,yvalues,zvalues)
+    
+    center=nodetocoord(index,xvalues,yvalues,zvalues)
+    xmin=nodetocoord(xneighs[0],xvalues,yvalues,zvalues)
+    xplus=nodetocoord(xneighs[1],xvalues,yvalues,zvalues)
+    ymin=nodetocoord(yneighs[0],xvalues,yvalues,zvalues)
+    yplus=nodetocoord(yneighs[1],xvalues,yvalues,zvalues)
+    zmin=nodetocoord(zneighs[0],xvalues,yvalues,zvalues)
+    zplus=nodetocoord(zneighs[1],xvalues,yvalues,zvalues)
+    
+    
+    nn=pd.DataFrame([center,xmin,xplus,ymin,yplus,zmin,zplus],columns=('x','y','z','xn','yn', 'zn'))
+     
+    return nn
+    
+E=np.empty(len(mydf))
+for i, row in sorted_data.iterrows():    
+    x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+    E[i]=x
+    
+E=electric_field_z(sorted_data)    
+ 
+>>>>>>> b2567e89d777556df098128eb957a439915cd548
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')
