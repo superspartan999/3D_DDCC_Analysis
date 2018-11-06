@@ -66,4 +66,17 @@ FilesNumber = NbPointBias/JobsPerFile;
 Biases=np.arange(StartBias, EndBias+DeltaBias, DeltaBias)
 BiasChunks=np.array_split(Biases,FilesNumber)
 
-f = open("", "a")
+for x in range(int(FilesNumber)):
+    InputName = NameJob+"_IV_"+str(x+1)+".inp"
+    f = open(InputName, "a")
+    f.write("ByMathematicaCode\
+Lheureux2018\
+\
+$geninpbymatlab\
+\
+$gencompositionmap\
+\
+$ifelectrode\
+0.0   0.0   0.01\
++"+BiasChunks[x][0]+" "+BiasChunks[x][len(BiasChunks[x])]+" "+DeltaBias)
+
