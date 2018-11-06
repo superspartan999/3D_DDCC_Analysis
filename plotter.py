@@ -4,7 +4,7 @@ Created on Tue Oct 23 13:24:07 2018
 
 @author: Clayton
 """
-
+from matplotlib.pyplot import *
 #function to plot band diagram
 def band_diagram_z(df1):
     #find all the values of z and put them in a list
@@ -31,31 +31,37 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues 
 
-sorted_data['E']=E
-    #find all the values of z and put them in a list
-zvalues = sorted_data['x'].unique()
-cols={}
-#create dataframe for conduction band and valence band
-Evalues=pd.DataFrame(columns=['x','E'])
-
-i=0
-#loop through different z values along the device
-for z in zvalues:
-    #extract x-y plane for a z value
-    zslice=extract_slice(sorted_data,'x',z, drop=True)
+def electric_field_z(sorted_data):
+    sorted_data['E']=E
+        #find all the values of z and put them in a list
+    zvalues = sorted_data['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+    Evalues=pd.DataFrame(columns=['z','E'])
     
-    #average
-    averagezsliceE=zslice['E'].mean()
-    d1={'x':z,'E':averagezsliceE}
-    Evalues.loc[i]=d1
-    i=i+1
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(sorted_data,'z',z, drop=True)
+        
+        #average
+        averagezsliceE=zslice['E'].mean()
+        d1={'z':z,'E':averagezsliceE}
+        Evalues.loc[i]=d1
+        i=i+1
+    
+    return Evalues
 
 
 #
 #
-El=electric_field_z(sorted_data)    
+El=electric_field_z(sorted_data)
+bd=band_diagram_z(sorted_data)    
 
 axes = plt.gca()
 axes.set_xlabel('z(cm)')
 axes.set_ylabel('E(V/cm)')
-plot(Evalues['x'], Evalues['E'])
+plot(El['z'], El['E'])
+plot(bd[0]['z'],bd[0]['Ec'])
+plot(bd[1]['z'],bd[1]['Ev'])
