@@ -18,7 +18,7 @@ def chunks(l, n):
 
 #"Enter Input File of the structure"
 StructureFile = "p_structure.csv";
-Data = pd.read_csv(StructureFile);
+Data = pd.read_csv(StructureFile,  converters={'mobilityh+': lambda x: str(x),'Mobilitye-': lambda x: str(x),'Activation': lambda x: str(x),'Doping': lambda x: str(x),'Impurity': lambda x: str(x),'NonRade-': lambda x: str(x),'NonRadh+': lambda x: str(x)});
 NameJob = "p_structure_0.17_10nm";
 
 #Read Width of structure. Assumes structure plane is a 2D square
