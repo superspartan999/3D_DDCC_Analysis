@@ -40,10 +40,10 @@ print("Lateral Length of the structure ",Data.at[0,'L'], " nm")
 #(* Functions used in the algorithm *)
 #(*****************************************************************************************************************************************)"
 
-def FunctionMeshAlphaTest(Length, MeshMin, Prog) :
-
-   for b in range(21):
-           x=np.sum([0.1*np.power(1.08,(i-1)) for i in  range(b)])
-           
-           c=scp.roots((x-Length) , 20)
+#def FunctionMeshAlphaTest(Length, MeshMin, Prog) :
+#
+#   for b in range(21):
+#           x=np.sum([0.1*np.power(1.08,(i-1)) for i in  range(b)])
+#           
+#           c=scp.roots((x-Length) , 20)
    
