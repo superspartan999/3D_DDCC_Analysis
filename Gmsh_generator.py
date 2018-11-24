@@ -8,7 +8,8 @@ from __future__ import division
 import pandas as pd
 
 import scipy as scp
-from scp import optimize
+import math
+from scipy import optimize
 
 #"Enter Input File of the structure"
 StructureFile = "p_structure.csv";
@@ -41,18 +42,26 @@ print("Lateral Length of the structure ",Data.at[0,'L'], " nm")
 #(* Functions used in the algorithm *)
 #(*****************************************************************************************************************************************)"
 
-def FunctionMeshAlphaTest(Length, MeshMin, Prog) :
+def FunctionBumpMesh(Length, MeshMin, Prog) :
 #
     def y(a,r,n):
         f=a*(1-r**n)/(1-r)-Length
         return f
         
     f=lambda x:y(MeshMin,Prog,x)
-    c=optimize.root(y,20)
-    g=lambda c:y(MeshMin)
-    prog=
+    n=optimize.root(f,20)
+    g=lambda r:y(MeshMin, r, round(n['x'][0]))
+    prog=optimize.root(g,1.1)
     
+    return round(n['x']), prog['x'][0]
+
+sol= FunctionMeshAlphaTest(DeviceLength, MinMesh, ProgMesh)
     
+def FunctionRegMesh(Length, MeshMin):
+    
+    return math.ceil(Length/MeshMin)
+
+sol2=FunctionRegMesh(DeviceLength, MinMesh)
     
 #           
    
