@@ -53,15 +53,20 @@ def FunctionBumpMesh(Length, MeshMin, Prog) :
     g=lambda r:y(MeshMin, r, round(n['x'][0]))
     prog=optimize.root(g,1.1)
     
-    return round(n['x']), prog['x'][0]
+    return round(n['x'][0]), prog['x'][0]
 
-sol= FunctionMeshAlphaTest(DeviceLength, MinMesh, ProgMesh)
+sol= FunctionBumpMesh(DeviceLength, MinMesh, ProgMesh)
     
 def FunctionRegMesh(Length, MeshMin):
     
     return math.ceil(Length/MeshMin)
 
 sol2=FunctionRegMesh(DeviceLength, MinMesh)
+
+    
+
+        
+            
     
 #           
    
