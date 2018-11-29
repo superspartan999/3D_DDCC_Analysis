@@ -36,12 +36,15 @@ Data = pd.read_csv(StructureFile);
 #DeviceLength = Data[[1, 2]];
 print("Lateral Length of the structure ",Data.at[0,'L'], " nm")  
 
-#(*****************************************************************************************************************************************)
+
+    
+ #(*****************************************************************************************************************************************)
 #\
 #
 #(* Functions used in the algorithm *)
 #(*****************************************************************************************************************************************)"
 
+#function to create a bump in the mesh
 def FunctionBumpMesh(Length, MeshMin, Prog) :
 #
     def y(a,r,n):
@@ -56,12 +59,26 @@ def FunctionBumpMesh(Length, MeshMin, Prog) :
     return round(n['x'][0]), prog['x'][0]
 
 sol= FunctionBumpMesh(DeviceLength, MinMesh, ProgMesh)
-    
+
+#function for regular mesh    
 def FunctionRegMesh(Length, MeshMin):
     
     return math.ceil(Length/MeshMin)
 
 sol2=FunctionRegMesh(DeviceLength, MinMesh)
+
+#def MeshConstructor(Data):
+#    for i in range(len(Data)):
+#
+#
+#        if Data.iloc[i]['type'] == 'QW':
+#            
+#        elif Data.iloc[i]['type'] == 'CAP':
+#            print ('yes')
+#            print(i) 
+#        else:
+#            print('no') 
+#            print(i)
 
     
 
