@@ -39,13 +39,11 @@ print("Lateral Length of the structure ",Data.at[0,'L'], " nm")
 
     
  #(*****************************************************************************************************************************************)
-#\
-#
 #(* Functions used in the algorithm *)
 #(*****************************************************************************************************************************************)"
 
 #function to create a bump in the mesh
-def FunctionBumpMesh(Length, MeshMin, Prog) :
+def FunctionProgMesh(Length, MeshMin, Prog) :
 #
     def y(a,r,n):
         f=a*(1-r**n)/(1-r)-Length
@@ -56,9 +54,9 @@ def FunctionBumpMesh(Length, MeshMin, Prog) :
     g=lambda r:y(MeshMin, r, round(n['x'][0]))
     prog=optimize.root(g,1.1)
     
-    return round(n['x'][0]), prog['x'][0]
+    return round(n['x'][0]), prog['x'][0] 
 
-sol= FunctionBumpMesh(DeviceLength, MinMesh, ProgMesh)
+sol= FunctionProgMesh(DeviceLength, MinMesh, ProgMesh)
 
 #function for regular mesh    
 def FunctionRegMesh(Length, MeshMin):
@@ -67,20 +65,36 @@ def FunctionRegMesh(Length, MeshMin):
 
 sol2=FunctionRegMesh(DeviceLength, MinMesh)
 
-#def MeshConstructor(Data):
-#    for i in range(len(Data)):
-#
-#
-#        if Data.iloc[i]['type'] == 'QW':
-#            
-#        elif Data.iloc[i]['type'] == 'CAP':
-#            print ('yes')
-#            print(i) 
-#        else:
-#            print('no') 
-#            print(i)
-
+#function to output table with mesh parameters for each layer. Duplicate each layer and do a double progression mesh to create a bump in the layer
+def MeshConstructor(Data):
     
+    tuplearray=np.array()
+
+
+    for i in range(len(Data)):
+
+
+        if Data.iloc[i]['type'] in ['QW', 'CAP']:
+            
+            tuplearray[i]
+        
+            
+            #dividing the thickness of each layer to reset the thickness
+            Data['nm']= Data['nm']/2
+            
+        else:
+            print('no') 
+            print(i)
+                
+        #duplicate each layer
+        Data = Data.loc[Data.index.repeat(2)]
+    
+        #reset index
+        Data = Data.reset_index(drop=True)
+        
+        #dividing the thickness of each layer to reset the thickness
+        Data['nm']= Data['nm']/2
+
 
         
             
