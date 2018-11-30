@@ -318,7 +318,7 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     
     return E
 
-<<<<<<< HEAD
+
 def Efieldcal(mydf,node_map):
     #round up values in node map to prevent floating point errors
     rounded_nodes=node_map.round(decimals=10)
@@ -353,7 +353,7 @@ def Efieldcal(mydf,node_map):
 
 Efieldcal(mydf,node_map)
   
-=======
+
 def Neighbourhood(index,xvalues,yvalues,zvalues):
     xneighs=NNX(index,xvalues,yvalues,zvalues)
     yneighs=NNY(index,xvalues,yvalues,zvalues)
@@ -379,7 +379,7 @@ for i, row in sorted_data.iterrows():
     
 E=electric_field_z(sorted_data)    
  
->>>>>>> b2567e89d777556df098128eb957a439915cd548
+
 #axes = plt.gca()
 #axes.set_xlabel('z(cm)')
 #axes.set_ylabel('V(ev)')

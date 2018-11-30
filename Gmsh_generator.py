@@ -54,46 +54,50 @@ def FunctionProgMesh(Length, MeshMin, Prog) :
     g=lambda r:y(MeshMin, r, round(n['x'][0]))
     prog=optimize.root(g,1.1)
     
-    return round(n['x'][0]), prog['x'][0] 
+    return round(n['x'][0]), prog['x'][0], 1/prog['x'][0] 
 
 sol= FunctionProgMesh(DeviceLength, MinMesh, ProgMesh)
 
 #function for regular mesh    
 def FunctionRegMesh(Length, MeshMin):
     
-    return math.ceil(Length/MeshMin)
-
+    f= math.ceil(Length/MeshMin)
+    return f
 sol2=FunctionRegMesh(DeviceLength, MinMesh)
 
 #function to output table with mesh parameters for each layer. Duplicate each layer and do a double progression mesh to create a bump in the layer
 def MeshConstructor(Data):
+    Data["MeshParam"]='s'  
     
-    tuplearray=np.array()
-
-
-    for i in range(len(Data)):
-
-
+      #duplicate each layer
+    Data = Data.loc[Data.index.repeat(2)]
+    
+    #reset index
+    Data = Data.reset_index(drop=True)
+    
+    #dividing the thickness of each layer to reset the thickness
+    Data['nm']= Data['nm']/2
+    
+    for i in range(0,len(Data),2):
+        
+    
+    
+    
         if Data.iloc[i]['type'] in ['QW', 'CAP']:
-            
-            tuplearray[i]
-        
-            
-            #dividing the thickness of each layer to reset the thickness
-            Data['nm']= Data['nm']/2
-            
-        else:
-            print('no') 
-            print(i)
-                
-        #duplicate each layer
-        Data = Data.loc[Data.index.repeat(2)]
+            meshparam=FunctionRegMesh(Data.iloc[i]['nm'],MinMesh)
+            Data.at[i,"MeshParam"]=meshparam
+            Data.at[i+1,"MeshParam"]=meshparam
     
-        #reset index
-        Data = Data.reset_index(drop=True)
-        
-        #dividing the thickness of each layer to reset the thickness
-        Data['nm']= Data['nm']/2
+        else:
+            meshparam=(FunctionProgMesh(Data.iloc[i]['nm'],MinMesh,ProgMesh)[0],\
+                       FunctionProgMesh(Data.iloc[i]['nm']/2,MinMesh,ProgMesh)[1],FunctionProgMesh(Data.iloc[i]['nm']/2,MinMesh,ProgMesh)[2])
+    
+            Data.at[i,"MeshParam"]=(meshparam[0],meshparam[1])
+            Data.at[i+1,"MeshParam"]=(meshparam[0],meshparam[2])
+    
+    return Data
+
+Data=MeshConstructor(Data)
 
 
         
