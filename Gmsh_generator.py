@@ -64,6 +64,9 @@ def FunctionRegMesh(Length, MeshMin):
     f= math.ceil(Length/MeshMin)
     return f
 sol2=FunctionRegMesh(DeviceLength, MinMesh)
+NLayers=(len(Data.index)+1)
+Zero=np.zeros(1)
+LayerTuple=np.concatenate(Zero,Data['nm'].values,axis=0)
 
 #function to output table with mesh parameters for each layer. Duplicate each layer and do a double progression mesh to create a bump in the layer
 def MeshConstructor(Data):
@@ -99,8 +102,10 @@ def MeshConstructor(Data):
 
 Data=MeshConstructor(Data)
 
-
-        
+#
+#def Poinstructure
+#
+#        
             
     
 #           
