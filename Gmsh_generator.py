@@ -103,13 +103,19 @@ def MeshConstructor(Data):
 
 Data=MeshConstructor(Data)
 LayersType=Data["type"].values
+LayersThickness=Data["nm"].values
 
 NVirt=(len(Data.index)+2)
 row= np.empty((0,4))
-for i in range(0,NVirt):
+
+def Pointstructure(NVirt,row):
+    for i in range(0,NVirt):
         temprow=np.array(['p'+str(i)+'1','p'+str(i)+'2','p'+str(i)+'3','p'+str(i)+'4'])
         row=np.vstack((row,temprow))
-#
+        
+    return row
+        
+p=Pointstructure(NVirt,row)        
 #        
 
 #           
