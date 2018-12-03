@@ -7,6 +7,7 @@ Created on Fri Oct  5 14:03:18 2018
 from __future__ import division
 import pandas as pd
 
+import numpy as np
 import scipy as scp
 import math
 from scipy import optimize
@@ -65,8 +66,8 @@ def FunctionRegMesh(Length, MeshMin):
     return f
 sol2=FunctionRegMesh(DeviceLength, MinMesh)
 NLayers=(len(Data.index)+1)
-Zero=np.zeros(1)
-LayerTuple=np.concatenate(Zero,Data['nm'].values,axis=0)
+
+LayerTuple=np.insert(Data['nm'].values,0,0)
 
 #function to output table with mesh parameters for each layer. Duplicate each layer and do a double progression mesh to create a bump in the layer
 def MeshConstructor(Data):
@@ -101,12 +102,15 @@ def MeshConstructor(Data):
     return Data
 
 Data=MeshConstructor(Data)
+LayersType=Data["type"].values
 
-#
-#def Poinstructure
+NVirt=(len(Data.index)+2)
+row= np.empty((0,4))
+for i in range(0,NVirt):
+        temprow=np.array(['p'+str(i)+'1','p'+str(i)+'2','p'+str(i)+'3','p'+str(i)+'4'])
+        row=np.vstack((row,temprow))
 #
 #        
-            
-    
+
 #           
    
