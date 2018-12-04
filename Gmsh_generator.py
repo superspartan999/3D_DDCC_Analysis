@@ -101,22 +101,34 @@ def MeshConstructor(Data):
     
     return Data
 
-Data=MeshConstructor(Data)
-LayersType=Data["type"].values
-LayersThickness=Data["nm"].values
-
-NVirt=(len(Data.index)+2)
-row= np.empty((0,4))
-
 def Pointstructure(NVirt,row):
     for i in range(0,NVirt):
         temprow=np.array(['p'+str(i)+'1','p'+str(i)+'2','p'+str(i)+'3','p'+str(i)+'4'])
         row=np.vstack((row,temprow))
         
     return row
+
+def Linestructure(NVirt,lines):
+    for i in range(0,NVirt):
+        temprow=np.array(['l'+str(i)+'1','l'+str(i)+'2','l'+str(i)+'3','l'+str(i)+'4','l'+str(i)+'5','l'+str(i)+'6','l'+str(i)+'7','l'+str(i)+'8'])
+        lines=np.vstack((lines,temprow))
         
-p=Pointstructure(NVirt,row)        
-#        
+    return lines
+
+Data=MeshConstructor(Data)
+LayersType=Data["type"].values
+LayersThickness=Data["nm"].values
+
+NVirt=(len(Data.index)+2)
+row= np.empty((0,4))
+lines=np.empty((0,8))
+
+
+        
+p=Pointstructure(NVirt,row)    
+l=Linestructure(NVirt,lines)    
+p[0]=['p1','p2','p3','p4']
+l[0]=['l1','l2','l3','l4','l5','l6','l7','l8']        
 
 #           
    
