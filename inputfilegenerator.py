@@ -7,8 +7,6 @@ Created on Fri Oct 12 14:14:54 2018
 """
 from __future__ import division
 import pandas as pd
-
-import scipy
 import numpy as np
 
 def chunks(l, n):

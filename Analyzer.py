@@ -24,8 +24,8 @@ __status__ = "Development"
 
 #directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'E:\\HoletransportAlGaN_0.17_30nm\\Bias2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.00.vs_0.00.unified'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
 
 
 def checkFrameRows(raw_data):
@@ -237,7 +237,7 @@ def NNX(index,x_values,y_values,z_values):
         
         x_neg=x_idx
     
-    if x_pos >len(xvalues)-1:
+    if x_pos >len(x_values)-1:
         
         x_pos=x_idx
     
@@ -263,7 +263,7 @@ def NNY(index,x_values,y_values,z_values):
         
         y_neg=y_idx
     
-    if y_pos >len(yvalues):
+    if y_pos >len(y_values):
         
         y_pos=y_idx
     
@@ -292,7 +292,7 @@ def NNZ(index,x_values,y_values,z_values):
         
         z_neg=z_idx
     
-    if z_pos >len(zvalues)-1:
+    if z_pos >len(z_values)-1:
         
         z_pos=z_idx
          
@@ -319,39 +319,33 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     return E
 
 
-def Efieldcal(mydf,node_map):
-    #round up values in node map to prevent floating point errors
-    rounded_nodes=node_map.round(decimals=10)
-    
-    #sort the nodes in ascending order
-    sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-    sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-    sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
-    
-    #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
-    #that gives us the total no. of grid points in any given direction
-    unique_x=rounded_nodes['x'].unique()
-    unique_y=rounded_nodes['y'].unique()
-    unique_z=rounded_nodes['z'].unique()
-    
-    
-    #sort these dataframes in acsending order
-    xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
-    yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
-    zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
-    
-    
+#round up values in node map to prevent floating point errors
+rounded_nodes=node_map.round(decimals=10)
 
-    
-    
-    E=np.empty(len(mydf))
-    for i, row in sorted_data.iterrows()-1:    
-        x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
-        E[i]=x
-        
-    E=electric_field_z(sorted_data)    
+#sort the nodes in ascending order
+sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
 
-Efieldcal(mydf,node_map)
+#create dataframes for each xyz dimension in the mesh. this creates a dimension list 
+#that gives us the total no. of grid points in any given direction
+unique_x=rounded_nodes['x'].unique()
+unique_y=rounded_nodes['y'].unique()
+unique_z=rounded_nodes['z'].unique()
+
+
+#sort these dataframes in acsending order
+xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
+yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
+zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
+
+
+
+
+
+
+
+
   
 
 def Neighbourhood(index,xvalues,yvalues,zvalues):
@@ -373,11 +367,11 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
     return nn
     
 E=np.empty(len(mydf))
-for i, row in sorted_data.iterrows():    
+for i in range(len(mydf)-1):    
     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
     E[i]=x
     
-E=electric_field_z(sorted_data)    
+E_z=electric_field_z(sorted_data)    
  
 
 #axes = plt.gca()

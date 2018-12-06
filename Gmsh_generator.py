@@ -17,7 +17,7 @@ StructureFile = "p_structure.csv";
 
 #"Enter Name of .geo file*"
 NameJob = "p_structure_0.17_10nm";
-Name = [NameJob+".geo"];
+Name = NameJob+".geo";
 
 #"Device Length"
 DeviceLength=30
@@ -32,10 +32,10 @@ ProgMesh = 1.08;
 MinMesh = 0.1;
 
 #"Import the structure from text file"
-Data = pd.read_csv(StructureFile);
+Structure = pd.read_csv(StructureFile);
 
 #DeviceLength = Data[[1, 2]];
-print("Lateral Length of the structure ",Data.at[0,'L'], " nm")  
+print("Lateral Length of the structure ",Structure.at[0,'L'], " nm")  
 
 
     
@@ -57,17 +57,16 @@ def FunctionProgMesh(Length, MeshMin, Prog) :
     
     return round(n['x'][0]), prog['x'][0], 1/prog['x'][0] 
 
-sol= FunctionProgMesh(DeviceLength, MinMesh, ProgMesh)
+
 
 #function for regular mesh    
 def FunctionRegMesh(Length, MeshMin):
     
     f= math.ceil(Length/MeshMin)
     return f
-sol2=FunctionRegMesh(DeviceLength, MinMesh)
-NLayers=(len(Data.index)+1)
 
-LayerTuple=np.insert(Data['nm'].values,0,0)
+
+
 
 #function to output table with mesh parameters for each layer. Duplicate each layer and do a double progression mesh to create a bump in the layer
 def MeshConstructor(Data):
@@ -84,15 +83,14 @@ def MeshConstructor(Data):
     
     for i in range(0,len(Data),2):
         
-    
-    
-    
+        #if layer is a quantum well or quantum barrier, use a regular mesh
         if Data.iloc[i]['type'] in ['QW', 'CAP']:
             meshparam=FunctionRegMesh(Data.iloc[i]['nm'],MinMesh)
             Data.at[i,"MeshParam"]=meshparam
             Data.at[i+1,"MeshParam"]=meshparam
-    
+        #if any other layer, use a bump mesh    
         else:
+            
             meshparam=(FunctionProgMesh(Data.iloc[i]['nm'],MinMesh,ProgMesh)[0],\
                        FunctionProgMesh(Data.iloc[i]['nm']/2,MinMesh,ProgMesh)[1],FunctionProgMesh(Data.iloc[i]['nm']/2,MinMesh,ProgMesh)[2])
     
@@ -101,34 +99,131 @@ def MeshConstructor(Data):
     
     return Data
 
-def Pointstructure(NVirt,row):
+def Pointfunc(NVirt,row):
     for i in range(0,NVirt):
         temprow=np.array(['p'+str(i)+'1','p'+str(i)+'2','p'+str(i)+'3','p'+str(i)+'4'])
         row=np.vstack((row,temprow))
         
     return row
 
-def Linestructure(NVirt,lines):
+def Linefunc(NVirt,lines):
     for i in range(0,NVirt):
         temprow=np.array(['l'+str(i)+'1','l'+str(i)+'2','l'+str(i)+'3','l'+str(i)+'4','l'+str(i)+'5','l'+str(i)+'6','l'+str(i)+'7','l'+str(i)+'8'])
         lines=np.vstack((lines,temprow))
         
     return lines
 
-Data=MeshConstructor(Data)
-LayersType=Data["type"].values
-LayersThickness=Data["nm"].values
+def Lineloopfunc(NVirt,lines):
+    for i in range(0,NVirt):
+        temprow=np.array(['ll'+str(i)+'1','ll'+str(i)+'2','ll'+str(i)+'3','ll'+str(i)+'4','ll'+str(i)+'5'])
+        lines=np.vstack((lines,temprow))
+        
+    return lines
 
-NVirt=(len(Data.index)+2)
+def Surfacefunc(NVirt,surf):
+    for i in range(0,NVirt):
+        temprow=np.array(['ps'+str(i)+'1','ps'+str(i)+'2','ps'+str(i)+'3','ps'+str(i)+'4','ps'+str(i)+'5'])
+        surf=np.vstack((surf,temprow))
+        
+    return surf
+
+def ZMeshParam(Structure):
+    temp= np.array((Structure["MeshParam"].values))
+    ZMesh=np.empty((0))
+    
+    for layer in temp:
+        if type(layer)==tuple:
+            ZMesh=np.concatenate((ZMesh, [str(layer[0]) +' Using Progression ' + str(layer[1])]))
+            
+        else:
+            ZMesh=np.concatenate((ZMesh,[str(layer)] ))
+        
+    return ZMesh
+
+def XYMeshParam(Structure):
+    XY=np.empty((0))
+    for i in range(len(Structure)):
+        XY=np.concatenate((XY,['tf'] ))
+    
+    return XY
+
+ #(*****************************************************************************************************************************************)
+#(* Variables used in geo file *)
+#(*****************************************************************************************************************************************)"
+        
+NPreLayers=(len(Structure.index)+1)
+Structure=MeshConstructor(Structure)
+LayersType=Structure["type"].values
+LayersThickness=Structure["nm"].values
+
+NVirt=(len(Structure.index)+2)
 row= np.empty((0,4))
 lines=np.empty((0,8))
-
-
+lineloop=np.empty((0,5))
+surf=np.empty((0,5))
         
-p=Pointstructure(NVirt,row)    
-l=Linestructure(NVirt,lines)    
-p[0]=['p1','p2','p3','p4']
-l[0]=['l1','l2','l3','l4','l5','l6','l7','l8']        
+PointStructure=Pointfunc(NVirt,row)    
+LineStructure=Linefunc(NVirt,lines)  
+LineLoopStructure=Lineloopfunc(NVirt,lineloop)
+SurfaceStructure=Surfacefunc(NVirt,surf)
 
-#           
+PointStructure[0]=['p1','p2','p3','p4']
+LineStructure[0]=['l1','l2','l3','l4','l5','l6','l7','l8']
+LineLoopStructure[0]=['ll1','ll2','ll3','ll4','ll5']        
+SurfaceStructure[0]=['ps1','ps2','ps3','ps4','ps5']
+
+
+ZMesh=ZMeshParam(Structure)
+XYMesh=XYMeshParam(Structure)  
+    
+ #(*****************************************************************************************************************************************)
+#(* Generate geo file *)
+#(*****************************************************************************************************************************************)"#         
+
+f=open(Name, "a")
+f.write(
+        "/////GeneratedbyPython\n\
+/////ClaytonQwah2018\n\
+\n\
+la = 2*10^-6; // 10 nm\n\
+u = 10^-4; // um \n\
+n = 10^-7; // nm \n\
+a = 10^-8; // a \n\
+length = "+str(DeviceLength)+" *n; // nm \n\
+mesh_x = "+str(LateralMesh)+" * n; \n\
+tf = length/mesh_x; \n\
+\n\
+tf_qw = 15; \n\
+tf_cap = 10; \n\
+// // // // // // // // // // // // // // // // // // // // // // \n\
+                    // // SUBSTRATE LAYER // // // / \n\
+// // // // //// // // // // // // // // // // // // // // // // \n\
+\n\
+// // Points Definition // // // / \n\
+\n\
+"+str(PointStructure[0][0])+" = newp; Point (" + str(PointStructure[0][0])+") = {0, 0, 0, la};\n\
+"+str(PointStructure[0][1])+" = newp; Point (" + str(PointStructure[0][1])+") = {length, 0, 0, la};\n\
+"+str(PointStructure[0][2])+" = newp; Point (" + str(PointStructure[0][2])+") = {length, length, 0, la};\n\
+"+str(PointStructure[0][3])+" = newp; Point (" + str(PointStructure[0][3])+") = {0, length, 0, la};\n\
+\n\
+// // Line Definition // // // /\n\
+\n\
+l1 = newl; Line (l1) = {p1, p2};\n\
+l2 = newl; Line (l2) = {p2, p3};\n\
+l3 = newl; Line (l3) = {p3, p4};\n\
+l4 = newl; Line (l4) = {p4, p1};\n\
+\n\
+ll1 = newll; Line Loop (ll1) = {l1, l2, l3, l4};\n\
+ps1 = news; Plane Surface (ps1) = {ll1};\n\
+\n\
+// // Mesh Definition // // // /\n\
+\n\
+Transfinite Line {l1} = "+str(XYMesh[0])+" + 1;\n\
+Transfinite Line {l2} = "+str(XYMesh[0])+" + 1;\n\
+Transfinite Line {l3} = "+str(XYMesh[0])+" + 1;\n\
+Transfinite Line {l4} = "+str(XYMesh[0])+" + 1;\n\
+\n\
+Transfinite Surface {ps1} = {1, 2, 3, 4};")
+
+f.close()
    
