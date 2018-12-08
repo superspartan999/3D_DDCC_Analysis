@@ -94,8 +94,8 @@ def MeshConstructor(Data):
             meshparam=(FunctionProgMesh(Data.iloc[i]['nm'],MinMesh,ProgMesh)[0],\
                        FunctionProgMesh(Data.iloc[i]['nm']/2,MinMesh,ProgMesh)[1],FunctionProgMesh(Data.iloc[i]['nm']/2,MinMesh,ProgMesh)[2])
     
-            Data.at[i,"MeshParam"]=(meshparam[0],meshparam[1])
-            Data.at[i+1,"MeshParam"]=(meshparam[0],meshparam[2])
+            Data.at[i,"MeshParam"]=(round(meshparam[0],3),round(meshparam[1],3))
+            Data.at[i+1,"MeshParam"]=(round(meshparam[0],3),round(meshparam[2],3))
     
     return Data
 
@@ -142,7 +142,7 @@ def ZMeshParam(Structure):
 
 def XYMeshParam(Structure):
     XY=np.empty((0))
-    for i in range(len(Structure)):
+    for i in range(len(Structure)+1):
         XY=np.concatenate((XY,['tf'] ))
     
     return XY
@@ -151,10 +151,17 @@ def XYMeshParam(Structure):
 #(* Variables used in geo file *)
 #(*****************************************************************************************************************************************)"
         
-NPreLayers=(len(Structure.index)+1)
+OriginalNumLayers=(len(Structure.index)+1)
+OriginalThicknessLayer=np.insert(Structure["nm"].values,0,0)
 Structure=MeshConstructor(Structure)
+Numoflayer=len(Structure.index)
 LayersType=Structure["type"].values
 LayersThickness=Structure["nm"].values
+
+#Height of each layer
+Height=y = np.array([sum(LayersThickness[:i+1]) for i in range(len(LayersThickness))])
+Height=np.insert(Height,0,0)
+
 
 NVirt=(len(Structure.index)+2)
 row= np.empty((0,4))
@@ -199,14 +206,14 @@ tf_cap = 10; \n\
                     // // SUBSTRATE LAYER // // // / \n\
 // // // // //// // // // // // // // // // // // // // // // // \n\
 \n\
-// // Points Definition // // // / \n\
+// // Define Points // // // / \n\
 \n\
 "+str(PointStructure[0][0])+" = newp; Point (" + str(PointStructure[0][0])+") = {0, 0, 0, la};\n\
 "+str(PointStructure[0][1])+" = newp; Point (" + str(PointStructure[0][1])+") = {length, 0, 0, la};\n\
 "+str(PointStructure[0][2])+" = newp; Point (" + str(PointStructure[0][2])+") = {length, length, 0, la};\n\
 "+str(PointStructure[0][3])+" = newp; Point (" + str(PointStructure[0][3])+") = {0, length, 0, la};\n\
 \n\
-// // Line Definition // // // /\n\
+// // Define Line // // // /\n\
 \n\
 l1 = newl; Line (l1) = {p1, p2};\n\
 l2 = newl; Line (l2) = {p2, p3};\n\
@@ -216,7 +223,7 @@ l4 = newl; Line (l4) = {p4, p1};\n\
 ll1 = newll; Line Loop (ll1) = {l1, l2, l3, l4};\n\
 ps1 = news; Plane Surface (ps1) = {ll1};\n\
 \n\
-// // Mesh Definition // // // /\n\
+// // Define Transfinite Mesh // // // /\n\
 \n\
 Transfinite Line {l1} = "+str(XYMesh[0])+" + 1;\n\
 Transfinite Line {l2} = "+str(XYMesh[0])+" + 1;\n\
@@ -224,6 +231,106 @@ Transfinite Line {l3} = "+str(XYMesh[0])+" + 1;\n\
 Transfinite Line {l4} = "+str(XYMesh[0])+" + 1;\n\
 \n\
 Transfinite Surface {ps1} = {1, 2, 3, 4};")
-
+for i in range(1,NVirt-1):
+        f.write("\n\
+// // // // // // // // // // // // // // // // // // // // // / \n\
+                    // ** ***NEW VOL "+str(i+1)+" ***  // // // /\n\
+// // // // // // // // // // // // // // // // // // // // // /\n\
+\n\
+// // Define Points // // // /\n\
+\n\
+"+str(PointStructure[i][0])+" = newp;Point("+str(PointStructure[i][0])+") = {0, 0, "+str(PointStructure[i][0])+"*n, la};\n\
+"+str(PointStructure[i][1])+" = newp;Point("+str(PointStructure[i][1])+" ) = {length, 0,"+str(PointStructure[i][1])+"*n, la};\n\
+"+str(PointStructure[i][2])+" = newp;Point("+str(PointStructure[i][2])+") = {length, length,"+str(PointStructure[i][2])+"*n, la};\n\
+"+str(PointStructure[i][3])+" = newp;Point("+str(PointStructure[i][3])+") = {0, length, "+str(PointStructure[i][3])+"*n, la};\n\
+\n\
+// // Define Lines and Volume /// \n\
+\n\
+"+str(LineStructure[i][0])+" = newl;Line("+str(LineStructure[i][0])+")="+str(LineStructure[i][0])+","+str(LineStructure[i][1])+"};\n\
+"+str(LineStructure[i][1])+" = newl;Line("+str(LineStructure[i][1])+")="+str(LineStructure[i][1])+","+str(LineStructure[i][2])+"};\n\
+"+str(LineStructure[i][2])+" = newl;Line("+str(LineStructure[i][2])+")="+str(LineStructure[i][2])+","+str(LineStructure[i][3])+"};\n\
+"+str(LineStructure[i][3])+" = newl;Line("+str(LineStructure[i][3])+")="+str(LineStructure[i][3])+","+str(LineStructure[i][0])+"};\n\
+"+str(LineStructure[i][4])+" = newl;Line("+str(LineStructure[i][4])+")="+str(LineStructure[i-1][0])+","+str(LineStructure[i][0])+"};\n\
+"+str(LineStructure[i][5])+" = newl;Line("+str(LineStructure[i][5])+")="+str(LineStructure[i-1][1])+","+str(LineStructure[i][1])+"};\n\
+"+str(LineStructure[i][6])+" = newl;Line("+str(LineStructure[i][6])+")="+str(LineStructure[i-1][2])+","+str(LineStructure[i][2])+"};\n\
+"+str(LineStructure[i][7])+" = newl;Line("+str(LineStructure[i][7])+")="+str(LineStructure[i-1][3])+","+str(LineStructure[i][3])+"};\n\
+\n\
+\n\
+// // // // // // // // // // // // //\n\
+ // Mesh Definition of Volume "+str(i+1)+" // \n\
+// // // // // // // // // // // // //\n\
+\n\
+Transfinite Line {"+str(LineStructure[i][0])+"} = "+str(XYMesh[i])+" + 1;\n\
+Transfinite Line {"+str(LineStructure[i][1])+"} = "+str(XYMesh[i])+" + 1;\n\
+Transfinite Line {"+str(LineStructure[i][2])+"} = "+str(XYMesh[i])+" + 1;\n\
+Transfinite Line {"+str(LineStructure[i][3])+"} = "+str(XYMesh[i])+";\n\
+Transfinite Line {"+str(LineStructure[i][4])+"} = "+str(ZMesh[i-1])+";\n\
+Transfinite Line {"+str(LineStructure[i][5])+"} = "+str(ZMesh[i-1])+";\n\
+Transfinite Line {"+str(LineStructure[i][6])+"} = "+str(ZMesh[i-1])+";\n\
+Transfinite Line {"+str(LineStructure[i][7])+"} = "+str(ZMesh[i-1])+";\n\
+\n\
+"#"+str(LineLoopStructure[i][0])+" = newll; Line Loop ("+str(LineLoopStructure[i][0])+") = {"+str(LineLoopStructure[i][0])+","+str(LineLoopStructure[i][1])+","+str(LineLoopStructure[i][2])+","+str(LineLoopStructure[i][3])+"};\n\
+#"+str(LineLoopStructure[i][1])+" = newll; Line Loop ("+str(LineLoopStructure[i][1])+") = {"+str(LineLoopStructure[i-1][1])+","+str(LineLoopStructure[i][5])+","+str(LineLoopStructure[i][0])+","+str(LineLoopStructure[i][4])+"};\n\
+#"+str(LineLoopStructure[i][2])+" = newll; Line Loop ("+str(LineLoopStructure[i][2])+") = {"+str(LineLoopStructure[i-1][2])+","+str(LineLoopStructure[i][6])+","+str(LineLoopStructure[i][1])+","+str(LineLoopStructure[i][5])+"};\n\
+#"+str(LineLoopStructure[i][3])+" = newll; Line Loop ("+str(LineLoopStructure[i][3])+") = {"+str(LineLoopStructure[i-1][3])+","+str(LineLoopStructure[i][7])+","+str(LineLoopStructure[i][2])+","+str(LineLoopStructure[i][6])+"};\n\
+#"+str(LineLoopStructure[i][4])+" = newll; Line Loop ("+str(LineLoopStructure[i][4])+") = {"+str(LineLoopStructure[i-1][4])+","+str(LineLoopStructure[i][4])+","+str(LineLoopStructure[i][3])+","+str(LineLoopStructure[i][7])+"};\n\
+#\n\
+#"#"+str(SurfaceStructure[i][0])+" = news; Plane Surface ("+str(SurfaceStructure[i][0])+") = \{"+str(SurfaceStructure[i][0])+"}\n\
+#"+str(SurfaceStructure[i][1])+" = news; Plane Surface ("+str(SurfaceStructure[i][1])+") = \{"+str(SurfaceStructure[i][1])+"}\n\
+#"+str(SurfaceStructure[i][2])+" = news; Plane Surface ("+str(SurfaceStructure[i][2])+") = \{"+str(SurfaceStructure[i][2])+"}\n\
+#"+str(SurfaceStructure[i][3])+" = news; Plane Surface ("+str(SurfaceStructure[i][3])+") = \{"+str(SurfaceStructure[i][3])+"}\n\
+#"+str(SurfaceStructure[i][4])+" = news; Plane Surface ("+str(SurfaceStructure[i][4])+") = \{"+str(SurfaceStructure[i][4])+"}\n\
+#\n\
+#Transfinite Surface {"+str(SurfaceStructure[i][0])+"} ="+str(PointStructure[i][0])+","+str(PointStructure[i][1])+","+str(PointStructure[i][2])+","+str(PointStructure[i][3])+"};\n\
+#Transfinite Surface {"+str(SurfaceStructure[i][1])+"} ="+str(PointStructure[i-1][0])+","+str(PointStructure[i-1][1])+","+str(PointStructure[i][1])+","+str(PointStructure[i][0])+"};\n\
+#Transfinite Surface {"+str(SurfaceStructure[i][2])+"} ="+str(PointStructure[i-1][1])+","+str(PointStructure[i-1][2])+","+str(PointStructure[i][2])+","+str(PointStructure[i][1])+"};\n\
+#Transfinite Surface {"+str(SurfaceStructure[i][3])+"} ="+str(PointStructure[i-1][3])+","+str(PointStructure[i-1][2])+","+str(PointStructure[i][2])+","+str(PointStructure[i][3])+"};\n\
+#Transfinite Surface {"+str(SurfaceStructure[i][4])+"} ="+str(PointStructure[i-1][0])+","+str(PointStructure[i-1][3])+","+str(PointStructure[i][3])+","+str(PointStructure[i][0])+"};\n\
+#\n\
+#Surface Loop ("+str(i-1)+") ={"+str(SurfaceStructure[i-1][0])+","+str(SurfaceStructure[i][0])+","+str(SurfaceStructure[i][1])+","+str(SurfaceStructure[i][2])+","+str(SurfaceStructure[i][3])+","+str(SurfaceStructure[i][4])+"};\n\
+#\n\
+)
 f.close()
+
+
+#"<>ToString[SurfaceStructure[[i,2]]]<>" = news; 
+#Plane Surface ("<>ToString[SurfaceStructure[[i,2]]]<>") = \
+#{"<>ToString[LineLoopStructure[[i,2]]]<>"};
+#"<>ToString[SurfaceStructure[[i,3]]]<>" = news; 
+#Plane Surface ("<>ToString[SurfaceStructure[[i,3]]]<>") = \
+#{"<>ToString[LineLoopStructure[[i,3]]]<>"};
+#"<>ToString[SurfaceStructure[[i,4]]]<>" = news; 
+#Plane Surface ("<>ToString[SurfaceStructure[[i,4]]]<>") = \
+#{"<>ToString[LineLoopStructure[[i,4]]]<>"};
+#"<>ToString[SurfaceStructure[[i,5]]]<>" = news; 
+#Plane Surface ("<>ToString[SurfaceStructure[[i,5]]]<>") = \
+#{"<>ToString[LineLoopStructure[[i,5]]]<>"};
+#
+#
+#Transfinite Surface {"<>ToString[SurfaceStructure[[i,2]]]<>"} = \
+#{"<>ToString[PointStructure[[i-1,1]]]<>", 
+#   "<>ToString[PointStructure[[i-1,2]]]<>", 
+#   "<>ToString[PointStructure[[i,2]]]<>", 
+#   "<>ToString[PointStructure[[i,1]]]<>"};
+#Transfinite Surface {"<>ToString[SurfaceStructure[[i,3]]]<>"} = \
+#{"<>ToString[PointStructure[[i-1,2]]]<>", 
+#   "<>ToString[PointStructure[[i-1,3]]]<>", 
+#   "<>ToString[PointStructure[[i,3]]]<>", 
+#   "<>ToString[PointStructure[[i,2]]]<>"};
+#Transfinite Surface {"<>ToString[SurfaceStructure[[i,4]]]<>"} = \
+#{"<>ToString[PointStructure[[i-1,4]]]<>", 
+#   "<>ToString[PointStructure[[i-1,3]]]<>", 
+#   "<>ToString[PointStructure[[i,3]]]<>", 
+#   "<>ToString[PointStructure[[i,4]]]<>"};
+#Transfinite Surface {"<>ToString[SurfaceStructure[[i,5]]]<>"} = \
+#{"<>ToString[PointStructure[[i-1,1]]]<>", 
+#   "<>ToString[PointStructure[[i-1,4]]]<>", 
+#   "<>ToString[PointStructure[[i,4]]]<>", 
+#   "<>ToString[PointStructure[[i,1]]]<>"};
+#
+#
+#Volume ("<>ToString[i-1]<>") = {"<>ToString[i-1]<>"};
+#Transfinite Volume ("<>ToString[i-1]<>"); "],{i,2,NbofLayer}]
+#Close[Name])
+
    
