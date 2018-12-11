@@ -8,6 +8,7 @@ Created on Fri Oct 12 14:14:54 2018
 from __future__ import division
 import pandas as pd
 import numpy as np
+import os
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -20,7 +21,7 @@ Data = pd.read_csv(StructureFile,  converters={'mobilityh+': lambda x: str(x),'M
 NameJob = "p_structure_0.17_10nm";
 
 #Read Width of structure. Assumes structure plane is a 2D square
-DeviceWidth=(Data['L'][0])*(10**-7)
+DeviceWidth=(Data['L'][0])
  #=====================================================================================#
 
 #(*Enter Coefficient of the structure*)
@@ -36,7 +37,6 @@ FilePathServer = "/home/Clayton/Files/HoletransportAlGaN_0.17_10nm_2/";
 
 #(*Input name*)
 InputNameSh = "p_structure_0.17_10nm_";
-InputName =[ NameJob+".inp"];
 
 #(*Enter wanted Bias range *)
 
@@ -73,6 +73,7 @@ BiasChunks=np.array_split(Biases,FilesNumber)
 
 for x in range(int(FilesNumber)):
     InputName = NameJob+"_IV_"+str(x+1)+".inp"
+    os.remove(InputName)
     f = open(InputName, "a")
     f.write("GeneratedbyPython\n\
 ClaytonQwah2018\n\
@@ -86,6 +87,7 @@ $ifelectrode\n\
 "+str(BiasChunks[x][0])+"   "+str(BiasChunks[x][len(BiasChunks[x])-1])+"   "+str(DeltaBias)+"\n\
 0.0   0.0   0.01 \n\
 0.0   0.0   0.01 \n\
+\n\
 $schottkyba\n\
 0.0\n\
 \n\
@@ -143,13 +145,13 @@ $latticeconstant\n")
         f.write("3.18900E+00   5.18500E+00\n")
     f.write("\n\
 $elasticconstant\n\
-\n")
+")
     for layer in range(0,Numoflayer):
         f.write("3.67000E+01  1.35000E+01  1.03000E+01  4.05000E+01  9.50000E+00  1.\
 23000E+0\n")
     f.write("\n\
 $piezoelectric\n\
-\n")
+")
     for layer in range(0,Numoflayer):
         f.write("7.30000E-01  -4.90000E-01  -4.00000E-01\n")
     f.write("\n\
@@ -162,11 +164,11 @@ $substratelattice\n\
 \n\
 \n\
 $PBCpoint_x\n\
-0 "+str(DeviceWidth)+" e - 07\n\
+0 "+str(int(DeviceWidth))+"E-07\n\
 \n\
 $PBCpoint_y\n\
-0 "+str(DeviceWidth)+" e - 07\n\
-***************************************\n\
+0 "+str(int(DeviceWidth))+"E-07\n\
+  ***************************************\n\
 \n\
 $ElBoundary\n\
 2\n\
@@ -174,7 +176,7 @@ $ElBoundary\n\
 "+str(20+(Numoflayer-1)*18)+" 3 0.0000\n\
 \n\
 \n\
-"+str(Numoflayer-1)+"\n")
+"+str(Numoflayer)+"\n")
     for layer in range(0,Numoflayer):
         f.write(str(layer+1)+" 0.0000 0.0000\n")
     f.write("volumenum(i),Eg(i),Ecoff(i),ep(i),charges(i),ND(i),Ea(i),impurity(i),\
@@ -190,7 +192,10 @@ $Electriccoe\n\
 "+str(ENonRad[layer])+" "+str(HNonRad[layer])+" \
 "+str(RecombinationCoefficient)+"\n")
        
-    f.write("$ifdirectrecombine\n\
+    f.write("\n\
+\n\
+\n\
+$ifdirectrecombine\n\
 \n\
 \n\
 \n\
@@ -234,6 +239,62 @@ $ifzscaled\n\
 
          
 f.close()
- 
 
+for x in range(int(FilesNumber)):
+    JobName = NameJob+"_IV_"+str(x+1)+".sh"
+    os.remove(JobName)
+    g = open(JobName, "a")
+    g.write("#!/bin/bash\n\
+#PBS - S /bin/bash\n\
+#PBS - N "+str(NameJob)+"_"+str(x+1)+"\n\
+#PBS - l nodes=1:ppn=8,mem=80gb,walltime=300:00:00,nice=15\n\
+#PBS - q long\n\
+#PBS - o "+str(FilePathServer)+"Bias"+str(x+1)+"\n\
+#PBS - e "+str(FilePathServer)+"Bias"+str(x+1)+"\n\
+cd "+str(FilePathServer)+"/Bias"+str(x+1)+"\n\
+export MKL_NUM _THREADS=8\n\
+export OPENMP_NUM _THREADS=8\n\
+3D-ddcc-dyna.exe "+str(JobName)+" > test"+str(x+1)+".txt\n\
+\n\
+wait\n\
+\n\
+")
+ 
+g.close()
+
+
+FileName = NameJob+"_Jobs.sh"
+os.remove(FileName)
+h= open(FileName, "a")   
+h.write(
+"#!/bin/bash\n\
+#PBS - S /bin/bash\n\
+\n\
+")
+for x in range(int(FilesNumber)): 
+    JobName = NameJob+str(x+1)+".sh"
+    h.write(
+"qsub "+JobName+"\n\
+sleep 1\n\
+")
+
+h.close()    
     
+GlobalFile=NameJob+"_Global.sh"
+os.remove(GlobalFile)
+i=open(GlobalFile, "a")
+i.write(
+"shopt - s extglob\n\
+chmod 777 *\n\
+gmsh - 3 "+str(NameJob)+".geo\n\
+ifort PBC30.f90\n\
+./a.out " +str(NameJob)+".msh\n\
+./compile.bat\n\
+./"+str(NameJob)+" _Copy.sh\n\
+./"+str(NameJob)+" _Jobs.sh\n\
+")    
+
+i.close()
+
+
+

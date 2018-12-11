@@ -101,9 +101,9 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     return neighborhood.set_index('Node')
 
 os.chdir(directory)
-my_data=pd.read_csv(file)    
+mydf=pd.read_csv(file)    
 num_rows = checkFrameRows(my_data)
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
+EcEv=mydf[['x','y','z','Ec', 'Ev']]
 
 
 #
