@@ -46,10 +46,10 @@ Transfinite Surface {ps1} = {1, 2, 3, 4};
 
 // // Define Points // // // /
 
-p11 = newp;Point(p11) = {0, 0, 20.*n, la};
-p12 = newp;Point(p12 ) = {length, 0,20.*n, la};
-p13 = newp;Point(p13) = {length, length,20.*n, la};
-p14 = newp;Point(p14) = {0, length, 20.*n, la};
+p11 = newp;Point(p11) = {0, 0, 50.*n, la};
+p12 = newp;Point(p12 ) = {length, 0,50.*n, la};
+p13 = newp;Point(p13) = {length, length,50.*n, la};
+p14 = newp;Point(p14) = {0, length, 50.*n, la};
 
 // // Define Lines and Volume /// 
 
@@ -71,10 +71,10 @@ Transfinite Line {l11} = tf+1;
 Transfinite Line {l12} = tf+1;
 Transfinite Line {l13} = tf+1;
 Transfinite Line {l14} = tf+1;
-Transfinite Line {l15} = 37.0 Using Progression 1.078;
-Transfinite Line {l16} = 37.0 Using Progression 1.078;
-Transfinite Line {l17} = 37.0 Using Progression 1.078;
-Transfinite Line {l18} = 37.0 Using Progression 1.078;
+Transfinite Line {l15} = 48.0 Using Progression 1.079;
+Transfinite Line {l16} = 48.0 Using Progression 1.079;
+Transfinite Line {l17} = 48.0 Using Progression 1.079;
+Transfinite Line {l18} = 48.0 Using Progression 1.079;
 
 ll11 = newll; Line Loop (ll11) = {l11,l12,l13,l14};
 ll12 = newll; Line Loop (ll12) = {l1,l16,-l11,-l15};
@@ -104,10 +104,10 @@ Transfinite Volume (1);
 
 // // Define Points // // // /
 
-p21 = newp;Point(p21) = {0, 0, 40.*n, la};
-p22 = newp;Point(p22 ) = {length, 0,40.*n, la};
-p23 = newp;Point(p23) = {length, length,40.*n, la};
-p24 = newp;Point(p24) = {0, length, 40.*n, la};
+p21 = newp;Point(p21) = {0, 0, 100.*n, la};
+p22 = newp;Point(p22 ) = {length, 0,100.*n, la};
+p23 = newp;Point(p23) = {length, length,100.*n, la};
+p24 = newp;Point(p24) = {0, length, 100.*n, la};
 
 // // Define Lines and Volume /// 
 
@@ -129,10 +129,10 @@ Transfinite Line {l21} = tf+1;
 Transfinite Line {l22} = tf+1;
 Transfinite Line {l23} = tf+1;
 Transfinite Line {l24} = tf+1;
-Transfinite Line {l25} = 37.0 Using Progression 0.928;
-Transfinite Line {l26} = 37.0 Using Progression 0.928;
-Transfinite Line {l27} = 37.0 Using Progression 0.928;
-Transfinite Line {l28} = 37.0 Using Progression 0.928;
+Transfinite Line {l25} = 48.0 Using Progression 0.927;
+Transfinite Line {l26} = 48.0 Using Progression 0.927;
+Transfinite Line {l27} = 48.0 Using Progression 0.927;
+Transfinite Line {l28} = 48.0 Using Progression 0.927;
 
 ll21 = newll; Line Loop (ll21) = {l21,l22,l23,l24};
 ll22 = newll; Line Loop (ll22) = {l11,l26,-l21,-l25};
@@ -162,10 +162,10 @@ Transfinite Volume (2);
 
 // // Define Points // // // /
 
-p31 = newp;Point(p31) = {0, 0, 45.*n, la};
-p32 = newp;Point(p32 ) = {length, 0,45.*n, la};
-p33 = newp;Point(p33) = {length, length,45.*n, la};
-p34 = newp;Point(p34) = {0, length, 45.*n, la};
+p31 = newp;Point(p31) = {0, 0, 115.*n, la};
+p32 = newp;Point(p32 ) = {length, 0,115.*n, la};
+p33 = newp;Point(p33) = {length, length,115.*n, la};
+p34 = newp;Point(p34) = {0, length, 115.*n, la};
 
 // // Define Lines and Volume /// 
 
@@ -187,10 +187,10 @@ Transfinite Line {l31} = tf+1;
 Transfinite Line {l32} = tf+1;
 Transfinite Line {l33} = tf+1;
 Transfinite Line {l34} = tf+1;
-Transfinite Line {l35} = 50;
-Transfinite Line {l36} = 50;
-Transfinite Line {l37} = 50;
-Transfinite Line {l38} = 50;
+Transfinite Line {l35} = 150;
+Transfinite Line {l36} = 150;
+Transfinite Line {l37} = 150;
+Transfinite Line {l38} = 150;
 
 ll31 = newll; Line Loop (ll31) = {l31,l32,l33,l34};
 ll32 = newll; Line Loop (ll32) = {l21,l36,-l31,-l35};
@@ -220,10 +220,10 @@ Transfinite Volume (3);
 
 // // Define Points // // // /
 
-p41 = newp;Point(p41) = {0, 0, 50.*n, la};
-p42 = newp;Point(p42 ) = {length, 0,50.*n, la};
-p43 = newp;Point(p43) = {length, length,50.*n, la};
-p44 = newp;Point(p44) = {0, length, 50.*n, la};
+p41 = newp;Point(p41) = {0, 0, 130.*n, la};
+p42 = newp;Point(p42 ) = {length, 0,130.*n, la};
+p43 = newp;Point(p43) = {length, length,130.*n, la};
+p44 = newp;Point(p44) = {0, length, 130.*n, la};
 
 // // Define Lines and Volume /// 
 
@@ -245,10 +245,10 @@ Transfinite Line {l41} = tf+1;
 Transfinite Line {l42} = tf+1;
 Transfinite Line {l43} = tf+1;
 Transfinite Line {l44} = tf+1;
-Transfinite Line {l45} = 50;
-Transfinite Line {l46} = 50;
-Transfinite Line {l47} = 50;
-Transfinite Line {l48} = 50;
+Transfinite Line {l45} = 150;
+Transfinite Line {l46} = 150;
+Transfinite Line {l47} = 150;
+Transfinite Line {l48} = 150;
 
 ll41 = newll; Line Loop (ll41) = {l41,l42,l43,l44};
 ll42 = newll; Line Loop (ll42) = {l31,l46,-l41,-l45};
@@ -278,10 +278,10 @@ Transfinite Volume (4);
 
 // // Define Points // // // /
 
-p51 = newp;Point(p51) = {0, 0, 70.*n, la};
-p52 = newp;Point(p52 ) = {length, 0,70.*n, la};
-p53 = newp;Point(p53) = {length, length,70.*n, la};
-p54 = newp;Point(p54) = {0, length, 70.*n, la};
+p51 = newp;Point(p51) = {0, 0, 180.*n, la};
+p52 = newp;Point(p52 ) = {length, 0,180.*n, la};
+p53 = newp;Point(p53) = {length, length,180.*n, la};
+p54 = newp;Point(p54) = {0, length, 180.*n, la};
 
 // // Define Lines and Volume /// 
 
@@ -303,10 +303,10 @@ Transfinite Line {l51} = tf+1;
 Transfinite Line {l52} = tf+1;
 Transfinite Line {l53} = tf+1;
 Transfinite Line {l54} = tf+1;
-Transfinite Line {l55} = 37.0 Using Progression 1.078;
-Transfinite Line {l56} = 37.0 Using Progression 1.078;
-Transfinite Line {l57} = 37.0 Using Progression 1.078;
-Transfinite Line {l58} = 37.0 Using Progression 1.078;
+Transfinite Line {l55} = 48.0 Using Progression 1.079;
+Transfinite Line {l56} = 48.0 Using Progression 1.079;
+Transfinite Line {l57} = 48.0 Using Progression 1.079;
+Transfinite Line {l58} = 48.0 Using Progression 1.079;
 
 ll51 = newll; Line Loop (ll51) = {l51,l52,l53,l54};
 ll52 = newll; Line Loop (ll52) = {l41,l56,-l51,-l55};
@@ -336,10 +336,10 @@ Transfinite Volume (5);
 
 // // Define Points // // // /
 
-p61 = newp;Point(p61) = {0, 0, 90.*n, la};
-p62 = newp;Point(p62 ) = {length, 0,90.*n, la};
-p63 = newp;Point(p63) = {length, length,90.*n, la};
-p64 = newp;Point(p64) = {0, length, 90.*n, la};
+p61 = newp;Point(p61) = {0, 0, 230.*n, la};
+p62 = newp;Point(p62 ) = {length, 0,230.*n, la};
+p63 = newp;Point(p63) = {length, length,230.*n, la};
+p64 = newp;Point(p64) = {0, length, 230.*n, la};
 
 // // Define Lines and Volume /// 
 
@@ -361,10 +361,10 @@ Transfinite Line {l61} = tf+1;
 Transfinite Line {l62} = tf+1;
 Transfinite Line {l63} = tf+1;
 Transfinite Line {l64} = tf+1;
-Transfinite Line {l65} = 37.0 Using Progression 0.928;
-Transfinite Line {l66} = 37.0 Using Progression 0.928;
-Transfinite Line {l67} = 37.0 Using Progression 0.928;
-Transfinite Line {l68} = 37.0 Using Progression 0.928;
+Transfinite Line {l65} = 48.0 Using Progression 0.927;
+Transfinite Line {l66} = 48.0 Using Progression 0.927;
+Transfinite Line {l67} = 48.0 Using Progression 0.927;
+Transfinite Line {l68} = 48.0 Using Progression 0.927;
 
 ll61 = newll; Line Loop (ll61) = {l61,l62,l63,l64};
 ll62 = newll; Line Loop (ll62) = {l51,l66,-l61,-l65};

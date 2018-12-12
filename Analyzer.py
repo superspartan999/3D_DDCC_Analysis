@@ -102,7 +102,7 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
 
 os.chdir(directory)
 mydf=pd.read_csv(file)    
-num_rows = checkFrameRows(my_data)
+num_rows = checkFrameRows(mydf)
 EcEv=mydf[['x','y','z','Ec', 'Ev']]
 
 
@@ -215,7 +215,7 @@ def nodetocoord(index,xvalues,yvalues,zvalues):
 
 def coordtonode(x_idx,y_idx,z_idx,unique_x,unique_y,unique_z):
     
-    max_x=len(unique_x)
+        max_x=len(unique_x)
     max_y=len(unique_y)
     max_z=len(unique_z)
     
@@ -310,9 +310,9 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     Z_NN=NNZ(index,xvalues,yvalues,zvalues)
     
     
-    E_X=sorted_data.iloc[X_NN[1]]['Ec']-mydf.iloc[X_NN[0]]['Ec']
-    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-mydf.iloc[Y_NN[0]]['Ec']
-    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-mydf.iloc[Z_NN[0]]['Ec']
+    E_X=sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec']
+    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']
+    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']
     
     E=np.sqrt(E_X*E_X+E_Y*E_Y+E_Z*E_Z)
     
@@ -369,42 +369,11 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
 E=np.empty(len(mydf))
 for i in range(len(mydf)-1):    
     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+    print(i)
     E[i]=x
-    
+
+mydf["E"]=E    
 E_z=electric_field_z(sorted_data)    
  
 
-#axes = plt.gca()
-#axes.set_xlabel('z(cm)')
-#axes.set_ylabel('V(ev)')
-#axes.set_xlim([0,12e-6])
-#plt.scatter(banddiagram['z'], Ecvalues['Ec'])
-#plt.scatter(Evvalues['z'], Evvalues['Ev']) 
-
-
-#zvalues = rounded_nodes['z'].unique() 
-#size_zslice=pd.DataFrame(columns=['z','size'])  
-#j=0
-#
-#for z in zvalues:
-#    zslice=extract_slice(rounded_nodes, 'z',0, drop=True)
-#    size=len(zslice)
-#    d={'z':z,'size':size}
-#    size_zslice.loc[j]=d
-#    j=j+1
-        
-
-##xlist=zslice['x'].tolist()
-##ylist=zslice['y'].tolist()
-##Eclist=zslice['Ec'].tolist()
-##
-##xx,yy=np.meshgrid(xlist,ylist)
-##grad=(Eclist,xx,yy)
-##mytab = extractFieldData(directory, file)
-#
-#my_data=pd.read_csv(file)
-#temp = getNearestNeighbor(my_data, 100, 1e-7, 1e-7, 1e-7)
-#num_rows = checkFrameRows(my_data)
-#df1=my_data[['x','y','z','Ec']]
-#v=df1.values
 

@@ -51,7 +51,7 @@ def electric_field_z(sorted_data):
         Evalues.loc[i]=d1
         i=i+1
     
-    return Evalues
+    return zvalues ,Evalues
 
 
 #

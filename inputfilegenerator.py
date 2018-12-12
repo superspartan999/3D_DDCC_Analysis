@@ -71,9 +71,16 @@ FilesNumber = NbPointBias/JobsPerFile;
 Biases=np.arange(StartBias, EndBias+DeltaBias, DeltaBias)
 BiasChunks=np.array_split(Biases,FilesNumber)
 
+#=-----------------------------------------------------------------------------------------------------------------------#
+#Writing the input file
+#=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
+    #input file name
     InputName = NameJob+"_IV_"+str(x+1)+".inp"
+    
+    #delete existing file to prevent overwriting
     os.remove(InputName)
+
     f = open(InputName, "a")
     f.write("GeneratedbyPython\n\
 ClaytonQwah2018\n\
@@ -240,6 +247,9 @@ $ifzscaled\n\
          
 f.close()
 
+#=-----------------------------------------------------------------------------------------------------------------------#
+#writing the job file
+#=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
     JobName = NameJob+"_IV_"+str(x+1)+".sh"
     os.remove(JobName)
@@ -262,7 +272,9 @@ wait\n\
  
 g.close()
 
-
+#=-----------------------------------------------------------------------------------------------------------------------#
+#writing the file to submit jobs
+#=-----------------------------------------------------------------------------------------------------------------------#
 FileName = NameJob+"_Jobs.sh"
 os.remove(FileName)
 h= open(FileName, "a")   
@@ -278,8 +290,11 @@ for x in range(int(FilesNumber)):
 sleep 1\n\
 ")
 
-h.close()    
-    
+h.close()  
+
+#=-----------------------------------------------------------------------------------------------------------------------#
+#writing the the Global file
+#=-----------------------------------------------------------------------------------------------------------------------#   
 GlobalFile=NameJob+"_Global.sh"
 os.remove(GlobalFile)
 i=open(GlobalFile, "a")
@@ -296,5 +311,24 @@ ifort PBC30.f90\n\
 
 i.close()
 
+FileName = NameJob+"_Copy.sh"
+os.remove(FileName)
+j = open(FileName, "a")
+j.write(
+"#!/bin/bash\n\
+#PBS - S /bin/bash\n\
+\n\
+")
 
+#=-----------------------------------------------------------------------------------------------------------------------#
+#writing the file to create separate directories for each job 
+#=-----------------------------------------------------------------------------------------------------------------------#
+for x in range(int(FilesNumber)): 
+    JobName = NameJob+str(x+1)+".sh"
+    j.write(
+"mkdir Bias "+str(x+1)+"\n\
+cp !(Child1) Bias"+str(x+1)+"\n\
+\n\
+")
 
+j.close()
