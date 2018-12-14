@@ -51,7 +51,7 @@ def electric_field_z(sorted_data):
         Evalues.loc[i]=d1
         i=i+1
     
-    return zvalues ,Evalues
+    return Evalues
 
 
 #
@@ -63,5 +63,5 @@ axes = plt.gca()
 axes.set_xlabel('z(cm)')
 axes.set_ylabel('E(V/cm)')
 plot(El['z'], El['E'])
-plot(bd[0]['z'],bd[0]['Ec'])
-plot(bd[1]['z'],bd[1]['Ev'])
+#plot(bd[0]['z'],bd[0]['Ec'])
+#plot(bd[1]['z'],bd[1]['Ev'])

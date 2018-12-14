@@ -101,9 +101,9 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     return neighborhood.set_index('Node')
 
 os.chdir(directory)
-mydf=pd.read_csv(file)    
-num_rows = checkFrameRows(mydf)
-EcEv=mydf[['x','y','z','Ec', 'Ev']]
+my_data=pd.read_csv(file)    
+num_rows = checkFrameRows(my_data)
+EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 
 #
@@ -136,14 +136,15 @@ EcEv=mydf[['x','y','z','Ec', 'Ev']]
     
 
 #max values
-max_x=mydf.loc[mydf['x'].idxmax()]['x']
-max_y=mydf.loc[mydf['y'].idxmax()]['y']
-max_z=mydf.loc[mydf['z'].idxmax()]['z']
+max_x=my_data.loc[my_data['x'].idxmax()]['x']
+max_y=my_data.loc[my_data['y'].idxmax()]['y']
+max_z=my_data.loc[my_data['z'].idxmax()]['z']
 
 #new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
 
 my_data=pd.read_csv(file)
+node_map=my_data[['x','y','z']].copy()
 
 
 
@@ -215,7 +216,7 @@ def nodetocoord(index,xvalues,yvalues,zvalues):
 
 def coordtonode(x_idx,y_idx,z_idx,unique_x,unique_y,unique_z):
     
-        max_x=len(unique_x)
+    max_x=len(unique_x)
     max_y=len(unique_y)
     max_z=len(unique_z)
     
@@ -263,7 +264,7 @@ def NNY(index,x_values,y_values,z_values):
         
         y_neg=y_idx
     
-    if y_pos >len(y_values):
+    if y_pos >len(y_values)-1:
         
         y_pos=y_idx
     
@@ -324,7 +325,7 @@ rounded_nodes=node_map.round(decimals=10)
 
 #sort the nodes in ascending order
 sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=mydf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+sorted_data=my_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
 
 #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
@@ -366,13 +367,13 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
      
     return nn
     
-E=np.empty(len(mydf))
-for i in range(len(mydf)-1):    
+E=np.empty(len(my_data))
+for i in range(len(my_data)-1):    
     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
     print(i)
     E[i]=x
 
-mydf["E"]=E    
+my_data["E"]=E    
 E_z=electric_field_z(sorted_data)    
  
 
