@@ -8,7 +8,7 @@
 cd /home/Clayton/Files/HoletransportAlGaN_0.17_10nm_2//Bias3
 export MKL_NUM _THREADS=8
 export OPENMP_NUM _THREADS=8
-3D-ddcc-dyna.exe p_structure_0.17_10nm_IV_3.sh > test3.txt
+3D-ddcc-dyna.exe p_structure_0.17_10nm_3.sh > test3.txt
 
 wait
 

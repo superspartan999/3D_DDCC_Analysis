@@ -76,7 +76,7 @@ BiasChunks=np.array_split(Biases,FilesNumber)
 #=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
     #input file name
-    InputName = NameJob+"_IV_"+str(x+1)+".inp"
+    InputName = NameJob+"_"+str(x+1)+".inp"
     
     #delete existing file to prevent overwriting
     os.remove(InputName)
@@ -251,7 +251,7 @@ f.close()
 #writing the job file
 #=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
-    JobName = NameJob+"_IV_"+str(x+1)+".sh"
+    JobName = NameJob+"_"+str(x+1)+".sh"
     os.remove(JobName)
     g = open(JobName, "a")
     g.write("#!/bin/bash\n\

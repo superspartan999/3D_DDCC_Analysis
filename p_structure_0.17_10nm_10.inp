@@ -7,7 +7,7 @@ $gencompositionmap
 
 $ifelectrode
 0.0   0.0   0.01
--2.5   -2.0   0.5
+4.5   5.0   0.5
 0.0   0.0   0.01 
 0.0   0.0   0.01 
 
@@ -41,7 +41,7 @@ p_structure_0.17_10nm-out
 **************************************
 
 $callstrainsolver
-p_structure_0.17_10nm_IV_3.inp
+p_structure_0.17_10nm_10.inp
 
 $ifusepolfromstrain
 

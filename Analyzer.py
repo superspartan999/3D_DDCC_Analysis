@@ -373,7 +373,7 @@ for i in range(len(my_data)-1):
     print(i)
     E[i]=x
 
-my_data["E"]=E    
+sorted_data["E"]=E    
 E_z=electric_field_z(sorted_data)    
  
 
