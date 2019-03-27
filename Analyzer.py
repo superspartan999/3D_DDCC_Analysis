@@ -215,7 +215,7 @@ def nodetocoord(index,xvalues,yvalues,zvalues):
 
 def coordtonode(x_idx,y_idx,z_idx,unique_x,unique_y,unique_z):
     
-        max_x=len(unique_x)
+    max_x=len(unique_x)
     max_y=len(unique_y)
     max_z=len(unique_z)
     
@@ -263,7 +263,7 @@ def NNY(index,x_values,y_values,z_values):
         
         y_neg=y_idx
     
-    if y_pos >len(y_values):
+    if y_pos >len(y_values)-1:
         
         y_pos=y_idx
     
