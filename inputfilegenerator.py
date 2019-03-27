@@ -76,7 +76,7 @@ BiasChunks=np.array_split(Biases,FilesNumber)
 #=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
     #input file name
-    InputName = NameJob+"_IV_"+str(x+1)+".inp"
+    InputName = NameJob+"_"+str(x+1)+".inp"
     
     #delete existing file to prevent overwriting
     os.remove(InputName)
@@ -251,7 +251,7 @@ f.close()
 #writing the job file
 #=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
-    JobName = NameJob+"_IV_"+str(x+1)+".sh"
+    JobName = NameJob+"_"+str(x+1)+".sh"
     os.remove(JobName)
     g = open(JobName, "a")
     g.write("#!/bin/bash\n\
@@ -311,6 +311,12 @@ ifort PBC30.f90\n\
 
 i.close()
 
+
+
+#=-----------------------------------------------------------------------------------------------------------------------#
+#writing the file to create separate directories for each job 
+#=-----------------------------------------------------------------------------------------------------------------------#
+
 FileName = NameJob+"_Copy.sh"
 os.remove(FileName)
 j = open(FileName, "a")
@@ -320,9 +326,6 @@ j.write(
 \n\
 ")
 
-#=-----------------------------------------------------------------------------------------------------------------------#
-#writing the file to create separate directories for each job 
-#=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)): 
     JobName = NameJob+str(x+1)+".sh"
     j.write(
@@ -332,3 +335,24 @@ cp !(Child1) Bias"+str(x+1)+"\n\
 ")
 
 j.close()
+
+
+#=-----------------------------------------------------------------------------------------------------------------------#
+#writing the file to merge IV files from different folders
+#=-----------------------------------------------------------------------------------------------------------------------#
+
+FileName = "MergeIV.sh"
+os.remove(FileName)
+k = open(FileName, "a")
+
+k.write(
+"#!/bin/bash\n\
+#PBS - S /bin/bash\n\
+\n\
+cat")
+for x in range(int(FilesNumber)): 
+    k.write(" "+str(FilePathServer)+"Bias"+str(x)+"/"+str(NameJob)+"-out.ivn")
+
+k.close()  
+  
+  
