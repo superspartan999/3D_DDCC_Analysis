@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as scp
-from sklearn.preprocessing import StandardScaler
+
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D 
 from math import floor, sqrt
@@ -106,34 +106,6 @@ num_rows = checkFrameRows(my_data)
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 
-#
-#tree=scp.spatial.cKDTree(node_map)
-#dd, ii=tree.query(node_map,7)
-#for n in ii:
-#    p=EcEv.iloc[n[0]]
-#    
-
-
-
-
-#my_data=pd.read_csv(file)
-
-#
-#tree=scp.spatial.cKDTree(node_map)
-#dd, ii=tree.query(node_map,7)
-#
-#j=0
-#neighbourhood_dis=pd.DataFrame(columns=['dx', 'dy', 'dz'])
-#three_d=plt.figure().gca(projection='3d')
-#temp = getNearestNeighbor(my_data, 100, 1e-6, 1e-6, 1e-6)
-#nxyz=pd.DataFrame(columns=['n','x', 'y', 'z'])
-#p=ii[100]
-#i=1
-
-#three_d.scatter(nxyz['x'],nxyz['y'],nxyz['z'])
-
-
-    
 
 #max values
 max_x=my_data.loc[my_data['x'].idxmax()]['x']
@@ -317,7 +289,27 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     
     E=np.sqrt(E_X*E_X+E_Y*E_Y+E_Z*E_Z)
     
-    return E
+    return E ,E_X, E_Y, E_Z
+
+  
+
+def Neighbourhood(index,xvalues,yvalues,zvalues):
+    xneighs=NNX(index,xvalues,yvalues,zvalues)
+    yneighs=NNY(index,xvalues,yvalues,zvalues)
+    zneighs=NNZ(index,xvalues,yvalues,zvalues)
+    
+    center=nodetocoord(index,xvalues,yvalues,zvalues)
+    xmin=nodetocoord(xneighs[0],xvalues,yvalues,zvalues)
+    xplus=nodetocoord(xneighs[1],xvalues,yvalues,zvalues)
+    ymin=nodetocoord(yneighs[0],xvalues,yvalues,zvalues)
+    yplus=nodetocoord(yneighs[1],xvalues,yvalues,zvalues)
+    zmin=nodetocoord(zneighs[0],xvalues,yvalues,zvalues)
+    zplus=nodetocoord(zneighs[1],xvalues,yvalues,zvalues)
+    
+    
+    nn=pd.DataFrame([center,xmin,xplus,ymin,yplus,zmin,zplus],columns=('x','y','z','xn','yn', 'zn'))
+     
+    return nn
 
 
 #round up values in node map to prevent floating point errors
@@ -347,34 +339,26 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 
 
 
-  
 
-def Neighbourhood(index,xvalues,yvalues,zvalues):
-    xneighs=NNX(index,xvalues,yvalues,zvalues)
-    yneighs=NNY(index,xvalues,yvalues,zvalues)
-    zneighs=NNZ(index,xvalues,yvalues,zvalues)
-    
-    center=nodetocoord(index,xvalues,yvalues,zvalues)
-    xmin=nodetocoord(xneighs[0],xvalues,yvalues,zvalues)
-    xplus=nodetocoord(xneighs[1],xvalues,yvalues,zvalues)
-    ymin=nodetocoord(yneighs[0],xvalues,yvalues,zvalues)
-    yplus=nodetocoord(yneighs[1],xvalues,yvalues,zvalues)
-    zmin=nodetocoord(zneighs[0],xvalues,yvalues,zvalues)
-    zplus=nodetocoord(zneighs[1],xvalues,yvalues,zvalues)
-    
-    
-    nn=pd.DataFrame([center,xmin,xplus,ymin,yplus,zmin,zplus],columns=('x','y','z','xn','yn', 'zn'))
-     
-    return nn
     
 E=np.empty(len(my_data))
+E_x=np.empty(len(my_data))
+E_y=np.empty(len(my_data))
+E_z=np.empty(len(my_data))
 for i in range(len(my_data)-1):    
     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
     print(i)
-    E[i]=x
+    E[i]=x[0]
+    E_x[i]=x[1]
+    E_y[i]=x[2]
+    E_z[i]=x[3]
 
 sorted_data["E"]=E    
-E_z=electric_field_z(sorted_data)    
+sorted_data["Ex"]=E_x
+sorted_data["Ey"]=E_y
+sorted_data["Ez"]=E_z  
+Ez=electric_field_z(sorted_data)    
  
+filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
 
 

@@ -52,7 +52,7 @@ def write_space_df(file, head_len=5):
         return
 
 
-def extract_data(file, head_len=11):
+def extract_data(file, head_len=12):
 
     """
     This function is the most general extractor that pulls energy bands,
@@ -91,7 +91,7 @@ def extract_data(file, head_len=11):
     return my_data
 
 
-def extract_carriers(file, head_len=11):
+def extract_carriers(file, head_len=12):
 
     """
     This function extracts the free carrier concentrations. Since the .np file
@@ -127,7 +127,7 @@ def extract_carriers(file, head_len=11):
         return
 
 
-def extract_recombination(file, head_len=11):
+def extract_recombination(file, head_len=12):
 
     """
     This function extracts the recombination rates from their corresponding
