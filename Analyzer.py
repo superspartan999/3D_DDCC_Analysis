@@ -295,11 +295,16 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     zplus=sorted_data.iloc[Z_NN[1]]['z']
     zminus=sorted_data.iloc[Z_NN[0]]['z']
     
+    E_X=(Ecxplus-Ecxminus)/(xplus-xminus)
+    E_Y=(Ecyplus-Ecyminus)/(yplus-yminus)
+    E_Z=(Eczplus-Eczminus)/(zplus-zminus)
+#    
     
-    E_X=(sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec'])/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
-    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['y']-sorted_data.iloc[X_NN[0]]['y'])
-    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['z']-sorted_data.iloc[X_NN[0]]['z'])
     
+#    E_X=(sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec'])/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
+#    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['y']-sorted_data.iloc[X_NN[0]]['y'])
+#    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['z']-sorted_data.iloc[X_NN[0]]['z'])
+#    
     E=np.sqrt(E_X*E_X+E_Y*E_Y+E_Z*E_Z)
     
     return E ,E_X, E_Y, E_Z
