@@ -17,10 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'D:\\Github\\3D_DDCC_Analysis\\3D_DDCC_Analysis'
-
-directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
-
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 os.chdir(directory)
 
 
@@ -55,7 +52,7 @@ def write_space_df(file, head_len=5):
         return
 
 
-def extract_data(file, head_len=12):
+def extract_data(file, head_len=11):
 
     """
     This function is the most general extractor that pulls energy bands,
@@ -94,7 +91,7 @@ def extract_data(file, head_len=12):
     return my_data
 
 
-def extract_carriers(file, head_len=12):
+def extract_carriers(file, head_len=11):
 
     """
     This function extracts the free carrier concentrations. Since the .np file
@@ -130,7 +127,7 @@ def extract_carriers(file, head_len=12):
         return
 
 
-def extract_recombination(file, head_len=12):
+def extract_recombination(file, head_len=11):
 
     """
     This function extracts the recombination rates from their corresponding
@@ -210,8 +207,4 @@ def create_unified_data_file(model_ID, node_map):
         
 
 node_map = write_space_df('p_structure_0.17_30nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
-
-node_map = write_space_df('p_structure_0.17_10nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00', node_map)
-
+mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00', node_map)
