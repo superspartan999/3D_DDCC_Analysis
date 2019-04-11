@@ -330,7 +330,7 @@ for x in range(int(FilesNumber)):
     JobName = NameJob+str(x+1)+".sh"
     j.write(
 "mkdir Bias "+str(x+1)+"\n\
-cp ./* ./Bias"+str(x+1)+"\n\
+cp !(Child1) Bias"+str(x+1)+"\n\
 \n\
 ")
 
