@@ -17,7 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
 os.chdir(directory)
 
 
@@ -52,8 +52,8 @@ def write_space_df(file, head_len=5):
         return
 
 
-    def extract_data(file, head_len=12):
-
+def extract_data(file, head_len=12):
+    
     """
     This function is the most general extractor that pulls energy bands,
     ionized dopants, and temperature. The extractors read output files and
@@ -65,7 +65,7 @@ def write_space_df(file, head_len=5):
     if type(file) is not str or type(head_len) is not int:
         print('Input parameters of incorrect type.')
         return
-
+    
     # Only run with file extension is correct and set the column header
     if file.endswith('.out'):
         head = 'Ec'
@@ -80,11 +80,11 @@ def write_space_df(file, head_len=5):
     else:
         print("Error! File extension is not correct!")
         return
-
+    
     print("Extrating " + head + " data...")
     data_info = pd.read_csv(file, nrows=head_len, header=None)
     num_nodes = int(data_info.iloc[head_len-1, 0])
-
+    
     my_data = pd.read_csv(file, skiprows=head_len, nrows=num_nodes, 
                           delim_whitespace=True, header=None, names=[head], 
                           engine='python')
@@ -206,5 +206,5 @@ def create_unified_data_file(model_ID, node_map):
     return output_data
         
 
-node_map = write_space_df('p_structure_0.17_30nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.17_10nm.msh')
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00', node_map)

@@ -56,6 +56,7 @@ def electric_field_z(df1, Ecom):
 
     return Evalues
 
+<<<<<<< HEAD
 def band_diagram_z(df1):
     #find all the values of z and put them in a list
     zvalues = df1['z'].unique()
@@ -118,3 +119,11 @@ df=df.drop(['Unnamed: 0'], axis=1)
 #plt.plot(E_z['z'],E_z['Ez'])
 
 
+=======
+mydf=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=',')
+Ecomponent='E'
+
+E_z=electric_field_z(df, Ecomponent)
+
+plt.plot(E_z['z'],E_z[Ecomponent])
+>>>>>>> parent of d234a39... redefine points for easier reading
