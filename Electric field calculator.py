@@ -1,9 +1,17 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr  8 11:39:40 2019
+
+@author: Clayton
+"""
+
 # Analyzer is responsible for the modification of data files such that
 # they can be read by our Python code.
 
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import scipy as scp
 
 import matplotlib.pyplot as plt
@@ -25,6 +33,8 @@ __status__ = "Development"
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
 directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
 file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+#directory = '/home-b/quantumqwah/testpy/'
+#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 
 
 def checkFrameRows(raw_data):
@@ -376,6 +386,6 @@ sorted_data["Ey"]=E_y
 sorted_data["Ez"]=E_z  
 Ez=electric_field_z(sorted_data)    
  
-filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
+filemake=sorted_data.to_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unifiedE',sep=' ')
 
 

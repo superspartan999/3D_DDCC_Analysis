@@ -52,7 +52,7 @@ def write_space_df(file, head_len=5):
         return
 
 
-def extract_data(file, head_len=12):
+    def extract_data(file, head_len=12):
 
     """
     This function is the most general extractor that pulls energy bands,
