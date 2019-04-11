@@ -19,7 +19,7 @@ __status__ = "Development"
 # Sets the current directory to the data folder
 directory = 'D:\\Github\\3D_DDCC_Analysis\\3D_DDCC_Analysis'
 
-directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
+directory = 'E:\Google Drive\Research\AlGaN Unipolar Studies\10nmAlGaN'
 
 os.chdir(directory)
 
@@ -208,9 +208,9 @@ def create_unified_data_file(model_ID, node_map):
     output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
         
-
-node_map = write_space_df('p_structure_0.17_30nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+#
+#node_map = write_space_df('p_structure_0.17_30nm.msh')
+#mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 
 node_map = write_space_df('p_structure_0.17_10nm.msh')
 mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00', node_map)

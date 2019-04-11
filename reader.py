@@ -56,9 +56,9 @@ def electric_field_z(df1, Ecom):
 
     return Evalues
 
-mydf=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=',')
+df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 Ecomponent='E'
 
-E_z=electric_field_z(df, Ecomponent)
+E_z=electric_field_z(mydf, Ecomponent)
 
 plt.plot(E_z['z'],E_z[Ecomponent])

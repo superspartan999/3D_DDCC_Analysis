@@ -24,8 +24,14 @@ __status__ = "Development"
 
 #directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+directory = 'E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN'
+file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+
+os.chdir(directory)
+my_data=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+EcEv=my_data[['x','y','z','Ec', 'Ev']]
+
+
 
 
 def checkFrameRows(raw_data):
@@ -100,11 +106,6 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     
     return neighborhood.set_index('Node')
 
-os.chdir(directory)
-my_data=pd.read_csv(file)    
-num_rows = checkFrameRows(my_data)
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
-
 
 
 #max values
@@ -114,8 +115,7 @@ max_z=my_data.loc[my_data['z'].idxmax()]['z']
 
 #new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
-
-my_data=pd.read_csv(file)
+my_data=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 node_map=my_data[['x','y','z']].copy()
 
 
