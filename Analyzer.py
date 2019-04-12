@@ -4,6 +4,7 @@
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import scipy as scp
 
 import matplotlib.pyplot as plt
@@ -23,8 +24,8 @@ __status__ = "Development"
 
 #directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
-file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
 
 
 def checkFrameRows(raw_data):

@@ -81,40 +81,15 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues 
 
-def testE(Ec):
-    
-    Evalues=pd.DataFrame(columns=['z','E'])
-    
-    for i in range(1,len(Ec)-1):
-        E=(Ec.iloc[i+1]['Ec']-Ec.iloc[i-1]['Ec'])/(Ec.iloc[i+1]['z']-Ec.iloc[i-1]['z'])
-        d={'z':Ec.iloc[i]['z'],'E':E}
-
-
-        Evalues.loc[i]=d
-        
-        
-    return Evalues
-
-def NDAE(df):
-    
-    Evalues=pd.DataFrame(columns=['z','E'])
-    
-    
-    
 df=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 df=df.drop(['Unnamed: 0'], axis=1)
-#Ecomponent='Ez'
+Ecomponent='E'
 
-#EcEv=band_diagram_z(df)
-#
-#Ec=EcEv[0]
-#Ev=EcEv[1]
-#
-#E=testE(Ec)
-#
-#E_z=electric_field_z(df, Ecomponent)
-#
-##plt.plot(E['z'],E['E'])
-#plt.plot(E_z['z'],E_z['Ez'])
+EcEv=band_diagram_z(df)
 
+Ec=EcEv[0]
+Ev=EcEv[1]
 
+E_z=electric_field_z(df, Ecomponent)
+
+plt.plot(Ec['z'],Ec['Ec'])
