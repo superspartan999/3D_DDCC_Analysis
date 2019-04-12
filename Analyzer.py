@@ -260,7 +260,7 @@ def NNZ(index,x_values,y_values,z_values):
     
     z_pos=z_idx+1
     
-    if z_neg < 0:
+    if z_neg < 0: 
         
         z_neg=z_idx
     
