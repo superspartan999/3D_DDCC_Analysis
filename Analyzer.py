@@ -281,11 +281,12 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     X_NN=NNX(index,xvalues,yvalues,zvalues)
     Y_NN=NNY(index,xvalues,yvalues,zvalues)
     Z_NN=NNZ(index,xvalues,yvalues,zvalues)
+
     
     
-    E_X=sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec']
-    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']
-    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']
+    E_X=sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
+    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']/(sorted_data.iloc[Y_NN[1]]['y']-sorted_data.iloc[Y_NN[0]]['y'])
+    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']/(sorted_data.iloc[Z_NN[1]]['z']-sorted_data.iloc[Z_NN[0]]['z'])
     
     E=np.sqrt(E_X*E_X+E_Y*E_Y+E_Z*E_Z)
     
@@ -357,7 +358,9 @@ sorted_data["E"]=E
 sorted_data["Ex"]=E_x
 sorted_data["Ey"]=E_y
 sorted_data["Ez"]=E_z  
-Ez=electric_field_z(sorted_data)    
+Ez=electric_field_z(sorted_data) 
+
+plot(zvalues, Ez)   
  
 #filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
 
