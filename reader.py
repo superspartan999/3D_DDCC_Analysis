@@ -56,12 +56,7 @@ def electric_field_z(df1, Ecom):
 
     return Evalues
 
-
-df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
-Ecomponent='E'
-
-E_z=electric_field_z(mydf, Ecomponent)
-
+#function to plot band diagram
 def band_diagram_z(df1):
     #find all the values of z and put them in a list
     zvalues = df1['z'].unique()
@@ -85,18 +80,76 @@ def band_diagram_z(df1):
         i=i+1
 
 
-    return Ecvalues,Evvalues 
+    return Ecvalues,Evvalues
 
-df=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
-df=df.drop(['Unnamed: 0'], axis=1)
-Ecomponent='E'
+def EEc(Ec):
+    
+
+
+df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 
 EcEv=band_diagram_z(df)
 
 Ec=EcEv[0]
-Ev=EcEv[1]
 
-E_z=electric_field_z(df, Ecomponent)
+#Ez=electric_field_z(df, 'Ez')
+##Ez.plot('z',Ecomponent)
+#plt.plot(Ez['z'],Ez['Ez'])
+#
+#Ex=electric_field_z(df, 'Ex')
+##Ex.plot('z','Ex')
+#plt.plot(Ex['z'],Ex['Ex'])
+#
+#Ey=electric_field_z(df, 'Ey')
+##Ey.plot('z','Ey')
+#
+#plt.plot(Ey['z'],Ey['Ey'])
+#
+#E=electric_field_z(df, 'E')
+##E.plot('z','E')
+#
+#plt.plot(E['z'],E['E'])
+#
+#plt.show()
 
 
-plt.plot(Ec['z'],Ec['Ec'])
+
+
+#def band_diagram_z(df1):
+#    #find all the values of z and put them in a list
+#    zvalues = df1['z'].unique()
+#    cols={}
+#    #create dataframe for conduction band and valence band
+#    Ecvalues=pd.DataFrame(columns=['z','Ec'])
+#    Evvalues=pd.DataFrame(columns=['z','Ev'])
+#    i=0
+#    #loop through different z values along the device
+#    for z in zvalues:
+#        #extract x-y plane for a z value
+#        zslice=extract_slice(df1,'z',z, drop=True)
+#        
+#        #average
+#        averagezsliceEc=zslice['Ec'].mean()
+#        averagezsliceEv=zslice['Ev'].mean()
+#        d1={'z':z,'Ec':averagezsliceEc}
+#        d2={'z':z,'Ev':averagezsliceEv}
+#        Ecvalues.loc[i]=d1
+#        Evvalues.loc[i]=d2
+#        i=i+1
+#
+#
+#    return Ecvalues,Evvalues 
+#
+#df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+#df=df.drop(['Unnamed: 0'], axis=1)
+#Ecomponent='E'
+#
+#EcEv=band_diagram_z(df)
+#
+#Ec=EcEv[0]
+#Ev=EcEv[1]
+#
+#E_z=electric_field_z(df, Ecomponent)
+#
+#
+#plt.plot(Ec['z'],Ec['Ec'])
