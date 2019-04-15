@@ -17,7 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
+directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
 os.chdir(directory)
 
 

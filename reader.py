@@ -83,7 +83,7 @@ def band_diagram_z(df1):
 
 df=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 df=df.drop(['Unnamed: 0'], axis=1)
-Ecomponent='E'
+Ecomponent='E1'
 
 EcEv=band_diagram_z(df)
 
@@ -91,5 +91,6 @@ Ec=EcEv[0]
 Ev=EcEv[1]
 
 E_z=electric_field_z(df, Ecomponent)
+E_z.plot('z','E1')
 
-plt.plot(Ec['z'],Ec['Ec'])
+#plt.plot(Ec['z'],Ec['Ec'])
