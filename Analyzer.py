@@ -360,7 +360,7 @@ sorted_data["Ey"]=E_y
 sorted_data["Ez"]=E_z  
 Ez=electric_field_z(sorted_data) 
 
-plot(zvalues, Ez)   
+
  
 #filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
 

@@ -17,8 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'C:\\Users\\Christian\\Box\\3DDCC_Simu\\' + \
-            'Raw_Data\\Dislocation\\No Dislocation'
+directory = 'E:/Google Drive/Research/Transport Structure Project/3D data/Bias10'
 os.chdir(directory)
 
 
@@ -53,7 +52,7 @@ def write_space_df(file, head_len=5):
         return
 
 
-def extract_data(file, head_len=11):
+def extract_data(file, head_len=12):
 
     """
     This function is the most general extractor that pulls energy bands,
@@ -92,7 +91,7 @@ def extract_data(file, head_len=11):
     return my_data
 
 
-def extract_carriers(file, head_len=11):
+def extract_carriers(file, head_len=12):
 
     """
     This function extracts the free carrier concentrations. Since the .np file
@@ -128,7 +127,7 @@ def extract_carriers(file, head_len=11):
         return
 
 
-def extract_recombination(file, head_len=11):
+def extract_recombination(file, head_len=12):
 
     """
     This function extracts the recombination rates from their corresponding
@@ -207,5 +206,5 @@ def create_unified_data_file(model_ID, node_map):
     return output_data
         
 
-node_map = write_space_df('dislocation_line_2.msh')
-mydf = create_unified_data_file('dislocation_line_2-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.17_10nm.msh')
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
