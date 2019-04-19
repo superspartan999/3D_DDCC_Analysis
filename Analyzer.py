@@ -24,8 +24,14 @@ __status__ = "Development"
 
 #directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'C:/Users/Clayton/Google Drive\Research/Transport Structure Project/3D data/Bias10'
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
 file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+
+os.chdir(directory)
+my_data=pd.read_csv(file, delimiter=',')
+EcEv=my_data[['x','y','z','Ec', 'Ev']]
+
+
 
 
 def checkFrameRows(raw_data):
@@ -100,11 +106,6 @@ def getNearestNeighbor(raw_data, node_num, x_thresh, y_thresh, z_thresh):
     
     return neighborhood.set_index('Node')
 
-os.chdir(directory)
-my_data=pd.read_csv(file)    
-num_rows = checkFrameRows(my_data)
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
-
 
 
 #max values
@@ -115,7 +116,6 @@ max_z=my_data.loc[my_data['z'].idxmax()]['z']
 #new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
 
-my_data=pd.read_csv(file)
 node_map=my_data[['x','y','z']].copy()
 
 
@@ -281,22 +281,10 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     X_NN=NNX(index,xvalues,yvalues,zvalues)
     Y_NN=NNY(index,xvalues,yvalues,zvalues)
     Z_NN=NNZ(index,xvalues,yvalues,zvalues)
-    
-    Ecxplus=sorted_data.iloc[X_NN[1]]['Ec']
-    Ecxminus=sorted_data.iloc[X_NN[0]]['Ec']
-    xplus=sorted_data.iloc[X_NN[1]]['x']
-    xminus=sorted_data.iloc[X_NN[0]]['x']
-    Ecyplus=sorted_data.iloc[Y_NN[1]]['Ec']
-    Ecyminus=sorted_data.iloc[Y_NN[0]]['Ec']
-    yplus=sorted_data.iloc[Y_NN[1]]['y']
-    yminus=sorted_data.iloc[Y_NN[0]]['y']
-    Eczplus=sorted_data.iloc[Z_NN[1]]['Ec']
-    Eczminus=sorted_data.iloc[Z_NN[0]]['Ec']
-    zplus=sorted_data.iloc[Z_NN[1]]['z']
-    zminus=sorted_data.iloc[Z_NN[0]]['z']
+
     
     
-    E_X=(sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec'])/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
+    E_X=sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
     E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']/(sorted_data.iloc[Y_NN[1]]['y']-sorted_data.iloc[Y_NN[0]]['y'])
     E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']/(sorted_data.iloc[Z_NN[1]]['z']-sorted_data.iloc[Z_NN[0]]['z'])
     
@@ -370,8 +358,10 @@ sorted_data["E"]=E
 sorted_data["Ex"]=E_x
 sorted_data["Ey"]=E_y
 sorted_data["Ez"]=E_z  
-Ez=electric_field_z(sorted_data)    
+Ez=electric_field_z(sorted_data) 
+
+
  
-filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
+#filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
 
 
