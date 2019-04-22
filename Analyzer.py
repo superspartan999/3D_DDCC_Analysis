@@ -22,10 +22,10 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-#directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
+#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
 os.chdir(directory)
 my_data=pd.read_csv(file, delimiter=',')
