@@ -82,11 +82,13 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues
 
-def EEc(Ec):
-    
-
 
 df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+
+df=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+df=df.drop(['Unnamed: 0'], axis=1)
+Ecomponent='E1'
+
 
 EcEv=band_diagram_z(df)
 

@@ -17,7 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 # Sets the current directory to the data folder
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+directory = 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
 os.chdir(directory)
 
 
@@ -41,6 +41,8 @@ def write_space_df(file, head_len=5):
         # Dynamically determines the node space size.
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
+        print data_info
+        print num_nodes
 
         raw_data = pd.read_csv(file, skiprows=head_len,
                                nrows=num_nodes, header=None,
@@ -52,7 +54,7 @@ def write_space_df(file, head_len=5):
         return
 
 
-def extract_data(file, head_len=11):
+def extract_data(file, head_len=12):
 
     """
     This function is the most general extractor that pulls energy bands,
@@ -83,15 +85,21 @@ def extract_data(file, head_len=11):
 
     print("Extrating " + head + " data...")
     data_info = pd.read_csv(file, nrows=head_len, header=None)
+    print data_info
     num_nodes = int(data_info.iloc[head_len-1, 0])
+    print 'g'
+    print num_nodes
+    
+    
 
     my_data = pd.read_csv(file, skiprows=head_len, nrows=num_nodes, 
                           delim_whitespace=True, header=None, names=[head], 
                           engine='python')
+    print len(my_data)
     return my_data
 
 
-def extract_carriers(file, head_len=11):
+def extract_carriers(file, head_len=12):
 
     """
     This function extracts the free carrier concentrations. Since the .np file
@@ -109,17 +117,21 @@ def extract_carriers(file, head_len=11):
 
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
+        print 'fishy'
+        print num_nodes
 
         print("Extracting electron concentration...")
         ndat = pd.read_csv(file, skiprows=head_len, nrows=num_nodes,
                            header=None, names=['n'], delim_whitespace=True, 
                            engine='python')
         print("Extracting hole concentration...")
-        pdat = pd.read_csv(file, skiprows=2*head_len+num_nodes-1,
+        pdat = pd.read_csv(file, skiprows=2*head_len+num_nodes-2,
                            nrows=num_nodes, header=None, names=['p'],
                            delim_whitespace=True, engine='python')
 
+
         output = pd.concat([ndat, pdat], axis=1, join='outer')
+
 
         return output
     else:
@@ -127,7 +139,7 @@ def extract_carriers(file, head_len=11):
         return
 
 
-def extract_recombination(file, head_len=11):
+def extract_recombination(file, head_len=12):
 
     """
     This function extracts the recombination rates from their corresponding
@@ -194,6 +206,8 @@ def create_unified_data_file(model_ID, node_map):
         
         if success:
             output_data = pd.concat([output_data, my_data], axis=1, join='outer')
+            print 'f'
+            print len(output_data)
 
         success = True
     
@@ -206,5 +220,5 @@ def create_unified_data_file(model_ID, node_map):
     return output_data
         
 
-node_map = write_space_df('p_structure_0.17_30nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.17_10nm.msh')
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00', node_map)

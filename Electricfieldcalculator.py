@@ -22,26 +22,13 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-
-#directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-directory = 'E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN'
+directory = 'C:\\Users\\Clayton\\Desktop\ \10nmAlGaN_test'
 file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
-
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#directory = '/home-b/quantumqwah/testpy/'
+#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 
 os.chdir(directory)
-my_data=pd.read_csv(file, delimiter=',')
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
-
-
-
-
-os.chdir(directory)
-my_data=pd.read_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+my_data=pd.read_csv(file, delimiter=' ')
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 
@@ -128,61 +115,11 @@ max_z=my_data.loc[my_data['z'].idxmax()]['z']
 
 #new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
-
 my_data=pd.read_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
-
-
 node_map=my_data[['x','y','z']].copy()
 
 
 
-#function to plot band diagram
-def band_diagram_z(df1):
-    #find all the values of z and put them in a list
-    zvalues = df1['z'].unique()
-    cols={}
-    #create dataframe for conduction band and valence band
-    Ecvalues=pd.DataFrame(columns=['z','Ec'])
-    Evvalues=pd.DataFrame(columns=['z','Ev'])
-    i=0
-    #loop through different z values along the device
-    for z in zvalues:
-        #extract x-y plane for a z value
-        zslice=extract_slice(df1,'z',z, drop=True)
-        
-        #average
-        averagezsliceEc=zslice['Ec'].mean()
-        averagezsliceEv=zslice['Ev'].mean()
-        d1={'z':z,'Ec':averagezsliceEc}
-        d2={'z':z,'Ev':averagezsliceEv}
-        Ecvalues.loc[i]=d1
-        Evvalues.loc[i]=d2
-        i=i+1
-
-
-    return Ecvalues,Evvalues 
-
-def electric_field_z(df1):
-    #find all the values of z and put them in a list
-    zvalues = df1['z'].unique()
-    cols={}
-    #create dataframe for conduction band and valence band
-    Evalues=pd.DataFrame(columns=['z','E'])
-
-    i=0
-    #loop through different z values along the device
-    for z in zvalues:
-        #extract x-y plane for a z value
-        zslice=extract_slice(df1,'z',z, drop=True)
-        
-        #average
-        averagezsliceE=zslice['E'].mean()
-        d1={'z':z,'Ec':averagezsliceE}
-        Evalues.loc[i]=d1
-        i=i+1
-
-
-    return E
 
 #extract x,y,z coordinates and x,y,z indices. the indices indicate the position of the point along a specific dimension list
 def nodetocoord(index,xvalues,yvalues,zvalues):
@@ -291,7 +228,7 @@ def NNZ(index,x_values,y_values,z_values):
     
     return z_neg_node,z_pos_node
 
-def E_field(index,xvalues,yvalues,zvalues,sorted_data):
+def E_field(index,xvalues,yvalues,zvalues,sorted_data, band):
 
     
     X_NN=NNX(index,xvalues,yvalues,zvalues)
@@ -300,9 +237,9 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
 
     
     
-    E_X=sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
-    E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']/(sorted_data.iloc[Y_NN[1]]['y']-sorted_data.iloc[Y_NN[0]]['y'])
-    E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']/(sorted_data.iloc[Z_NN[1]]['z']-sorted_data.iloc[Z_NN[0]]['z'])
+    E_X=sorted_data.iloc[X_NN[1]][band]-sorted_data.iloc[X_NN[0]][band]/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
+    E_Y=sorted_data.iloc[Y_NN[1]][band]-sorted_data.iloc[Y_NN[0]][band]/(sorted_data.iloc[Y_NN[1]]['y']-sorted_data.iloc[Y_NN[0]]['y'])
+    E_Z=sorted_data.iloc[Z_NN[1]][band]-sorted_data.iloc[Z_NN[0]][band]/(sorted_data.iloc[Z_NN[1]]['z']-sorted_data.iloc[Z_NN[0]]['z'])
     
     E=np.sqrt(E_X*E_X+E_Y*E_Y+E_Z*E_Z)
     
@@ -358,26 +295,41 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 
 
     
-E=np.empty(len(my_data))
-E_x=np.empty(len(my_data))
-E_y=np.empty(len(my_data))
-E_z=np.empty(len(my_data))
+E1=np.empty(len(my_data))
+E_x1=np.empty(len(my_data))
+E_y1=np.empty(len(my_data))
+E_z1=np.empty(len(my_data))
+
+E2=np.empty(len(my_data))
+E_x2=np.empty(len(my_data))
+E_y2=np.empty(len(my_data))
+E_z2=np.empty(len(my_data))
+
 for i in range(len(my_data)-1):    
-    x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+    x=E_field(i,xvalues,yvalues,zvalues,sorted_data, 'Ec')
+    y=E_field(i,xvalues,yvalues,zvalues,sorted_data, 'Ev')
     print(i)
-    E[i]=x[0]
-    E_x[i]=x[1]
-    E_y[i]=x[2]
-    E_z[i]=x[3]
+    E1[i]=x[0]
+    E_x1[i]=x[1]
+    E_y1[i]=x[2]
+    E_z1[i]=x[3]
+    
+    E2[i]=y[0]
+    E_x2[i]=y[1]
+    E_y2[i]=y[2]
+    E_z2[i]=y[3]
 
-sorted_data["E"]=E    
-sorted_data["Ex"]=E_x
-sorted_data["Ey"]=E_y
-sorted_data["Ez"]=E_z  
-Ez=electric_field_z(sorted_data) 
+sorted_data["E1"]=E1    
+sorted_data["Ex1"]=E_x1
+sorted_data["Ey1"]=E_y1
+sorted_data["Ez1"]=E_z1 
 
+sorted_data["E2"]=E2    
+sorted_data["Ex2"]=E_x2
+sorted_data["Ey2"]=E_y2
+sorted_data["Ez2"]=E_z2 
 
  
-#filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
+filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
 
 
