@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as scp
+import os
 
 
 def extract_slice(data, slice_var, slice_val, drop=False):
@@ -80,17 +81,44 @@ def band_diagram_z(df1):
 
 
     return Ecvalues,Evvalues 
+#directory='D:\\HoletransportAlGaN_0.17_30nm_2'
 
-df=pd.read_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
-df=df.drop(['Unnamed: 0'], axis=1)
-Ecomponent='E1'
+#file='unified electric field data.csv'
+
+directory = 'C:\\Users\\Clayton\\Desktop\\Older\\Bias8'
+
+file = 'p_structure_0.17_10nm-out.vg_0.00.vd_3.50.vs_0.00.unified'
+#
+directory ='C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
+file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+
+
+#directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
+#file='p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+##
+#directory ='C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias10'
+#file= 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+
+#directory ='C:\\Users\\Clayton\\Desktop\\30nmAlGaN\\Bias8'
+#file= 'p_structure_0.17_30nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+
+os.chdir(directory)
+#df=pd.read_csv(file, delimiter=',')
+df=pd.read_csv(file, delimiter=',')
+
+Ecomponent='E'
 
 EcEv=band_diagram_z(df)
 
 Ec=EcEv[0]
 Ev=EcEv[1]
 
-E_z=electric_field_z(df, Ecomponent)
-E_z.plot('z','E1')
-
+Elfield=electric_field_z(df, Ecomponent)
+Elfield.plot('z',Ecomponent)
 #plt.plot(Ec['z'],Ec['Ec'])
+#plt.plot(Ev['z'],Ev['Ev'])
+#plt.plot(Ec['z'], Ec['Ec'])
+
+#df.plot('z','E')
+#
+#plt.scatter(df['z'],df['E'])

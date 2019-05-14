@@ -22,12 +22,22 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+#directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+#file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+
+directory = 'C:\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias1'
+file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-1.00.vs_0.00.unified'
+
+directory ='C:\\Users\\Clayton\\Desktop\\30nmAlGaN\\Bias8'
+file= 'p_structure_0.17_30nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+
+directory ='C:\\Users\\Clayton\\Desktop\\10nmAlGaN_0\\Bias8'
+file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+
 
 os.chdir(directory)
+
 my_data=pd.read_csv(file, delimiter=',')
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
@@ -362,6 +372,6 @@ Ez=electric_field_z(sorted_data)
 
 
  
-#filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
+filemake=sorted_data.to_csv(file,sep=',')
 
 

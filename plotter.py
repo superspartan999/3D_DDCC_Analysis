@@ -32,12 +32,12 @@ def band_diagram_z(df1):
     return Ecvalues,Evvalues 
 
 def electric_field_z(sorted_data):
-    sorted_data['E']=E
+    sorted_data['Ez']=E
         #find all the values of z and put them in a list
     zvalues = sorted_data['z'].unique()
     cols={}
     #create dataframe for conduction band and valence band
-    Evalues=pd.DataFrame(columns=['z','E'])
+    Evalues=pd.DataFrame(columns=['z','Ez'])
     
     i=0
     #loop through different z values along the device
@@ -62,6 +62,6 @@ bd=band_diagram_z(sorted_data)
 axes = plt.gca()
 axes.set_xlabel('z(cm)')
 axes.set_ylabel('E(V/cm)')
-plot(El['z'], El['E'])
+plot(El['z'], El['Ez'])
 #plot(bd[0]['z'],bd[0]['Ec'])
 #plot(bd[1]['z'],bd[1]['Ev'])
