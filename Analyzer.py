@@ -23,10 +23,21 @@ __status__ = "Development"
 
 
 
+
 #directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 #file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
 directory = 'E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN'
 file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+
+directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
+#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
+#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+
+os.chdir(directory)
+my_data=pd.read_csv(file, delimiter=',')
+EcEv=my_data[['x','y','z','Ec', 'Ev']]
+
 
 directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
 file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
@@ -127,6 +138,7 @@ max_y=my_data.loc[my_data['y'].idxmax()]['y']
 max_z=my_data.loc[my_data['z'].idxmax()]['z']
 
 #new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
+
 
 
 my_data=pd.read_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
@@ -298,8 +310,7 @@ def E_field(index,xvalues,yvalues,zvalues,sorted_data):
     Y_NN=NNY(index,xvalues,yvalues,zvalues)
     Z_NN=NNZ(index,xvalues,yvalues,zvalues)
 
-    
-    
+
     E_X=sorted_data.iloc[X_NN[1]]['Ec']-sorted_data.iloc[X_NN[0]]['Ec']/(sorted_data.iloc[X_NN[1]]['x']-sorted_data.iloc[X_NN[0]]['x'])
     E_Y=sorted_data.iloc[Y_NN[1]]['Ec']-sorted_data.iloc[Y_NN[0]]['Ec']/(sorted_data.iloc[Y_NN[1]]['y']-sorted_data.iloc[Y_NN[0]]['y'])
     E_Z=sorted_data.iloc[Z_NN[1]]['Ec']-sorted_data.iloc[Z_NN[0]]['Ec']/(sorted_data.iloc[Z_NN[1]]['z']-sorted_data.iloc[Z_NN[0]]['z'])
