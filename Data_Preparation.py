@@ -222,7 +222,11 @@ mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0
 
 node_map = write_space_df('p_structure_0.17_10nm.msh')
 
+
 mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+
 
 mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 
