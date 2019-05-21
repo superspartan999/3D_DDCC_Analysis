@@ -1,0 +1,7 @@
+# pack-refs with: peeled fully-peeled sorted 
+c02af39b2ada9cdc1984c60af65eee9f661f1b11 refs/heads/clayton_branch
+81c8573c1b37f127618ca7e7587ee8f2e803e81f refs/heads/clayton_branch_work
+bdff91863a2d84f62a863d5266048484e837f081 refs/heads/clayton_branchhome
+b3862d77a15ae00e1461556524d72fc3ecad12d5 refs/heads/master
+c02af39b2ada9cdc1984c60af65eee9f661f1b11 refs/pull/1/head
+09b1076f0aaa440bb8458e7f093e80b12ce62ad4 refs/pull/1/merge
