@@ -81,6 +81,45 @@ def band_diagram_z(df1):
 
 
     return Ecvalues,Evvalues 
+
+def lowestpoint(df1):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+   lvalues=pd.DataFrame(columns=['x','y','z','Ec'])
+
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        l=zslice['Ec'].min()
+
+
+    return Ecvalues,Evvalues 
+
+#def jp_z(df1):
+#    #find all the values of z and put them in a list
+#    zvalues = df1['z'].unique()
+#    cols={}
+#    #create dataframe for conduction band and valence band
+#    Ecvalues=pd.DataFrame(columns=['z','Ec'])
+#    Evvalues=pd.DataFrame(columns=['z','Ev'])
+#    i=0
+#    #loop through different z values along the device
+#    for z in zvalues:
+#        #extract x-y plane for a z value
+#        zslice=extract_slice(df1,'z',z, drop=True)
+#        
+#        #average
+#        averagezsliceEc=zslice['Ec'].mean()
+#        averagezsliceEv=zslice['Ev'].mean()
+#        d1={'z':z,'Ec':averagezsliceEc}
+#        d2={'z':z,'Ev':averagezsliceEv}
+#        Ecvalues.loc[i]=d1
+#        Evvalues.loc[i]=d2
+#        i=i+1
 #directory='D:\\HoletransportAlGaN_0.17_30nm_2'
 
 #file='unified electric field data.csv'
@@ -105,16 +144,16 @@ file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 os.chdir(directory)
 #df=pd.read_csv(file, delimiter=',')
 df=pd.read_csv(file, delimiter=',')
-
-Ecomponent='E'
-
-EcEv=band_diagram_z(df)
-
-Ec=EcEv[0]
-Ev=EcEv[1]
-
-Elfield=electric_field_z(df, Ecomponent)
-Elfield.plot('z',Ecomponent)
+#
+#Ecomponent='E'
+#
+#EcEv=band_diagram_z(df)
+#
+#Ec=EcEv[0]
+#Ev=EcEv[1]
+#
+#Elfield=electric_field_z(df, Ecomponent)
+#Elfield.plot('z',Ecomponent)
 #plt.plot(Ec['z'],Ec['Ec'])
 #plt.plot(Ev['z'],Ev['Ev'])
 #plt.plot(Ec['z'], Ec['Ec'])

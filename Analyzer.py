@@ -352,23 +352,23 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 
 
     
-E=np.empty(len(my_data))
-E_x=np.empty(len(my_data))
-E_y=np.empty(len(my_data))
-E_z=np.empty(len(my_data))
-for i in range(len(my_data)-1):    
-    x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
-    print(i)
-    E[i]=x[0]
-    E_x[i]=x[1]
-    E_y[i]=x[2]
-    E_z[i]=x[3]
-
-sorted_data["E"]=E    
-sorted_data["Ex"]=E_x
-sorted_data["Ey"]=E_y
-sorted_data["Ez"]=E_z  
-Ez=electric_field_z(sorted_data) 
+#E=np.empty(len(my_data))
+#E_x=np.empty(len(my_data))
+#E_y=np.empty(len(my_data))
+#E_z=np.empty(len(my_data))
+#for i in range(len(my_data)-1):    
+#    x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+#    print(i)
+#    E[i]=x[0]
+#    E_x[i]=x[1]
+#    E_y[i]=x[2]
+#    E_z[i]=x[3]
+#
+#sorted_data["E"]=E    
+#sorted_data["Ex"]=E_x
+#sorted_data["Ey"]=E_y
+#sorted_data["Ez"]=E_z  
+#Ez=electric_field_z(sorted_data) 
 
 
  
