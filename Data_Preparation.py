@@ -19,9 +19,9 @@ __status__ = "Development"
 
 directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
 
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
+directory = 'E:\\10nmAlGaN\\Bias -42'
 
-directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
+#directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
 
 os.chdir(directory)
 
@@ -209,24 +209,11 @@ def create_unified_data_file(model_ID, node_map):
     return output_data
         
 #
-node_map = write_space_df('p_structure_0.17_30nm.msh')
 
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
-
-#node_map = write_space_df('p_structure_0.17_10nm.msh')
-#mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-1.00.vs_0.00', node_map)
-
-
-
-mydf = create_unified_data_file('p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00', node_map)
 
 node_map = write_space_df('p_structure_0.17_10nm.msh')
 
 
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
-
-
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00', node_map)
 

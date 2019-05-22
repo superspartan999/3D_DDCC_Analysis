@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy as scp
 import os
+import networkx as nx
 
 
 def extract_slice(data, slice_var, slice_val, drop=False):
@@ -84,89 +85,46 @@ def band_diagram_z(df1):
     return Ecvalues,Evvalues
 
 
-df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
-
-def lowestpoint(df1):
-    #find all the values of z and put them in a list
-    zvalues = df1['z'].unique()
-    cols={}
-    #create dataframe for conduction band and valence band
-   lvalues=pd.DataFrame(columns=['x','y','z','Ec'])
-
-
-    i=0
-    #loop through different z values along the device
-    for z in zvalues:
-        #extract x-y plane for a z value
-        zslice=extract_slice(df1,'z',z, drop=True)
-        l=zslice['Ec'].min()
-
-
-    return Ecvalues,Evvalues 
-
-#def jp_z(df1):
-
-
-EcEv=band_diagram_z(df)
-
-Ec=EcEv[0]
-
-#Ez=electric_field_z(df, 'Ez')
-##Ez.plot('z',Ecomponent)
-#plt.plot(Ez['z'],Ez['Ez'])
 #
-#Ex=electric_field_z(df, 'Ex')
-##Ex.plot('z','Ex')
-#plt.plot(Ex['z'],Ex['Ex'])
-#
-#Ey=electric_field_z(df, 'Ey')
-##Ey.plot('z','Ey')
-#
-#plt.plot(Ey['z'],Ey['Ey'])
-#
-#E=electric_field_z(df, 'E')
-##E.plot('z','E')
-#
-#plt.plot(E['z'],E['E'])
-#
-#plt.show()
+directory = 'E:\\10nmAlGaN\\Bias -42'
+file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+os.chdir(directory)
+df=pd.read_csv(file, delimiter=',')
+
+#find all the values of z and put them in a list
+zvalues = df['z'].unique()
+zvalues=zvalues[:-1]
+coords=np.empty(3)
+
+#create dataframe for conduction band and valence band
+lvalues=pd.DataFrame(columns=['z','coords'])
 
 
+i=0
+#loop through different z values along the device
+for z in zvalues:
+    #extract x-y plane for a z value
+    zslice=extract_slice(df,'z',z, drop=True)
+    l=zslice[zslice['Ec'] == min(zslice['Ec'])]
+    l=l[['x','y']].copy()
+    d1={'z':z,'coords':l.values}
+    
+    for l in l.values:
+        d2=np.append(l,z)
+        coords=np.vstack((coords,d2))
+        
+    lvalues=lvalues.append(d1, ignore_index=True)
+
+    i=i+1
+
+sortedcoords=coords[coords[:,2].argsort()]
+dictcoords=dict(enumerate(sortedcoords, 1))
+G=nx.DiGraph()
+G.add_nodes_from(dictcoords.keys())
+for key,n in G.nodes.items():
+   n["attribute"]=dictcoords[key]
 
 
-#def band_diagram_z(df1):
-
-#    #find all the values of z and put them in a list
-#    zvalues = df1['z'].unique()
-#    cols={}
-#    #create dataframe for conduction band and valence band
-#    Ecvalues=pd.DataFrame(columns=['z','Ec'])
-#    Evvalues=pd.DataFrame(columns=['z','Ev'])
-#    i=0
-#    #loop through different z values along the device
-#    for z in zvalues:
-#        #extract x-y plane for a z value
-#        zslice=extract_slice(df1,'z',z, drop=True)
-#        
-#        #average
-#        averagezsliceEc=zslice['Ec'].mean()
-#        averagezsliceEv=zslice['Ev'].mean()
-#        d1={'z':z,'Ec':averagezsliceEc}
-#        d2={'z':z,'Ev':averagezsliceEv}
-#        Ecvalues.loc[i]=d1
-#        Evvalues.loc[i]=d2
-#        i=i+1
-
-#directory='D:\\HoletransportAlGaN_0.17_30nm_2'
-
-#file='unified electric field data.csv'
-
-directory = 'C:\\Users\\Clayton\\Desktop\\Older\\Bias8'
-
-file = 'p_structure_0.17_10nm-out.vg_0.00.vd_3.50.vs_0.00.unified'
-#
-directory ='C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8'
-file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 
 
 #directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
@@ -178,10 +136,11 @@ file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 #directory ='C:\\Users\\Clayton\\Desktop\\30nmAlGaN\\Bias8'
 #file= 'p_structure_0.17_30nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 
-os.chdir(directory)
+#os.chdir(directory)
+##df=pd.read_csv(file, delimiter=',')
 #df=pd.read_csv(file, delimiter=',')
-df=pd.read_csv(file, delimiter=',')
-#
+#g=lowestpoint(df)
+##
 
 #
 #
@@ -192,23 +151,5 @@ df=pd.read_csv(file, delimiter=',')
 
 #Ecomponent='E'
 #
-#EcEv=band_diagram_z(df)
-#
-#Ec=EcEv[0]
-#Ev=EcEv[1]
-#
-# #Elfield=electric_field_z(df, Ecomponent)
-#Elfield.plot('z',Ecomponent)
-#plt.plot(Ec['z'],Ec['Ec'])
-#plt.plot(Ev['z'],Ev['Ev'])
-#plt.plot(Ec['z'], Ec['Ec'])
 
-#df.plot('z','E')
-#
-#plt.scatter(df['z'],df['E'])
-
-#E_z=electric_field_z(df, Ecomponent)
-#
-#
-#plt.plot(Ec['z'],Ec['Ec'])
 
