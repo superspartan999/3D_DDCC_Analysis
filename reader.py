@@ -57,6 +57,7 @@ def electric_field_z(df1, Ecom):
 
     return Evalues
 
+#function to plot band diagram
 def band_diagram_z(df1):
     #find all the values of z and put them in a list
     zvalues = df1['z'].unique()
@@ -80,7 +81,10 @@ def band_diagram_z(df1):
         i=i+1
 
 
-    return Ecvalues,Evvalues 
+    return Ecvalues,Evvalues
+
+
+df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 
 def lowestpoint(df1):
     #find all the values of z and put them in a list
@@ -88,6 +92,7 @@ def lowestpoint(df1):
     cols={}
     #create dataframe for conduction band and valence band
    lvalues=pd.DataFrame(columns=['x','y','z','Ec'])
+
 
     i=0
     #loop through different z values along the device
@@ -100,6 +105,37 @@ def lowestpoint(df1):
     return Ecvalues,Evvalues 
 
 #def jp_z(df1):
+
+
+EcEv=band_diagram_z(df)
+
+Ec=EcEv[0]
+
+#Ez=electric_field_z(df, 'Ez')
+##Ez.plot('z',Ecomponent)
+#plt.plot(Ez['z'],Ez['Ez'])
+#
+#Ex=electric_field_z(df, 'Ex')
+##Ex.plot('z','Ex')
+#plt.plot(Ex['z'],Ex['Ex'])
+#
+#Ey=electric_field_z(df, 'Ey')
+##Ey.plot('z','Ey')
+#
+#plt.plot(Ey['z'],Ey['Ey'])
+#
+#E=electric_field_z(df, 'E')
+##E.plot('z','E')
+#
+#plt.plot(E['z'],E['E'])
+#
+#plt.show()
+
+
+
+
+#def band_diagram_z(df1):
+
 #    #find all the values of z and put them in a list
 #    zvalues = df1['z'].unique()
 #    cols={}
@@ -120,6 +156,7 @@ def lowestpoint(df1):
 #        Ecvalues.loc[i]=d1
 #        Evvalues.loc[i]=d2
 #        i=i+1
+
 #directory='D:\\HoletransportAlGaN_0.17_30nm_2'
 
 #file='unified electric field data.csv'
@@ -145,6 +182,14 @@ os.chdir(directory)
 #df=pd.read_csv(file, delimiter=',')
 df=pd.read_csv(file, delimiter=',')
 #
+
+#
+#
+#    return Ecvalues,Evvalues 
+#
+#df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+#df=df.drop(['Unnamed: 0'], axis=1)
+
 #Ecomponent='E'
 #
 #EcEv=band_diagram_z(df)
@@ -152,7 +197,7 @@ df=pd.read_csv(file, delimiter=',')
 #Ec=EcEv[0]
 #Ev=EcEv[1]
 #
-#Elfield=electric_field_z(df, Ecomponent)
+# #Elfield=electric_field_z(df, Ecomponent)
 #Elfield.plot('z',Ecomponent)
 #plt.plot(Ec['z'],Ec['Ec'])
 #plt.plot(Ev['z'],Ev['Ev'])
@@ -161,3 +206,9 @@ df=pd.read_csv(file, delimiter=',')
 #df.plot('z','E')
 #
 #plt.scatter(df['z'],df['E'])
+
+#E_z=electric_field_z(df, Ecomponent)
+#
+#
+#plt.plot(Ec['z'],Ec['Ec'])
+
