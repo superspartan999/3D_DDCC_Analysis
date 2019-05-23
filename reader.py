@@ -127,8 +127,8 @@ for key,n in G.nodes.items():
     tup=dictcoords[key].tolist()
     n['pos']=dictcoords[key]
 
-
-for idx,z in enumerate(zvalues)-1:
+idx=0
+for idx in range(len(zvalues)-1):
     positions=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx]].values
     neighposition=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx+1]].values
     for nkey in neighposition:
@@ -137,6 +137,7 @@ for idx,z in enumerate(zvalues)-1:
             neighpos=G.node[nkey+1]['pos']
             dist=np.linalg.norm(pos-neighpos)
             G.add_edge(key+1,nkey+1, weight=dist)
+            G[key+1][nkey+1]['dist']=dist
         
     
 
