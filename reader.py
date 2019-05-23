@@ -92,7 +92,8 @@ os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
 
 #find all the values of z and put them in a list
-zvalues = df['z'].unique()
+zvalues = np.sort(df['z'].unique())
+
 zvalues=zvalues[:-1]
 coords=np.empty(3)
 
@@ -118,11 +119,27 @@ for z in zvalues:
     i=i+1
 
 sortedcoords=coords[coords[:,2].argsort()]
+sortedcoordsdf=pd.DataFrame(sortedcoords,columns=['x','y','z'])
 dictcoords=dict(enumerate(sortedcoords, 1))
-G=nx.DiGraph()
+G=nx.Graph()
 G.add_nodes_from(dictcoords.keys())
 for key,n in G.nodes.items():
-   n["attribute"]=dictcoords[key]
+    tup=dictcoords[key].tolist()
+    n['pos']=dictcoords[key]
+
+
+for idx,z in enumerate(zvalues)-1:
+    positions=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx]].values
+    neighposition=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx+1]].values
+    for nkey in neighposition:
+        for key in positions:
+            pos=G.node[key+1]['pos']
+            neighpos=G.node[nkey+1]['pos']
+            dist=np.linalg.norm(pos-neighpos)
+            G.add_edge(key+1,nkey+1, weight=dist)
+        
+    
+
 
 
 
