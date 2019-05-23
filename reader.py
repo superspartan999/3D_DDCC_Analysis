@@ -84,10 +84,53 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues
 
+def ksp_yen(graph, node_start, node_end, max_k=2):
+    distances, previous = dijkstra(graph, node_start)
 
+    A = [{'cost': distances[node_end], 
+          'path': path(previous, node_start, node_end)}]
+    B = []
+
+    if not A[0]['path']: return A
+
+    for k in range(1, max_k):
+        for i in range(0, len(A[-1]['path']) - 1):
+            node_spur = A[-1]['path'][i]
+            path_root = A[-1]['path'][:i+1]
+
+            edges_removed = []
+            for path_k in A:
+                curr_path = path_k['path']
+                if len(curr_path) > i and path_root == curr_path[:i+1]:
+                    cost = graph.remove_edge(curr_path[i], curr_path[i+1])
+                    if cost == -1:
+                        continue
+                    edges_removed.append([curr_path[i], curr_path[i+1], cost])
+
+            path_spur = dijkstra(graph, node_spur, node_end)
+
+            if path_spur['path']:
+                path_total = path_root[:-1] + path_spur['path']
+                dist_total = distances[node_spur] + path_spur['cost']
+                potential_k = {'cost': dist_total, 'path': path_total}
+
+                if not (potential_k in B):
+                    B.append(potential_k)
+
+            for edge in edges_removed:
+                graph.add_edge(edge[0], edge[1], edge[2])
+
+        if len(B):
+            B = sorted(B, key=itemgetter('cost'))
+            A.append(B[0])
+            B.pop(0)
+        else:
+            break
+
+    return A
 #
-directory = 'E:\\10nmAlGaN\\Bias -42'
-file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+directory = 'E:\\50nmAlGaN\\Bias -42'
+file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
 
@@ -140,7 +183,7 @@ for idx in range(len(zvalues)-1):
             G[key+1][nkey+1]['dist']=dist
         
     
-
+p=ksp_yen(G,0,10740,max_k=4)
 
 
 
