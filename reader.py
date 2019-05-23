@@ -50,7 +50,6 @@ def electric_field_z(df1, Ecom):
         
         #average
         averagezsliceE=zslice[Ecom].mean()
-        print averagezsliceE
         d1={'z':z,Ecom:averagezsliceE}
         Evalues.loc[i]=d1
         i=i+1
@@ -87,7 +86,11 @@ def band_diagram_z(df1):
 
 #
 directory = 'E:\\10nmAlGaN\\Bias -42'
+
 directory= 'C:/Users/Clayton/Desktop/10nmAlGaN/Bias -42
+
+directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
@@ -96,7 +99,7 @@ df=pd.read_csv(file, delimiter=',')
 zvalues = np.sort(df['z'].unique())
 
 zvalues=zvalues[:-1]
-coords=np.empty(3)
+coords=np.empty(4)
 
 #create dataframe for conduction band and valence band
 lvalues=pd.DataFrame(columns=['z','coords'])
@@ -108,7 +111,7 @@ for z in zvalues:
     #extract x-y plane for a z value
     zslice=extract_slice(df,'z',z, drop=True)
     l=zslice[zslice['Ec'] == min(zslice['Ec'])]
-    l=l[['x','y']].copy()
+    l=l[['x','y', 'Ec']].copy()
     d1={'z':z,'coords':l.values}
     
     for l in l.values:
@@ -118,15 +121,16 @@ for z in zvalues:
     lvalues=lvalues.append(d1, ignore_index=True)
 
     i=i+1
-
+coords[:, 2], coords[:, 3] = coords[:, 3], coords[:, 2].copy()
 sortedcoords=coords[coords[:,2].argsort()]
-sortedcoordsdf=pd.DataFrame(sortedcoords,columns=['x','y','z'])
+sortedcoordsdf=pd.DataFrame(sortedcoords,columns=['x','y','z', 'Ec'])
 dictcoords=dict(enumerate(sortedcoords, 1))
 G=nx.Graph()
 G.add_nodes_from(dictcoords.keys())
 for key,n in G.nodes.items():
     tup=dictcoords[key].tolist()
-    n['pos']=dictcoords[key]
+    n['pos']=dictcoords[key][0:3]
+    n['pot']=dictcoords[key][3]
 
 idx=0
 for idx in range(len(zvalues)-1):
@@ -141,10 +145,17 @@ for idx in range(len(zvalues)-1):
             G[key+1][nkey+1]['dist']=dist
         
     
+s=nx.shortest_path_length(G,1,len(sortedcoords)-1,weight='dist')
+h=nx.shortest_path(G,1,len(sortedcoords)-1,weight='dist')
+p=nx.shortest_simple_paths(G,1,7231)
 
 
+nodeweights=0
 
-
+for node in h:
+    nodeweights=G.node[node]['pot']+nodeweights
+    
+averagenodeenergy=nodeweights/len(h )
 
 #directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
 #file='p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
