@@ -87,6 +87,7 @@ def band_diagram_z(df1):
 
 #
 directory = 'E:\\10nmAlGaN\\Bias -42'
+directory= 'C:/Users/Clayton/Desktop/10nmAlGaN/Bias -42
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
