@@ -37,38 +37,11 @@ file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
 os.chdir(directory)
-my_data=pd.read_csv(file, delimiter=',')
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
-
-
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-#file = 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
-
-os.chdir(directory)
-my_data=pd.read_csv(file, delimiter=',')
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
-
-
-directory = 'D:\\HoletransportAlGaN_0.17_30nm_2'
-file = 'p_structure_0.17_30nm-out.vg_0.00.vd_-2.50.vs_0.00.unified'
-
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-
-directory ='C:\\Users\\Clayton\\Desktop\\10nmAlGaN_0\\Bias8'
-file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
-
-
-os.chdir(directory)
 
 my_data=pd.read_csv(file, delimiter=',')
 EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 
-
-
-os.chdir(directory)
-my_data=pd.read_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 
 
@@ -156,8 +129,6 @@ max_z=my_data.loc[my_data['z'].idxmax()]['z']
 
 
 
-
-my_data=pd.read_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
 
 
 
