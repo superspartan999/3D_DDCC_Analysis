@@ -113,7 +113,7 @@ def extract_carriers(file, head_len=12):
 
     # Only run method if the file type is a .np
     if file.endswith('.np'):
-
+ 
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
 
