@@ -122,7 +122,7 @@ def extract_carriers(file, head_len=12):
                            header=None, names=['n'], delim_whitespace=True, 
                            engine='python')
         print("Extracting hole concentration...")
-        pdat = pd.read_csv(file, skiprows=2*head_len+num_nodes-1,
+        pdat = pd.read_csv(file, skiprows=2*head_len+num_nodes-2,
                            nrows=num_nodes, header=None, names=['p'],
                            delim_whitespace=True, engine='python')
 
