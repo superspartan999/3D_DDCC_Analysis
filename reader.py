@@ -21,6 +21,8 @@ import os
 import networkx as nx
 
 
+
+
 def extract_slice(data, slice_var, slice_val, drop=False):
 
     """
@@ -102,6 +104,7 @@ directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Proj
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
 
 file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+
 
 
 def checkFrameRows(raw_data):
@@ -331,9 +334,9 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
 directory = 'E:\\50nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
-directory = 'E:\\10nmAlGaN\\Bias -42'
+directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
 os.chdir(directory)
@@ -382,21 +385,22 @@ dictEc=dict(enumerate(Ecarr, 1))
 G=nx.Graph()
 G.add_nodes_from(dictEc.keys())
 for key, n in G.nodes.items():
-    n['pos']=np.array(dictEc[key][0:3],dtype=float).tolist()
-    n['pot']=np.array(dictEc[key][3],dtype=float).tolist()
+    n['pos']=dictEc[key][0:3]
+    n['pot']=dictEc[key][3]
+        
     
-#def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
+def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
+    
+    center=nodetocoord(source,xvalues,yvalues,zvalues)
+    neighbour=nodetocoord(target,xvalues,yvalues,zvalues)
+    
+    distance=np.linalg.norm(np.array(center[0:3])-np.array(neighbour[0:3]))
+    potentialdiff=(Ecdf['Ec'].iloc[source]+Ecdf['Ec'].iloc[target])/2
+    
+    return distance*potentialdiff
+#
 #    
-#    center=nodetocoord(source,xvalues,yvalues,zvalues)
-#    neighbour=nodetocoord(target,xvalues,yvalues,zvalues)
-#    
-#    distance=np.linalg.norm(np.array(center[0:3])-np.array(neighbour[0:3]))
-#    potentialdiff=(Ecdf['Ec'].iloc[source]+Ecdf['Ec'].iloc[target])/2
-#    
-#    return distance*potentialdiff
-##
-##    
-for key, n in G.nodes.items():
+for key, n in list(G.nodes.items()):
     xneighs=NNX(key,xvalues,yvalues,zvalues)
     yneighs=NNY(key,xvalues,yvalues,zvalues)
     zneighs=NNZ(key,xvalues,yvalues,zvalues)
@@ -429,7 +433,7 @@ for key, n in G.nodes.items():
     else:
         G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
         
-    print key
+    print(key)
     #
 ##loop through different z values along the device
 #for z in zvalues:
@@ -472,18 +476,17 @@ for key, n in G.nodes.items():
 #            G[key+1][nkey+1]['dist']=dist
 #        
 #    
-#s=nx.shortest_path_length(G,1,len(sortedcoords)-1,weight='dist')
-#h=nx.shortest_path(G,1,len(sortedcoords)-1,weight='dist')
-#p=nx.shortest_simple_paths(G,1,7231)
+s=nx.shortest_path_length(G,1,len(sorted_data)-1,weight='weight')
+h=nx.shortest_path(G,1,len(sorted_data)-1,weight='weight')
+
 #
 #
+nodeweights=0
 #
-#nodeweights=0
-#
-#for node in h:
-#    nodeweights=G.node[node]['pot']+nodeweights
+for node in h:
+    nodeweights=G.node[node]['pot']+nodeweights
 #    
-#averagenodeenergy=nodeweights/len(h)
+averagenodeenergy=nodeweights/len(h)
 
 #directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
 #file='p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
