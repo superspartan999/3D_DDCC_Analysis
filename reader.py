@@ -484,7 +484,7 @@ start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sor
 
 end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
 s=nx.shortest_path_length(G,1,len(sorted_data)-1,weight='weight')
-h=nx.shortest_path(G,start.index,end.index,weight='weight')
+h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
 
 #
 #
@@ -495,21 +495,21 @@ for node in h:
 #    
 averagenodeenergy=nodeweights/len(h)
 
-path=pd.DataFrame(index=range(len(G)),columns={'Node','x','y','z'})
+path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
 
 for i,val in enumerate(h):
-    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']
+    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
    
     
 fig = plt.figure()
 
 ax = fig.add_subplot(111, projection='3d')
 
-x=sorted_data['x'].values
+x=path['x'].values
 
-y=sorted_data['y'].values
+y=path['y'].values
 
-z=sorted_data['z'].values
+z=path['z'].values
 
 
 ax.scatter(x, y, z, c='r', marker='o')
