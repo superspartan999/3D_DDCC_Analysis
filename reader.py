@@ -98,8 +98,8 @@ def band_diagram_z(df1):
 
 #
 directory = 'E:\\50nmAlGaN\\Bias -42'
-
-directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\50nmAlGaN\\Bias -42'
+#
+#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\50nmAlGaN\\Bias -42'
 
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
 
@@ -334,7 +334,11 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
 directory = 'E:\\50nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
+
 directory= 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias -42'
+
+#directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
+
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
@@ -400,7 +404,7 @@ def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     return distance*potentialdiff
 #
 #    
-for key, n in list(G.nodes.items()):
+for key, n in list(G.nodes.items()-1):
     xneighs=NNX(key,xvalues,yvalues,zvalues)
     yneighs=NNY(key,xvalues,yvalues,zvalues)
     zneighs=NNZ(key,xvalues,yvalues,zvalues)
@@ -476,8 +480,11 @@ for key, n in list(G.nodes.items()):
 #            G[key+1][nkey+1]['dist']=dist
 #        
 #    
+start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == 0)]
+
+end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
 s=nx.shortest_path_length(G,1,len(sorted_data)-1,weight='weight')
-h=nx.shortest_path(G,1,len(sorted_data)-1,weight='weight')
+h=nx.shortest_path(G,start.index,end.index,weight='weight')
 
 #
 #
@@ -487,6 +494,25 @@ for node in h:
     nodeweights=G.node[node]['pot']+nodeweights
 #    
 averagenodeenergy=nodeweights/len(h)
+
+path=pd.DataFrame(index=range(len(G)),columns={'Node','x','y','z'})
+
+for i,val in enumerate(h):
+    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']
+   
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')
+
+x=sorted_data['x'].values
+
+y=sorted_data['y'].values
+
+z=sorted_data['z'].values
+
+
+ax.scatter(x, y, z, c='r', marker='o')
 
 #directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
 #file='p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
