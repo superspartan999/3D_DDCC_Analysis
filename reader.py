@@ -400,7 +400,7 @@ def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     return distance*potentialdiff
 #
 #    
-for key, n in list(G.nodes.items()-1):
+for key, n in list(G.nodes.items()):
     xneighs=NNX(key,xvalues,yvalues,zvalues)
     yneighs=NNY(key,xvalues,yvalues,zvalues)
     zneighs=NNZ(key,xvalues,yvalues,zvalues)
@@ -494,10 +494,10 @@ averagenodeenergy=nodeweights/len(h)
 path=pd.DataFrame(index=range(len(G)),columns={'Node','x','y','z'})
 
 for i,val in enumerate(h):
-    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']
-   
-    
-fig = plt.figure()
+    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+
+
+
 
 ax = fig.add_subplot(111, projection='3d')
 
