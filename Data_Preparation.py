@@ -25,6 +25,9 @@ directory= 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias -42'
 
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
 
+directory= 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias -42'
+#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+
 os.chdir(directory)
 
 
