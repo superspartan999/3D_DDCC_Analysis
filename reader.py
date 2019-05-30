@@ -335,8 +335,12 @@ directory = 'E:\\10nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+#
+##directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
+#
+##directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+#file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 
 os.chdir(directory)
