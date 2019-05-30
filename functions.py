@@ -1,9 +1,119 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon May 27 15:39:29 2019
+Created on Wed Apr  3 17:27:40 2019
 
 @author: Clayton
 """
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy as scp
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import axes3d, Axes3D 
+from math import floor, sqrt
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy as scp
+import os
+import networkx as nx
+from networkx.readwrite import json_graph
+import simplejson as json
+
+def extract_slice(data, slice_var, slice_val, drop=False):
+
+    """
+    This function grabs a 2D slice of a 3D data set. The function can set the
+    variable and value as an argument.
+    """
+
+    if type(data) is not pd.DataFrame or type(slice_var) is not str:
+        print('Input parameters of incorrect type.')
+        return
+
+    print("Slicing data...")
+    my_filter = data[slice_var] == slice_val
+    slice_data = data[my_filter]
+
+    if drop:
+        slice_data = slice_data.drop(slice_var, axis=1)
+
+    return slice_data
+
+def save_json(filename,graph):
+    g = graph
+    g_json = json_graph.node_link_data(g)
+    json.dump(g_json,open(filename,'w'),indent=2)
+
+def read_json_file(filename):
+    with open(filename) as f:
+        js_graph = json.load(f)
+    return json_graph.node_link_graph(js_graph)
+
+def electric_field_z(df1, Ecom):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+    Evalues=pd.DataFrame(columns=['z',Ecom])
+
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+
+        
+        #average
+        averagezsliceE=zslice[Ecom].mean()
+        d1={'z':z,Ecom:averagezsliceE}
+        Evalues.loc[i]=d1
+        i=i+1
+
+
+    return Evalues
+
+#function to plot band diagram
+def band_diagram_z(df1):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+    Ecvalues=pd.DataFrame(columns=['z','Ec'])
+    Evvalues=pd.DataFrame(columns=['z','Ev'])
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average
+        averagezsliceEc=zslice['Ec'].mean()
+        averagezsliceEv=zslice['Ev'].mean()
+        d1={'z':z,'Ec':averagezsliceEc}
+        d2={'z':z,'Ev':averagezsliceEv}
+        Ecvalues.loc[i]=d1
+        Evvalues.loc[i]=d2
+        i=i+1
+
+
+
+    return Ecvalues,Evvalues
+
+
+
+#
+directory = 'E:\\50nmAlGaN\\Bias -42'
+#
+#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\50nmAlGaN\\Bias -42'
+
+#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+
+file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+
+
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape

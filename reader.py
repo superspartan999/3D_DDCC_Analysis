@@ -19,8 +19,8 @@ import matplotlib.pyplot as plt
 import scipy as scp
 import os
 import networkx as nx
-
-
+from networkx.readwrite import json_graph
+import simplejson as json
 
 
 def extract_slice(data, slice_var, slice_val, drop=False):
@@ -43,6 +43,15 @@ def extract_slice(data, slice_var, slice_val, drop=False):
 
     return slice_data
 
+def save_json(filename,graph):
+    g = graph
+    g_json = json_graph.node_link_data(g)
+    json.dump(g_json,open(filename,'w'),indent=2)
+
+def read_json_file(filename):
+    with open(filename) as f:
+        js_graph = json.load(f)
+    return json_graph.node_link_graph(js_graph)
 
 def electric_field_z(df1, Ecom):
     #find all the values of z and put them in a list
@@ -335,12 +344,12 @@ directory = 'E:\\10nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
-#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #
 ##directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
 #
-##directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-#file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 
 os.chdir(directory)
@@ -367,6 +376,8 @@ sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True])
 sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 
+if sorted_data['Ec'].min()<0:
+    
 
 #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
 #that gives us the total no. of grid points in any given direction
@@ -377,7 +388,8 @@ unique_z=rounded_nodes['z'].unique()
 
 #sort these dataframes in acsending order
 xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
-yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
+yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).res
+et_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 
     
@@ -444,6 +456,8 @@ for key, n in list(G.nodes.items())[:-1]:
         G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
         
     print(key)
+    
+
     #
 ##loop through different z values along the device
 #for z in zvalues:
@@ -491,7 +505,7 @@ start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])
 end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
 s=nx.shortest_path_length(G,start.index.values[0],end.index.values[0],weight='weight')
 h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
-#
+
 #
 nodeweights=0
 #
@@ -521,6 +535,13 @@ ax.set_ylim(0,yvalues[0].iat[-1])
 ax.set_zlim(0,zvalues[0].iat[-1])
 
 ax.scatter(x, y, z, c='r', marker='o')
+
+
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+
+
+
+k=read_json_file('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.json')
 
 #directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
 #file='p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
