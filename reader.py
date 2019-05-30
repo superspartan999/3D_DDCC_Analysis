@@ -404,36 +404,41 @@ def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     return distance*potentialdiff
 #
 #    
-for key, n in list(G.nodes.items()):
+for key, n in list(G.nodes.items())[:-1]:
     xneighs=NNX(key,xvalues,yvalues,zvalues)
     yneighs=NNY(key,xvalues,yvalues,zvalues)
     zneighs=NNZ(key,xvalues,yvalues,zvalues)
     
-
     if key==xneighs[0]:
-        continue
+       g=0
     else:
         G.add_edge(key,xneighs[0],weight=float(edgeweight(key,xneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+    
     if key==xneighs[1]:
-        continue
+       g=0
     else:
+
         G.add_edge(key,xneighs[1],weight=float(edgeweight(key,xneighs[1],xvalues,yvalues,zvalues,Ecdf)))
 
+
     if key==yneighs[0]:
-        continue
+       g=0
     else:
+        print(key)
         G.add_edge(key,yneighs[0],weight=float(edgeweight(key,yneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+    
     if key==yneighs[1]:
-        continue
+        g=0
     else:
         G.add_edge(key,yneighs[1],weight=float(edgeweight(key,yneighs[1],xvalues,yvalues,zvalues,Ecdf)))
         
     if key==zneighs[0]:
-        continue
+       g=0
     else:
         G.add_edge(key,zneighs[0],weight=float(edgeweight(key,zneighs[0],xvalues,yvalues,zvalues,Ecdf)))
-    if key==yneighs[1]:
-        continue
+   
+    if key==zneighs[1]:
+      g=0
     else:
         G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
         
