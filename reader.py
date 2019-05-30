@@ -331,16 +331,16 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
 
 
 
-directory = 'E:\\50nmAlGaN\\Bias -42'
-file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+directory = 'E:\\10nmAlGaN\\Bias -42'
+file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
-directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
-
-#directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
-
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+#
+##directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
+#
+##directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+#file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 
 os.chdir(directory)
@@ -364,8 +364,9 @@ rounded_nodes=node_map.round(decimals=10)
 #
 ##sort the nodes in ascending order
 sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=df.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=sorted_data.round({'x':10,'y':10,'z':10})
+sorted_data=df.round({'x':10,'y':10,'z':10})
+sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+
 
 #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
 #that gives us the total no. of grid points in any given direction
