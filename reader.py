@@ -485,12 +485,11 @@ for key, n in list(G.nodes.items())[:-1]:
 #            G[key+1][nkey+1]['dist']=dist
 #        
 #    
-start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == 0)]
+start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
 
-end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
+end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
 s=nx.shortest_path_length(G,start.index.values[0],end.index.values[0],weight='weight')
 h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
-
 #
 #
 nodeweights=0
