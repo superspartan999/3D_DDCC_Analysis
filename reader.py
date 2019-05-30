@@ -499,11 +499,9 @@ path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
 
 for i,val in enumerate(h):
     path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-
-
+   
     
 fig = plt.figure()
-
 
 ax = fig.add_subplot(111, projection='3d')
 
