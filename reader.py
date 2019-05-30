@@ -335,12 +335,12 @@ directory = 'E:\\50nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
-directory= 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias -42'
+directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 
 #directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
 
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 
 os.chdir(directory)
@@ -404,7 +404,7 @@ def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     return distance*potentialdiff
 #
 #    
-for key, n in list(G.nodes.items()-1):
+for key, n in list(G.nodes.items()):
     xneighs=NNX(key,xvalues,yvalues,zvalues)
     yneighs=NNY(key,xvalues,yvalues,zvalues)
     zneighs=NNZ(key,xvalues,yvalues,zvalues)
@@ -483,7 +483,7 @@ for key, n in list(G.nodes.items()-1):
 start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == 0)]
 
 end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[len(xvalues)/2][0])&(sorted_data['y'] == yvalues.iloc[len(yvalues)/2][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
-s=nx.shortest_path_length(G,1,len(sorted_data)-1,weight='weight')
+s=nx.shortest_path_length(G,start.index.values[0],end.index.values[0],weight='weight')
 h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
 
 #
@@ -511,6 +511,9 @@ y=path['y'].values
 
 z=path['z'].values
 
+ax.set_xlim(0, xvalues[0].iat[-1]) 
+ax.set_ylim(0,yvalues[0].iat[-1])
+ax.set_zlim(0,zvalues[0].iat[-1])
 
 ax.scatter(x, y, z, c='r', marker='o')
 
