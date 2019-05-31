@@ -105,16 +105,6 @@ def band_diagram_z(df1):
 
 
 
-#
-directory = 'E:\\50nmAlGaN\\Bias -42'
-#
-#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\50nmAlGaN\\Bias -42'
-
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-
-file= 'p_structure_0.17_50nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
-
-
 
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape

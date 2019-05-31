@@ -343,26 +343,17 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
 directory = 'E:\\10nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
-
-directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #
-##directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
-#
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+##
+###directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
+##
+##directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+#file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
-
-#find all the values of z and put them in a list
-zvalues = np.sort(df['z'].unique())
-
-zvalues=zvalues[:-1]
-coords=np.empty(4)
-
-#create dataframe for conduction band and valence band
-lvalues=pd.DataFrame(columns=['z','coords'])
 
 #extract x,y,z coordinates and x,y,z indices. the indices indicate the position of the point along a specific dimension list
 
@@ -400,9 +391,9 @@ Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop
 Ecarr=Ecdf.values
 dictEc=dict(enumerate(Ecarr, 1))
 G=nx.Graph()
-G.add_nodes_from(dictEc.keys())
+G.add_nodes_from(dictEc.keys(),pos=dictEc)
 for key, n in G.nodes.items():
-    n['pos']=dictEc[key][0:3]
+    n['pos']=dictEc[key][0:3].tolist()
     n['pot']=dictEc[key][3]
         
     
@@ -415,8 +406,8 @@ def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     potentialdiff=(Ecdf['Ec'].iloc[source]+Ecdf['Ec'].iloc[target])/2
     
     return distance*potentialdiff
-#
-#    
+
+    
 for key, n in list(G.nodes.items())[:-1]:
     xneighs=NNX(key,xvalues,yvalues,zvalues)
     yneighs=NNY(key,xvalues,yvalues,zvalues)
@@ -437,7 +428,7 @@ for key, n in list(G.nodes.items())[:-1]:
     if key==yneighs[0]:
        g=0
     else:
-        print(key)
+
         G.add_edge(key,yneighs[0],weight=float(edgeweight(key,yneighs[0],xvalues,yvalues,zvalues,Ecdf)))
     
     if key==yneighs[1]:
@@ -455,89 +446,89 @@ for key, n in list(G.nodes.items())[:-1]:
     else:
         G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
         
-    print(key)
     
-save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
-    #
-##loop through different z values along the device
-#for z in zvalues:
-#    #extract x-y plane for a z value
-#    zslice=extract_slice(df,'z',z, drop=True)
-#    l=zslice[zslice['Ec'] == min(zslice['Ec'])]
-#    l=l[['x','y', 'Ec']].copy()
-#    d1={'z':z,'coords':l.values}
 #    
-#    for l in l.values:
-#        d2=np.append(l,z)
-#        coords=np.vstack((coords,d2))
-#        
-#    lvalues=lvalues.append(d1, ignore_index=True)
+#save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+#    #
+###loop through different z values along the device
+##for z in zvalues:
+##    #extract x-y plane for a z value
+##    zslice=extract_slice(df,'z',z, drop=True)
+##    l=zslice[zslice['Ec'] == min(zslice['Ec'])]
+##    l=l[['x','y', 'Ec']].copy()
+##    d1={'z':z,'coords':l.values}
+##    
+##    for l in l.values:
+##        d2=np.append(l,z)
+##        coords=np.vstack((coords,d2))
+##        
+##    lvalues=lvalues.append(d1, ignore_index=True)
+##
+##    i=i+1
 #
-#    i=i+1
-
-
-#coords[:, 2], coords[:, 3] = coords[:, 3], coords[:, 2].copy()
-#sortedcoords=coords[coords[:,2].argsort()]
-#sortedcoordsdf=pd.DataFrame(sortedcoords,columns=['x','y','z', 'Ec'])
-#dictcoords=dict(enumerate(sortedcoords, 1))
-#G=nx.Graph()
-#G.add_nodes_from(dictcoords.keys())
-#for key,n in G.nodes.items():
-#    tup=dictcoords[key].tolist()
-#    n['pos']=dictcoords[key][0:3]
-#    n['pot']=dictcoords[key][3]
 #
-#idx=0
-#for idx in range(len(zvalues)-1):
-#    positions=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx]].values
-#    neighposition=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx+1]].values
-#    for nkey in neighposition:
-#        for key in positions:
-#            pos=G.node[key+1]['pos']
-#            neighpos=G.node[nkey+1]['pos']
-#            dist=np.linalg.norm(pos-neighpos)
-#            G.add_edge(key+1,nkey+1, weight=dist)
-#            G[key+1][nkey+1]['dist']=dist
-#        
-#    
+##coords[:, 2], coords[:, 3] = coords[:, 3], coords[:, 2].copy()
+##sortedcoords=coords[coords[:,2].argsort()]
+##sortedcoordsdf=pd.DataFrame(sortedcoords,columns=['x','y','z', 'Ec'])
+##dictcoords=dict(enumerate(sortedcoords, 1))
+##G=nx.Graph()
+##G.add_nodes_from(dictcoords.keys())
+##for key,n in G.nodes.items():
+##    tup=dictcoords[key].tolist()
+##    n['pos']=dictcoords[key][0:3]
+##    n['pot']=dictcoords[key][3]
+##
+##idx=0
+##for idx in range(len(zvalues)-1):
+##    positions=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx]].values
+##    neighposition=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx+1]].values
+##    for nkey in neighposition:
+##        for key in positions:
+##            pos=G.node[key+1]['pos']
+##            neighpos=G.node[nkey+1]['pos']
+##            dist=np.linalg.norm(pos-neighpos)
+##            G.add_edge(key+1,nkey+1, weight=dist)
+##            G[key+1][nkey+1]['dist']=dist
+##        
+##    
 start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
 
 end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
 s=nx.shortest_path_length(G,start.index.values[0],end.index.values[0],weight='weight')
+
 h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
-
+##
+#nodeweights=0
+##
+#for node in h:
+#    nodeweights=G.node[node]['pot']+nodeweights
+##    
+#averagenodeenergy=nodeweights/len(h)
 #
-nodeweights=0
+#path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
 #
-for node in h:
-    nodeweights=G.node[node]['pot']+nodeweights
+#for i,val in enumerate(h):
+#    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+#   
 #    
-averagenodeenergy=nodeweights/len(h)
-
-path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-
-for i,val in enumerate(h):
-    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-   
-    
-fig = plt.figure()
-
-ax = fig.add_subplot(111, projection='3d')
-
-x=path['x'].values
-
-y=path['y'].values
-
-z=path['z'].values
-
-ax.set_xlim(0, xvalues[0].iat[-1]) 
-ax.set_ylim(0,yvalues[0].iat[-1])
-ax.set_zlim(0,zvalues[0].iat[-1])
-ax.scatter(x, y, z, c='r', marker='o')
-
-
-
-save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+#fig = plt.figure()
+#
+#ax = fig.add_subplot(111, projection='3d')
+#
+#x=path['x'].values
+#
+#y=path['y'].values
+#
+#z=path['z'].values
+#
+#ax.set_xlim(0, xvalues[0].iat[-1]) 
+#ax.set_ylim(0,yvalues[0].iat[-1])
+#ax.set_zlim(0,zvalues[0].iat[-1])
+#ax.scatter(x, y, z, c='r', marker='o')
+#
+#
+#
+#save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
 
 
 
