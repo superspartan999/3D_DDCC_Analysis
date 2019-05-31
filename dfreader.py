@@ -40,6 +40,13 @@ zmap=zslice[['x','y','Ec']]
 fig = plt.figure()
 
 
+def edgeweight2d(source,target,space,merged):
+    
+    average=(merged[source][2]+merged[target][2])/2
+    
+    return average*space
+
+
 
 x=zmap['x'].values
 
@@ -67,9 +74,58 @@ dictm=dict(enumerate(merged,1))
 G=nx.Graph()
 G.add_nodes_from(enumerate(dictm,1))
 
+space= np.diff(x_vals)[0]
 G.add_nodes_from(dictm.keys())
-for key, n in G.nodes.items()[:-1]:
+for key, n in G.nodes.items():
     n['pos']=dictm[key][0:2].tolist()
     n['pot']=dictm[key][2]
 
+for key, n in G.nodes.items():
+    Xp=merged[key][0]+(space[0])
+    Xn=merged[key][0]-(space[0])
+    Yp=merged[key][1]+(space[0])
+    Yn=merged[key][1]-(space[0])
+    
+#    if Xp > x_vals[len(x_vals)-1]:
+#        Xp=merged[key][0]
+#        
+#    if Xn < 0:
+#        Xn=merged[key][0]    
+#    
+#    if Yp > y_vals[len(y_vals)-1]:
+#        Yp=merged[key][0]
+#        
+#    if Xn < 0:
+#        Yn=merged[key][0]       
+    Xneighp=zmap.loc[(zmap['x']==Xp)&(zmap['y']==merged[key][1])].index.values
+    Xneighn=zmap.loc[(zmap['x']==Xn)&(zmap['y']==merged[key][1])].index.values
+    Yneighp=zmap.loc[(zmap['x']==merged[key][0])&(zmap['y']==Yp)].index.values
+    Yneighn=zmap.loc[(zmap['x']==merged[key][0])&(zmap['y']==Yn)].index.values
+    
+    if len(Xneighp)==0:
+        g=0
+    
+    else:
+        G.add_edge(key,Xneighp[0],weight=edgeweight2d(key,Xneighp[0],space,merged))
+        
+
+    if len(Xneighn)==0:
+        g=0
+    
+    else:
+        G.add_edge(key,Xneighn[0],weight=edgeweight2d(key,Xneighn[0],space,merged))        
+        
+    if len(Yneighp)==0:
+        g=0
+    
+    else:
+        G.add_edge(key,Yneighp[0],weight=edgeweight2d(key,Yneighp[0],space,merged))
+        
+
+    if len(Yneighn)==0:
+        g=0
+    
+    else:
+        G.add_edge(key,Yneighn[0],weight=edgeweight2d(key,Yneighn[0],space,merged))                
+    
 
