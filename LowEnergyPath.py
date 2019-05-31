@@ -338,34 +338,73 @@ def Neighbourhood(index,xvalues,yvalues,zvalues):
      
     return nn
 
-def processdf(df):
-    node_map=df[['x','y','z']].copy()
-    #round up values in node map to prevent floating point errors
-    rounded_nodes=node_map.round(decimals=10)
+
+
+directory = 'E:\\10nmAlGaN\\Bias -42'
+file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+
+
+directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #
-    #sort the nodes in ascending order
-    sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-    sorted_data=df.round({'x':10,'y':10,'z':10})
-    sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+##directory= 'C:\\Users\\Clayton\\Desktop\\50nmAlGaN\\Bias -42'
+#
+#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
-    if sorted_data['Ec'].min()<0:   
-        sorted_data['Ec']=sorted_data['Ec']-sorted_data['Ec'].min()
+
+os.chdir(directory)
+df=pd.read_csv(file, delimiter=',')
+
+#find all the values of z and put them in a list
+zvalues = np.sort(df['z'].unique())
+
+zvalues=zvalues[:-1]
+coords=np.empty(4)
+
+#create dataframe for conduction band and valence band
+lvalues=pd.DataFrame(columns=['z','coords'])
+
+#extract x,y,z coordinates and x,y,z indices. the indices indicate the position of the point along a specific dimension list
+
+
+node_map=df[['x','y','z']].copy()
+#round up values in node map to prevent floating point errors
+rounded_nodes=node_map.round(decimals=10)
+#
+##sort the nodes in ascending order
+sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+sorted_data=df.round({'x':10,'y':10,'z':10})
+sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+
+if sorted_data['Ec'].min()<0:   
+    sorted_data['Ec']=sorted_data['Ec']-sorted_data['Ec'].min()
     
 
-    #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
-    #that gives us the total no. of grid points in any given direction
-    unique_x=rounded_nodes['x'].unique()
-    unique_y=rounded_nodes['y'].unique()
-    unique_z=rounded_nodes['z'].unique()
+#create dataframes for each xyz dimension in the mesh. this creates a dimension list 
+#that gives us the total no. of grid points in any given direction
+unique_x=rounded_nodes['x'].unique()
+unique_y=rounded_nodes['y'].unique()
+unique_z=rounded_nodes['z'].unique()
 
 
-    #sort these dataframes in acsending order
-    xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
-    yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
-    zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
+#sort these dataframes in acsending order
+xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
+yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
+zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
+
     
-    return sorted_data, xvalues,yvalues,zvalues
+    
 
+Ecdf=sorted_data[['x','y','z','Ec']].copy()
+Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+Ecarr=Ecdf.values
+dictEc=dict(enumerate(Ecarr, 1))
+G=nx.Graph()
+G.add_nodes_from(dictEc.keys())
+for key, n in G.nodes.items():
+    n['pos']=dictEc[key][0:3]
+    n['pot']=dictEc[key][3]
+        
     
 def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     
@@ -376,75 +415,157 @@ def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
     potentialdiff=(Ecdf['Ec'].iloc[source]+Ecdf['Ec'].iloc[target])/2
     
     return distance*potentialdiff
+#
+#    
+for key, n in list(G.nodes.items())[:-1]:
+    xneighs=NNX(key,xvalues,yvalues,zvalues)
+    yneighs=NNY(key,xvalues,yvalues,zvalues)
+    zneighs=NNZ(key,xvalues,yvalues,zvalues)
+    
+    if key==xneighs[0]:
+       g=0
+    else:
+        G.add_edge(key,xneighs[0],weight=float(edgeweight(key,xneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+    
+    if key==xneighs[1]:
+       g=0
+    else:
 
-def graphfromdf(sorted_data,xvalues,yvalues,zvalues):
-    Ecdf=sorted_data[['x','y','z','Ec']].copy()
-    Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-    Ecarr=Ecdf.values
-    dictEc=dict(enumerate(Ecarr, 1))
-    G=nx.Graph()
-    G.add_nodes_from(dictEc.keys())
-    for key, n in G.nodes.items():
-        n['pos']=dictEc[key][0:3]
-        n['pot']=dictEc[key][3]
-            
-    
-    #
-    #    
-    for key, n in list(G.nodes.items())[:-1]:
-        xneighs=NNX(key,xvalues,yvalues,zvalues)
-        yneighs=NNY(key,xvalues,yvalues,zvalues)
-        zneighs=NNZ(key,xvalues,yvalues,zvalues)
-        
-        if key==xneighs[0]:
-           g=0
-        else:
-            G.add_edge(key,xneighs[0],weight=float(edgeweight(key,xneighs[0],xvalues,yvalues,zvalues,Ecdf)))
-        
-        if key==xneighs[1]:
-           g=0
-        else:
-    
-            G.add_edge(key,xneighs[1],weight=float(edgeweight(key,xneighs[1],xvalues,yvalues,zvalues,Ecdf)))
-    
-    
-        if key==yneighs[0]:
-           g=0
-        else:
-            print(key)
-            G.add_edge(key,yneighs[0],weight=float(edgeweight(key,yneighs[0],xvalues,yvalues,zvalues,Ecdf)))
-        
-        if key==yneighs[1]:
-            g=0
-        else:
-            G.add_edge(key,yneighs[1],weight=float(edgeweight(key,yneighs[1],xvalues,yvalues,zvalues,Ecdf)))
-            
-        if key==zneighs[0]:
-           g=0
-        else:
-            G.add_edge(key,zneighs[0],weight=float(edgeweight(key,zneighs[0],xvalues,yvalues,zvalues,Ecdf)))
-       
-        if key==zneighs[1]:
-          g=0
-        else:
-            G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
-            
+        G.add_edge(key,xneighs[1],weight=float(edgeweight(key,xneighs[1],xvalues,yvalues,zvalues,Ecdf)))
+
+
+    if key==yneighs[0]:
+       g=0
+    else:
         print(key)
-        
-    return G
-
-def averageenergy(G):
-    nodeweights=0
-    #
-    for node in h:
-        nodeweights=G.node[node]['pot']+nodeweights
-    #    
-    return nodeweights/len(h)
-
-def pathfromnodes(h):
-    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+        G.add_edge(key,yneighs[0],weight=float(edgeweight(key,yneighs[0],xvalues,yvalues,zvalues,Ecdf)))
     
-    for i,val in enumerate(h):
-        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+    if key==yneighs[1]:
+        g=0
+    else:
+        G.add_edge(key,yneighs[1],weight=float(edgeweight(key,yneighs[1],xvalues,yvalues,zvalues,Ecdf)))
         
-    return path
+    if key==zneighs[0]:
+       g=0
+    else:
+        G.add_edge(key,zneighs[0],weight=float(edgeweight(key,zneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+   
+    if key==zneighs[1]:
+      g=0
+    else:
+        G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
+        
+    print(key)
+    
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+    #
+##loop through different z values along the device
+#for z in zvalues:
+#    #extract x-y plane for a z value
+#    zslice=extract_slice(df,'z',z, drop=True)
+#    l=zslice[zslice['Ec'] == min(zslice['Ec'])]
+#    l=l[['x','y', 'Ec']].copy()
+#    d1={'z':z,'coords':l.values}
+#    
+#    for l in l.values:
+#        d2=np.append(l,z)
+#        coords=np.vstack((coords,d2))
+#        
+#    lvalues=lvalues.append(d1, ignore_index=True)
+#
+#    i=i+1
+
+
+#coords[:, 2], coords[:, 3] = coords[:, 3], coords[:, 2].copy()
+#sortedcoords=coords[coords[:,2].argsort()]
+#sortedcoordsdf=pd.DataFrame(sortedcoords,columns=['x','y','z', 'Ec'])
+#dictcoords=dict(enumerate(sortedcoords, 1))
+#G=nx.Graph()
+#G.add_nodes_from(dictcoords.keys())
+#for key,n in G.nodes.items():
+#    tup=dictcoords[key].tolist()
+#    n['pos']=dictcoords[key][0:3]
+#    n['pot']=dictcoords[key][3]
+#
+#idx=0
+#for idx in range(len(zvalues)-1):
+#    positions=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx]].values
+#    neighposition=sortedcoordsdf.index[sortedcoordsdf['z'] == zvalues[idx+1]].values
+#    for nkey in neighposition:
+#        for key in positions:
+#            pos=G.node[key+1]['pos']
+#            neighpos=G.node[nkey+1]['pos']
+#            dist=np.linalg.norm(pos-neighpos)
+#            G.add_edge(key+1,nkey+1, weight=dist)
+#            G[key+1][nkey+1]['dist']=dist
+#        
+#    
+start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
+
+end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
+s=nx.shortest_path_length(G,start.index.values[0],end.index.values[0],weight='weight')
+h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
+
+#
+nodeweights=0
+#
+for node in h:
+    nodeweights=G.node[node]['pot']+nodeweights
+#    
+averagenodeenergy=nodeweights/len(h)
+
+path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+
+for i,val in enumerate(h):
+    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+   
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')
+
+x=path['x'].values
+
+y=path['y'].values
+
+z=path['z'].values
+
+ax.set_xlim(0, xvalues[0].iat[-1]) 
+ax.set_ylim(0,yvalues[0].iat[-1])
+ax.set_zlim(0,zvalues[0].iat[-1])
+ax.scatter(x, y, z, c='r', marker='o')
+
+
+
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+
+
+
+
+
+#directory="C:\\Users\\Clayton\\Desktop\\CNSI test"
+#file='p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+##
+#directory ='C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias10'
+#file= 'p_structure_0.17_10nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+
+#directory ='C:\\Users\\Clayton\\Desktop\\30nmAlGaN\\Bias8'
+#file= 'p_structure_0.17_30nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+
+#os.chdir(directory)
+##df=pd.read_csv(file, delimiter=',')
+#df=pd.read_csv(file, delimiter=',')
+#g=lowestpoint(df)
+##
+
+#
+#
+#    return Ecvalues,Evvalues 
+#
+#df=pd.read_csv('E:\\Google Drive\\Research\\AlGaN Unipolar Studies\\10nmAlGaN\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+#df=df.drop(['Unnamed: 0'], axis=1)
+
+#Ecomponent='E'
+#
+
+
