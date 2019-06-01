@@ -25,7 +25,7 @@ from networkx.readwrite import json_graph
 import simplejson as json
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
-directory = 'E:\Google Drive\Research\Guillaume'
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 os.chdir(directory)
 
 
@@ -33,9 +33,9 @@ df=pd.read_csv("LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified", delimiter=',')
 
 sorted_data,xvalues,yvalues,zvalues=processdf(df)
 
-zslice=extract_slice(sorted_data,'z',zvalues.iloc[348][0]/2,drop=True)
+zslice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0]/2,drop=True)
 
-zmap=zslice[['x','y','Ec']]
+zmap=zslice[['x','y','Ec']].reset_index().round({'x':8,'y':8,'z':8})
 
 fig = plt.figure()
 
@@ -43,6 +43,7 @@ fig = plt.figure()
 def edgeweight2d(source,target,space,merged):
     
     average=(merged[source][2]+merged[target][2])/2
+
     
     return average*space
 
@@ -69,22 +70,41 @@ merged=np.vstack((x,y,z))
 
 merged=np.transpose(merged)
 
-dictm=dict(enumerate(merged,1))
+dictm=dict(enumerate(merged))
 
 G=nx.Graph()
-G.add_nodes_from(enumerate(dictm,1))
+
 
 space= np.diff(x_vals)[0]
 G.add_nodes_from(dictm.keys())
 for key, n in G.nodes.items():
+
     n['pos']=dictm[key][0:2].tolist()
     n['pot']=dictm[key][2]
 
-for key, n in G.nodes.items():
-    Xp=merged[key][0]+(space[0])
-    Xn=merged[key][0]-(space[0])
-    Yp=merged[key][1]+(space[0])
-    Yn=merged[key][1]-(space[0])
+for key, n in list(G.nodes.items()):
+    neighbourhood=point_tree.query_ball_point(xy[key], 6.05e-8)
+    
+    
+    neighbourhood.remove(key)
+    print(neighbourhood, 'neighbourhood')
+    print(len(neighbourhood))
+    for neigh in neighbourhood:
+        G.add_edge(key,neigh,weight=edgeweight2d(key,neigh,space,merged))
+
+
+h=nx.shortest_path(G,1,2600,weight='weight')     
+
+path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+
+for i,val in enumerate(h):
+    path.iloc[i]=zmap.iloc[val][['x','y']]
+#       
+#    
+#    Xp=merged[key][0]+space
+#    Xn=merged[key][0]-space
+#    Yp=merged[key][1]+space
+#    Yn=merged[key][1]-space
     
 #    if Xp > x_vals[len(x_vals)-1]:
 #        Xp=merged[key][0]
@@ -96,36 +116,63 @@ for key, n in G.nodes.items():
 #        Yp=merged[key][0]
 #        
 #    if Xn < 0:
-#        Yn=merged[key][0]       
-    Xneighp=zmap.loc[(zmap['x']==Xp)&(zmap['y']==merged[key][1])].index.values
-    Xneighn=zmap.loc[(zmap['x']==Xn)&(zmap['y']==merged[key][1])].index.values
-    Yneighp=zmap.loc[(zmap['x']==merged[key][0])&(zmap['y']==Yp)].index.values
-    Yneighn=zmap.loc[(zmap['x']==merged[key][0])&(zmap['y']==Yn)].index.values
-    
-    if len(Xneighp)==0:
-        g=0
-    
-    else:
-        G.add_edge(key,Xneighp[0],weight=edgeweight2d(key,Xneighp[0],space,merged))
-        
+#        Yn=merged[key][0]      
 
-    if len(Xneighn)==0:
-        g=0
-    
-    else:
-        G.add_edge(key,Xneighn[0],weight=edgeweight2d(key,Xneighn[0],space,merged))        
-        
-    if len(Yneighp)==0:
-        g=0
-    
-    else:
-        G.add_edge(key,Yneighp[0],weight=edgeweight2d(key,Yneighp[0],space,merged))
-        
 
-    if len(Yneighn)==0:
-        g=0
-    
-    else:
-        G.add_edge(key,Yneighn[0],weight=edgeweight2d(key,Yneighn[0],space,merged))                
+#    
+#    print('---')
+#    print(Xneighp)
+#    print(Xneighn)
+#    print(Yneighp)
+#    print(Yneighn)    
+#    if len(Xneighp)==0:
+#        g=0
+#    
+#    else:
+#        counter+=1
+#        G.add_edge(key,Xneighp[0],weight=edgeweight2d(key,Xneighp[0],space,merged))
+#        
+#
+#    if len(Xneighn)==0:
+#        g=0
+#    
+#    else:
+#        counter+=1
+#        G.add_edge(key,Xneighn[0],weight=edgeweight2d(key,Xneighn[0],space,merged))        
+#        
+#    if len(Yneighp)==0:
+#        g=0
+#    
+#    else:
+#        counter+=1
+#        G.add_edge(key,Yneighp[0],weight=edgeweight2d(key,Yneighp[0],space,merged))
+#        
+#
+#    if len(Yneighn)==0:
+#        g=0
+#    
+#    else:
+#        counter+=1
+#        G.add_edge(key,Yneighn[0],weight=edgeweight2d(key,Yneighn[0],space,merged))                
     
 
+        
+#def neighbours(node,G,zmap):
+#    neighbourhood=list(G.neighbors(node))
+#    print(neighbourhood)
+#    coords=np.empty(shape=(len(neighbourhood)+1,2))
+#    
+#    for key,n in enumerate(neighbourhood):
+#        coords[key]=np.transpose(zmap.iloc[n][['x','y']].values)
+#    
+#
+#    coords[len(neighbourhood)]=zmap.iloc[node][['x','y']]
+#    h=pd.DataFrame(coords,columns=['x','y'])
+#    return h
+    
+
+    
+
+    
+    
+    

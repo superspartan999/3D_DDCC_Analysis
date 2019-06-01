@@ -391,7 +391,7 @@ Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop
 Ecarr=Ecdf.values
 dictEc=dict(enumerate(Ecarr, 1))
 G=nx.Graph()
-G.add_nodes_from(dictEc.keys(),pos=dictEc)
+G.add_nodes_from(dictEc.keys())
 for key, n in G.nodes.items():
     n['pos']=dictEc[key][0:3].tolist()
     n['pot']=dictEc[key][3]
