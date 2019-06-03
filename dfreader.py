@@ -23,9 +23,13 @@ import os
 import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
+from matplotlib import cm
+
+from scipy.spatial import KDTree
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
-directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+directory = 'E:\\Google Drive\\Research\\Guillaume'
+#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 os.chdir(directory)
 
 
@@ -49,6 +53,14 @@ def edgeweight2d(source,target,space,merged):
 
 
 
+def coordtonode2d(x_idx,y_idx,unique_x,unique_y):
+    
+    max_y=len(unique_y)
+
+    
+    index = x_idx * max_y + y_idx 
+    return index
+
 x=zmap['x'].values
 
 y=zmap['y'].values
@@ -64,9 +76,12 @@ Ec_array.fill(np.nan)
 
 Ec_array[x_idx, y_idx] = zmap['Ec'].values
 
-plt.contourf(x_vals,y_vals,Ec_array,200)
 
-plt.contour(x_vals,y_vals,Ec_array,10)
+
+
+plt.contourf(x_vals,y_vals,Ec_array,cmap=cm.plasma)
+
+
 
 merged=np.vstack((x,y,z))
 
@@ -84,13 +99,18 @@ for key, n in G.nodes.items():
     n['pos']=dictm[key][0:2].tolist()
     n['pot']=dictm[key][2]
 
+
+xy=zmap[['index','x','y']]
+point=xy[['x','y']].values
+point_tree=KDTree(point)
+
+
 for key, n in list(G.nodes.items()):
-    neighbourhood=point_tree.query_ball_point(xy[key], 6.05e-8)
+    
+    neighbourhood=point_tree.query_ball_point(point[key], 6.05e-8)
     
     
     neighbourhood.remove(key)
-    print(neighbourhood, 'neighbourhood')
-    print(len(neighbourhood))
     for neigh in neighbourhood:
         G.add_edge(key,neigh,weight=edgeweight2d(key,neigh,space,merged))
 
@@ -99,9 +119,26 @@ h=nx.shortest_path(G,1,2600,weight='weight')
 
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
 
+
+
 for i,val in enumerate(h):
     path.iloc[i]=zmap.iloc[val][['x','y']]
-#       
+
+
+xx,yy=np.meshgrid(x_vals,y_vals)
+zz=np.zeros_like(xx)
+
+for xind, x in enumerate(x_vals):
+    for yind, y in enumerate(y_vals):
+        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
+        
+plt.scatter(path['x'],path['y'],c='r')
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')  
+ax.plot_surface(xx,yy,zz,cmap=cm.plasma,alpha=0.5) 
+ax.scatter(path['x'],path['y'],0.58,s=50,c='b')   
+
+
 #    
 #    Xp=merged[key][0]+space
 #    Xn=merged[key][0]-space
