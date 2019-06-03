@@ -35,7 +35,7 @@ sorted_data,xvalues,yvalues,zvalues=processdf(df)
 
 zslice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0]/2,drop=True)
 
-zmap=zslice[['x','y','Ec']].reset_index().round({'x':8,'y':8,'z':8})
+zmap=zslice[['x','y','Ec']].reset_index().round({'x':10,'y':10,'z':10})
 
 fig = plt.figure()
 
@@ -45,7 +45,7 @@ def edgeweight2d(source,target,space,merged):
     average=(merged[source][2]+merged[target][2])/2
 
     
-    return average*space
+    return space
 
 
 
@@ -64,7 +64,9 @@ Ec_array.fill(np.nan)
 
 Ec_array[x_idx, y_idx] = zmap['Ec'].values
 
-plt.contour(x_vals,y_vals,Ec_array)
+plt.contourf(x_vals,y_vals,Ec_array,200)
+
+plt.contour(x_vals,y_vals,Ec_array,10)
 
 merged=np.vstack((x,y,z))
 
