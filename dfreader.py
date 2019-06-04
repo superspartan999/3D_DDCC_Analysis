@@ -29,7 +29,7 @@ from scipy.spatial import KDTree
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
 directory = 'E:\\Google Drive\\Research\\Guillaume'
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 os.chdir(directory)
 
 
@@ -41,7 +41,6 @@ zslice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0]/2,drop=True
 
 zmap=zslice[['x','y','Ec']].reset_index().round({'x':10,'y':10,'z':10})
 
-fig = plt.figure()
 
 
 def edgeweight2d(source,target,space,merged):
@@ -49,7 +48,7 @@ def edgeweight2d(source,target,space,merged):
     average=(merged[source][2]+merged[target][2])/2
 
     
-    return space
+    return average
 
 
 
@@ -79,17 +78,7 @@ Ec_array[x_idx, y_idx] = zmap['Ec'].values
 
 
 
-plt.contourf(x_vals,y_vals,Ec_array,cmap=cm.plasma)
 
-
-
-merged=np.vstack((x,y,z))
-
-merged=np.transpose(merged)
-
-dictm=dict(enumerate(merged))
-
-G=nx.Graph()
 
 
 space= np.diff(x_vals)[0]
@@ -114,29 +103,50 @@ for key, n in list(G.nodes.items()):
     for neigh in neighbourhood:
         G.add_edge(key,neigh,weight=edgeweight2d(key,neigh,space,merged))
 
+def k_shortest_paths(G, source, target, k, weight=None):
+   return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
-h=nx.shortest_path(G,1,2600,weight='weight')     
+
+#shortestpaths=[]
+#for path in k_shortest_paths(G, 1, 2600, 3, weight='weight'):
+#    shortestpaths.append(shortestpaths)
+
+h=nx.astar_path(G,26,
+                2575,weight='weight')     
 
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
-
+nodeweights=0
+#
+for node in h:
+    nodeweights=G.node[node]['pot']+nodeweights
+#    
+averagenodeenergy=nodeweights/len(h)
 
 
 for i,val in enumerate(h):
     path.iloc[i]=zmap.iloc[val][['x','y']]
 
 
-xx,yy=np.meshgrid(x_vals,y_vals)
-zz=np.zeros_like(xx)
+#xx,yy=np.meshgrid(x_vals,y_vals)
+#zz=np.zeros_like(xx)
+#
+#for xind, x in enumerate(x_vals):
+#    for yind, y in enumerate(y_vals):
+#        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
+#
+fig = plt.figure()
+CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
 
-for xind, x in enumerate(x_vals):
-    for yind, y in enumerate(y_vals):
-        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
-        
-plt.scatter(path['x'],path['y'],c='r')
+CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
+#plt.clabel(CS2)
+plt.scatter(path['x'],path['y'],s=5,c='b')
+cbar = plt.colorbar(CS)
+
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')  
 ax.plot_surface(xx,yy,zz,cmap=cm.plasma,alpha=0.5) 
-ax.scatter(path['x'],path['y'],0.58,s=50,c='b')   
+ax.scatter(path['x'],path['y'],0.58,s=50,c='b') 
+
 
 
 #    
