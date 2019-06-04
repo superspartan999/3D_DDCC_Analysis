@@ -24,12 +24,13 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
 from matplotlib import cm
+from itertools import *
 
 from scipy.spatial import KDTree
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
 directory = 'E:\\Google Drive\\Research\\Guillaume'
-directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 os.chdir(directory)
 
 
@@ -48,7 +49,7 @@ def edgeweight2d(source,target,space,merged):
     average=(merged[source][2]+merged[target][2])/2
 
     
-    return average
+    return average*space
 
 
 
@@ -60,6 +61,50 @@ def coordtonode2d(x_idx,y_idx,unique_x,unique_y):
     index = x_idx * max_y + y_idx 
     return index
 
+def ksp_yen(graph, node_start, node_end, max_k=2):
+    distances, previous = nx.dijkstra_path(graph, node_start)
+
+    A = [{'cost': distances[node_end], 
+          'path': path(previous, node_start, node_end)}]
+    B = []
+
+    if not A[0]['path']: return A
+
+    for k in range(1, max_k):
+        for i in range(0, len(A[-1]['path']) - 1):
+            node_spur = A[-1]['path'][i]
+            path_root = A[-1]['path'][:i+1]
+
+            edges_removed = []
+            for path_k in A:
+                curr_path = path_k['path']
+                if len(curr_path) > i and path_root == curr_path[:i+1]:
+                    cost = graph.remove_edge(curr_path[i], curr_path[i+1])
+                    if cost == -1:
+                        continue
+                    edges_removed.append([curr_path[i], curr_path[i+1], cost])
+
+            path_spur = nx.dijkstra(graph, node_spur, node_end)
+
+            if path_spur['path']:
+                path_total = path_root[:-1] + path_spur['path']
+                dist_total = distances[node_spur] + path_spur['weight']
+                potential_k = {'cost': dist_total, 'path': path_total}
+
+                if not (potential_k in B):
+                    B.append(potential_k)
+
+            for edge in edges_removed:
+                graph.add_edge(edge[0], edge[1], edge[2])
+
+        if len(B):
+            B = sorted(B, key=nx.itemgetter('weight'))
+            A.append(B[0])
+            B.pop(0)
+        else:
+            break
+
+    return A
 x=zmap['x'].values
 
 y=zmap['y'].values
@@ -75,15 +120,17 @@ Ec_array.fill(np.nan)
 
 Ec_array[x_idx, y_idx] = zmap['Ec'].values
 
+merged=np.vstack((x,y,z))
 
+merged=np.transpose(merged)
 
+dictm=dict(enumerate(merged))
 
-
-
+G=nx.Graph()
 
 space= np.diff(x_vals)[0]
 G.add_nodes_from(dictm.keys())
-for key, n in G.nodes.items():
+for key, n in G.nodes.items()[:-1]:
 
     n['pos']=dictm[key][0:2].tolist()
     n['pot']=dictm[key][2]
@@ -94,7 +141,7 @@ point=xy[['x','y']].values
 point_tree=KDTree(point)
 
 
-for key, n in list(G.nodes.items()):
+for key, n in list(G.nodes.items())[:-1]:
     
     neighbourhood=point_tree.query_ball_point(point[key], 6.05e-8)
     
@@ -104,9 +151,10 @@ for key, n in list(G.nodes.items()):
         G.add_edge(key,neigh,weight=edgeweight2d(key,neigh,space,merged))
 
 def k_shortest_paths(G, source, target, k, weight=None):
-   return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
+     return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
 
+   
 #shortestpaths=[]
 #for path in k_shortest_paths(G, 1, 2600, 3, weight='weight'):
 #    shortestpaths.append(shortestpaths)
@@ -114,7 +162,10 @@ def k_shortest_paths(G, source, target, k, weight=None):
 h=nx.astar_path(G,26,
                 2575,weight='weight')     
 
+
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+for i,val in enumerate(h):
+        path.loc[i]=zmap.iloc[val][['x','y']]
 nodeweights=0
 #
 for node in h:
@@ -123,29 +174,41 @@ for node in h:
 averagenodeenergy=nodeweights/len(h)
 
 
-for i,val in enumerate(h):
-    path.iloc[i]=zmap.iloc[val][['x','y']]
 
 
-#xx,yy=np.meshgrid(x_vals,y_vals)
-#zz=np.zeros_like(xx)
-#
-#for xind, x in enumerate(x_vals):
-#    for yind, y in enumerate(y_vals):
-#        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
-#
+
+xx,yy=np.meshgrid(x_vals,y_vals)
+zz=np.zeros_like(xx)
+
+for xind, x in enumerate(x_vals):
+    for yind, y in enumerate(y_vals):
+        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
+
 fig = plt.figure()
 CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
 
 CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
 #plt.clabel(CS2)
-plt.scatter(path['x'],path['y'],s=5,c='b')
+
+#
+h4=k_shortest_paths(G,1,2600,50,weight='weight')
+path_list= {}
+
+for index,h in enumerate(h4):
+    path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+    for i,val in enumerate(h):
+            path.loc[i]=zmap.iloc[val][['x','y']]
+    path_list[index]=path
+#    
+for i, path in path_list.items():
+    plt.scatter(path['x'],path['y'], s=0.5)
+
 cbar = plt.colorbar(CS)
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')  
-ax.plot_surface(xx,yy,zz,cmap=cm.plasma,alpha=0.5) 
-ax.scatter(path['x'],path['y'],0.58,s=50,c='b') 
+#fig = plt.figure()
+#ax = fig.add_subplot(111, projection='3d')  
+#ax.plot_surface(xx,yy,zz,cmap=cm.plasma,alpha=0.5) 
+#ax.scatter(path['x'],path['y'],0.58,s=50,c='b') 
 
 
 
