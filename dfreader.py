@@ -5,43 +5,6 @@ Created on Fri May 31 01:33:08 2019
 @author: Kun
 """
 
-from functions import *
-import os
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy as scp
-
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d, Axes3D 
-from math import floor, sqrt
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy as scp
-import os
-import networkx as nx
-from networkx.readwrite import json_graph
-import simplejson as json
-from matplotlib import cm
-from itertools import *
-
-from scipy.spatial import KDTree
-
-directory = 'E:\\10nmAlGaN\\Bias -42'
-directory = 'E:\\Google Drive\\Research\\Guillaume'
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
-os.chdir(directory)
-
-
-df=pd.read_csv("LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified", delimiter=',')
-
-sorted_data,xvalues,yvalues,zvalues=processdf(df)
-
-zslice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0]/2,drop=True)
-
-zmap=zslice[['x','y','Ec']].reset_index().round({'x':10,'y':10,'z':10})
-
 
 
 def edgeweight2d(source,target,space,merged):
@@ -49,7 +12,7 @@ def edgeweight2d(source,target,space,merged):
     average=(merged[source][2]+merged[target][2])/2
 
     
-    return average*space
+    return average/space
 
 
 
@@ -176,32 +139,34 @@ averagenodeenergy=nodeweights/len(h)
 
 
 
-
-xx,yy=np.meshgrid(x_vals,y_vals)
-zz=np.zeros_like(xx)
-
-for xind, x in enumerate(x_vals):
-    for yind, y in enumerate(y_vals):
-        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
-
-fig = plt.figure()
-CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
-
-CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
-#plt.clabel(CS2)
-
 #
-h4=k_shortest_paths(G,1,2600,50,weight='weight')
-path_list= {}
-
-for index,h in enumerate(h4):
-    path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
-    for i,val in enumerate(h):
-            path.loc[i]=zmap.iloc[val][['x','y']]
-    path_list[index]=path
-#    
-for i, path in path_list.items():
-    plt.scatter(path['x'],path['y'], s=0.5)
+#xx,yy=np.meshgrid(x_vals,y_vals)
+#zz=np.zeros_like(xx)
+#
+#for xind, x in enumerate(x_vals):
+#    for yind, y in enumerate(y_vals):
+#        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
+#
+##plt.clabel(CS2)
+#
+##
+#h4=k_shortest_paths(G,26,2575,1000
+#                    ,weight='weight')
+#path_list= {}
+#
+#for index,h in enumerate(h4):
+#    path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+#    for i,val in enumerate(h):
+#            path.loc[i]=zmap.iloc[val][['x','y']]
+#    path_list[index]=path
+#
+#
+#fig = plt.figure()
+#CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
+#
+#CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)    
+#for i, path in path_list.items():
+#    plt.scatter(path['x'],path['y'], s=0.5, color='black')
 
 cbar = plt.colorbar(CS)
 
