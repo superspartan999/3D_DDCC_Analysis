@@ -30,7 +30,7 @@ from scipy.spatial import KDTree
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
 directory = 'E:\\Google Drive\\Research\\Guillaume'
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 os.chdir(directory)
 
 
@@ -46,10 +46,11 @@ zmap=zslice[['x','y','Ec']].reset_index().round({'x':10,'y':10,'z':10})
 
 def edgeweight2d(source,target,space,merged):
     
-    average=(merged[source][2]+merged[target][2])/2
+    average=(merged[source][2]+merged[target][2])
+    print(average)
 
     
-    return average*space
+    return average
 
 
 
@@ -61,50 +62,139 @@ def coordtonode2d(x_idx,y_idx,unique_x,unique_y):
     index = x_idx * max_y + y_idx 
     return index
 
-def ksp_yen(graph, node_start, node_end, max_k=2):
-    distances, previous = nx.dijkstra_path(graph, node_start)
 
-    A = [{'cost': distances[node_end], 
-          'path': path(previous, node_start, node_end)}]
-    B = []
+def create_neighbors_array(index_matrix, x_array, y_array, z_array, is_4_axes_bool):
+    around_x_mod, around_y_mod, around_size = select_around_mode (is_4_axes_bool)
+    neighbors_array = np.empty((around_size+1,np.shape(z_array)[0]), dtype=int); neighbors_array.fill(-1)
+    neighbor_pos = 1   
+    for counter in range (np.shape(z_array)[0]):
+        neighbor_pos = 1
+        neighbors_array[0][counter] = 0
+        for around_counter in range (around_size):
+            new_x = x_array[counter] + around_x_mod[around_counter]
+            if new_x >= 0 and new_x < np.shape(index_matrix)[0]:
+                new_y = y_array[counter] + around_y_mod[around_counter]
+                if new_y >= 0 and new_y < np.shape(index_matrix)[1]:
+                    neighbors_array[int(neighbor_pos), int(counter)] = index_matrix[int(new_x),int(new_y)]
+                    neighbor_pos += 1
+                    neighbors_array[0, counter] += 1
+    return neighbors_array
 
-    if not A[0]['path']: return A
+def select_around_mode (is_4_axes_bool):
+    around_x_mod = ([0,1,0,-1,1,1,-1,-1])
+    around_y_mod = ([1,0,-1,0,1,-1,-1,1])
+    if is_4_axes_bool == True:
+        around_size = 8
+    else:
+        around_size = 4
+    return around_x_mod, around_y_mod, around_size
 
-    for k in range(1, max_k):
-        for i in range(0, len(A[-1]['path']) - 1):
-            node_spur = A[-1]['path'][i]
-            path_root = A[-1]['path'][:i+1]
+def generate_three_column_format(sorted_x_array, sorted_y_array, z_matrix):
+    sorted_x_length = np.shape(sorted_x_array); sorted_y_length = np.shape(sorted_y_array)
+    x_to_plot = np.empty((sorted_x_length[0]*sorted_y_length[0]))
+    y_to_plot = np.empty((sorted_x_length[0]*sorted_y_length[0]))
+    z_to_plot = np.empty((sorted_x_length[0]*sorted_y_length[0]))
+    counter_to_plot = 0
+    for counter_x in range(0, sorted_x_length[0]):
+       for counter_y in range (0, sorted_y_length[0]):
+           x_to_plot[counter_to_plot] = sorted_x_array[counter_x]
+           y_to_plot[counter_to_plot] = sorted_y_array[counter_y]
+           z_to_plot[counter_to_plot] = z_matrix[counter_x][counter_y]
+           counter_to_plot+=1
+    return x_to_plot, y_to_plot, z_to_plot
 
-            edges_removed = []
-            for path_k in A:
-                curr_path = path_k['path']
-                if len(curr_path) > i and path_root == curr_path[:i+1]:
-                    cost = graph.remove_edge(curr_path[i], curr_path[i+1])
-                    if cost == -1:
-                        continue
-                    edges_removed.append([curr_path[i], curr_path[i+1], cost])
+def get_index_array (input_array):
+    for counter in range (numpy.shape(input_array)[0]):
+        input_array[counter] = counter
+    return input_array
 
-            path_spur = nx.dijkstra(graph, node_spur, node_end)
+def create_index_matrix(reference_matrix, x_array, y_array):
+    index_matrix = np.empty(np.shape(reference_matrix))
+    for counter in range (np.shape(x_array)[0]):
+        index_matrix[int(x_array[counter])][int(y_array[counter])] = counter
+    return index_matrix
 
-            if path_spur['path']:
-                path_total = path_root[:-1] + path_spur['path']
-                dist_total = distances[node_spur] + path_spur['weight']
-                potential_k = {'cost': dist_total, 'path': path_total}
+def node_finder (input_matrix, x_array,y_array,z_array, is_4_axes_bool, x_values, y_values, flat_nodes_bool):
+    print("Searching for nodes")
+    input_matrix_shape = np.shape(input_matrix)
+    x_array, y_array, z_array = generate_three_column_format(get_index_array(np.empty(input_matrix_shape[0])), get_index_array(np.empty(input_matrix_shape[1])), input_matrix)
+    index_matrix = create_index_matrix(input_matrix, x_array, y_array)
+    neighbors_array = create_neighbors_array(index_matrix, x_array, y_array, z_array, is_4_axes_bool)
+    max_check = False
+    min_check = False
+    node_array = np.empty(np.shape(z_array)[0]); node_array.fill(-2)
+    minima_counter = -1
+    for global_counter in range (np.shape(z_array)[0]):
+        if (max_check == True):
+            max_check = False
+        if (min_check == True):
+            min_check = False
+        for neighbor_counter in range (1,(neighbors_array[0][global_counter]+1).astype(int)):
+            if (z_array[global_counter] > z_array[int(neighbors_array[neighbor_counter][global_counter])]):
+                max_check = True
+                break
+            elif (z_array[global_counter] < z_array[neighbors_array[neighbor_counter][global_counter]] and flat_nodes_bool == False and min_check == False):
+                min_check = True
+                
+        if (max_check == False and (flat_nodes_bool == True or min_check == True)):
+        #if (max_check == 0):
+            minima_counter += 1
+            node_array[global_counter] = minima_counter
 
-                if not (potential_k in B):
-                    B.append(potential_k)
-
-            for edge in edges_removed:
-                graph.add_edge(edge[0], edge[1], edge[2])
-
-        if len(B):
-            B = sorted(B, key=nx.itemgetter('weight'))
-            A.append(B[0])
-            B.pop(0)
+    minima_groups_counter = -1
+    if (minima_counter<1):
+        return 1, node_array, node_array, node_array, node_array ##This means there is 1 or 0 minima groups and, therefore, analysis cannot be made
+    minima_groups_counter = minima_counter
+    print(str(minima_groups_counter + 1) + " nodes found")
+    if minima_groups_counter < 1:
+        return 1, minima_groups_counter, minima_groups_counter, minima_groups_counter, minima_groups_counter
+    max_points_in_a_group = 1
+    points_in_minima_groups = np.empty((minima_groups_counter+1,max_points_in_a_group), dtype = int); points_in_minima_groups.fill(-1)
+    points_to_plot = np.empty((minima_groups_counter+1,3))
+    points_to_plot_counter = 0
+    for global_counter in range (np.shape(z_array)[0]):
+        if (node_array[global_counter] > -1):
+            points_to_plot[points_to_plot_counter][0] = x_values[int(x_array[global_counter])]
+            points_to_plot[points_to_plot_counter][1] = y_values[int(y_array[global_counter])]
+            points_to_plot[points_to_plot_counter][2] = node_array[global_counter]
+            points_to_plot_counter += 1
+            points_in_minima_groups[int(node_array[global_counter])][0] = global_counter
+    node_matrix = np.zeros((minima_groups_counter+1,minima_groups_counter+1))
+    return 0, points_to_plot, node_array, points_in_minima_groups, node_matrix
+        
+def insert_point_in_working_array(working_array, point_index, z_array, first_working_point, last_pos_in_working_array, occupied_points_array):
+    working_array[last_pos_in_working_array+1][0] = point_index
+    first_working_point = int(first_working_point)
+    point_index = int(point_index)
+    if (first_working_point == -1):
+        first_working_point = 0
+        last_pos_in_working_array = 0
+    else:
+        if (z_array[int(working_array[first_working_point][0])] >=  z_array[point_index]):
+            working_array[first_working_point][1] = last_pos_in_working_array+1
+            working_array[last_pos_in_working_array+1][2] = first_working_point
+            first_working_point = last_pos_in_working_array+1
         else:
-            break
+            current_pos = first_working_point
+            while (current_pos != -1):
+                if (z_array[int(working_array[current_pos][0])] >=  z_array[point_index]):
+                    working_array[last_pos_in_working_array+1][1] = working_array[current_pos][1]
+                    working_array[last_pos_in_working_array+1][2] = current_pos
+                    working_array[int(working_array[current_pos][1])][2] = last_pos_in_working_array+1   
+                    working_array[current_pos][1] = last_pos_in_working_array+1
+                    break
+                if (working_array[current_pos][2] == -1):
+                    working_array[current_pos][2] = last_pos_in_working_array+1
+                    working_array[last_pos_in_working_array+1][1] = current_pos
+                    working_array[last_pos_in_working_array+1][2] = -1
+                    break
+                current_pos = int(working_array[current_pos][2])
+    last_pos_in_working_array += 1
+    occupied_points_array[int(point_index)] = -2
+    return int(first_working_point), int(last_pos_in_working_array)
 
-    return A
+
+
 x=zmap['x'].values
 
 y=zmap['y'].values
@@ -130,7 +220,7 @@ G=nx.Graph()
 
 space= np.diff(x_vals)[0]
 G.add_nodes_from(dictm.keys())
-for key, n in G.nodes.items()[:-1]:
+for key, n in list(G.nodes.items())[:-1]:
 
     n['pos']=dictm[key][0:2].tolist()
     n['pot']=dictm[key][2]
@@ -159,7 +249,8 @@ def k_shortest_paths(G, source, target, k, weight=None):
 #for path in k_shortest_paths(G, 1, 2600, 3, weight='weight'):
 #    shortestpaths.append(shortestpaths)
 
-h=nx.astar_path(G,26,
+
+h=nx.bellman_ford_path(G,26,
                 2575,weight='weight')     
 
 
@@ -172,7 +263,7 @@ for node in h:
     nodeweights=G.node[node]['pot']+nodeweights
 #    
 averagenodeenergy=nodeweights/len(h)
-
+plt.scatter(path['x'],path['y'], s=0.5)
 
 
 
@@ -188,22 +279,24 @@ fig = plt.figure()
 CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
 
 CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
+
+plt.scatter(path['x'],path['y'], s=0.5)
 #plt.clabel(CS2)
 
 #
-h4=k_shortest_paths(G,1,2600,50,weight='weight')
-path_list= {}
-
-for index,h in enumerate(h4):
-    path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
-    for i,val in enumerate(h):
-            path.loc[i]=zmap.iloc[val][['x','y']]
-    path_list[index]=path
-#    
-for i, path in path_list.items():
-    plt.scatter(path['x'],path['y'], s=0.5)
-
-cbar = plt.colorbar(CS)
+#h4=k_shortest_paths(G,1,2600,50,weight='weight')
+#path_list= {}
+#
+#for index,h in enumerate(h4):
+#    path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+#    for i,val in enumerate(h):
+#            path.loc[i]=zmap.iloc[val][['x','y']]
+#    path_list[index]=path
+##    
+#for i, path in path_list.items():
+#    plt.scatter(path['x'],path['y'], s=0.5)
+#
+#cbar = plt.colorbar(CS)
 
 #fig = plt.figure()
 #ax = fig.add_subplot(111, projection='3d')  
