@@ -116,19 +116,29 @@ def k_shortest_paths(G, source, target, k, weight=None):
 
 def mypath(G,source,target):
 
-
-    neighbourhood=point_tree.query_ball_point(point[source], 6.05e-8)
-    energylist=pd.DataFrame(index=range(len(neighbourhood)),columns={'Node','Energy'})
-    
-    for neigh in neighbourhood:
-        if neigh==target:
+    pathlist=[]
+    while source != target:
+        neighbourhood=point_tree.query_ball_point(point[source], 6.05e-8)
+        neighbourhood.remove(source)
+        
+        energylist=pd.DataFrame(index=range(len(neighbourhood)),columns={'Node','Energy'})
+        
+        for i,neigh in enumerate(neighbourhood):
             
-    for i,neigh in enumerate(neighbourhood):
-
-        energylist.iloc[i]['Energy']=G.node[neigh]['pot']
-        energylist.iloc[i]['Node']=neigh
-    lowestneigh=energylist.loc[energylist['Energy'].astype(float).idxmin()]
+            if neigh in pathlist:
+                neighbourhood.remove(neigh)
+            else:
     
+                energylist.iloc[i]['Energy']=G.node[neigh]['pot']
+                energylist.iloc[i]['Node']=neigh
+        lowestneigh=energylist.loc[energylist['Energy'].astype(float).idxmin()]
+        pathlist.append(lowestneigh['Node'])
+        source=lowestneigh['Node']
+
+            
+            
+            
+
     
 #shortestpaths=[]
 #for path in k_shortest_paths(G, 1, 2600, 3, weight='weight'):
@@ -138,7 +148,7 @@ def mypath(G,source,target):
 h=nx.shortest_path(G,26,
                 2575,weight='weight')     
 
-
+h=pathlist
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
 for i,val in enumerate(h):
         path.loc[i]=zmap.iloc[val][['x','y']]
@@ -148,7 +158,7 @@ for node in h:
     nodeweights=G.node[node]['pot']+nodeweights
 #    
 averagenodeenergy=nodeweights/len(h)
-plt.scatter(path['x'],path['y'], s=0.5)
+
 
 
 
@@ -165,7 +175,7 @@ CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma)
 
 CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
 
-plt.scatter(path['x'],path['y'], s=0.5)
+plt.scatter(path['x'],path['y'], s=1)
 #plt.clabel(CS2)
 
 #
