@@ -50,9 +50,7 @@ def edgeweight2d(source,target,space,merged):
     print(average/space)
 
     
-
-    return average/space
-
+    return average
 
 
 
@@ -116,8 +114,22 @@ for key, n in list(G.nodes.items())[:-1]:
 def k_shortest_paths(G, source, target, k, weight=None):
      return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
 
+def mypath(G,source,target):
 
-   
+
+    neighbourhood=point_tree.query_ball_point(point[source], 6.05e-8)
+    energylist=pd.DataFrame(index=range(len(neighbourhood)),columns={'Node','Energy'})
+    
+    for neigh in neighbourhood:
+        if neigh==target:
+            
+    for i,neigh in enumerate(neighbourhood):
+
+        energylist.iloc[i]['Energy']=G.node[neigh]['pot']
+        energylist.iloc[i]['Node']=neigh
+    lowestneigh=energylist.loc[energylist['Energy'].astype(float).idxmin()]
+    
+    
 #shortestpaths=[]
 #for path in k_shortest_paths(G, 1, 2600, 3, weight='weight'):
 #    shortestpaths.append(shortestpaths)
@@ -140,18 +152,6 @@ plt.scatter(path['x'],path['y'], s=0.5)
 
 
 
-#
-#xx,yy=np.meshgrid(x_vals,y_vals)
-#zz=np.zeros_like(xx)
-#
-#for xind, x in enumerate(x_vals):
-#    for yind, y in enumerate(y_vals):
-#        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
-#
-##plt.clabel(CS2)
-#
-##
-#h4=k_shortest_paths(G,26,2575,1000
 
 xx,yy=np.meshgrid(x_vals,y_vals)
 zz=np.zeros_like(xx)
@@ -170,7 +170,6 @@ plt.scatter(path['x'],path['y'], s=0.5)
 
 #
 #h4=k_shortest_paths(G,1,2600,50,weight='weight')
-
 #path_list= {}
 #
 #for index,h in enumerate(h4):
@@ -178,22 +177,11 @@ plt.scatter(path['x'],path['y'], s=0.5)
 #    for i,val in enumerate(h):
 #            path.loc[i]=zmap.iloc[val][['x','y']]
 #    path_list[index]=path
-
-#fig = plt.figure()
-#CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
-#
-#CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)    
-#for i, path in path_list.items():
-#    plt.scatter(path['x'],path['y'], s=0.5, color='black')
-
-cbar = plt.colorbar(CS)
-
 ##    
 #for i, path in path_list.items():
 #    plt.scatter(path['x'],path['y'], s=0.5)
 #
 #cbar = plt.colorbar(CS)
-
 
 #fig = plt.figure()
 #ax = fig.add_subplot(111, projection='3d')  
