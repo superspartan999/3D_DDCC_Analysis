@@ -30,7 +30,7 @@ from scipy.spatial import KDTree
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
 directory = 'E:\\Google Drive\\Research\\Guillaume'
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 os.chdir(directory)
 
 
@@ -91,7 +91,7 @@ G=nx.Graph()
 
 space= np.diff(x_vals)[0]
 G.add_nodes_from(dictm.keys())
-for key, n in list(G.nodes.items())[:-1]:
+for key, n in list(G.nodes.items()):
 
     n['pos']=dictm[key][0:2].tolist()
     n['pot']=dictm[key][2]
@@ -102,7 +102,7 @@ point=xy[['x','y']].values
 point_tree=KDTree(point)
 
 
-for key, n in list(G.nodes.items())[:-1]:
+for key, n in list(G.nodes.items()):
     
     neighbourhood=point_tree.query_ball_point(point[key], 6.05e-8)
     
@@ -117,24 +117,48 @@ def k_shortest_paths(G, source, target, k, weight=None):
 def mypath(G,source,target):
 
     pathlist=[]
-    while source != target:
-        neighbourhood=point_tree.query_ball_point(point[source], 6.05e-8)
-        neighbourhood.remove(source)
-        
-        energylist=pd.DataFrame(index=range(len(neighbourhood)),columns={'Node','Energy'})
-        
-        for i,neigh in enumerate(neighbourhood):
-            
-            if neigh in pathlist:
-                neighbourhood.remove(neigh)
-            else:
-    
-                energylist.iloc[i]['Energy']=G.node[neigh]['pot']
-                energylist.iloc[i]['Node']=neigh
-        lowestneigh=energylist.loc[energylist['Energy'].astype(float).idxmin()]
-        pathlist.append(lowestneigh['Node'])
-        source=lowestneigh['Node']
 
+    unseenNodes=list(G.nodes).copy()
+    energy={node: 999999999 for node in unseenNodes}
+    iteration={node: None for node in unseenNodes}
+
+    energy[source]=G.node[source]['pot']
+    i=1
+    while unseenNodes:
+        current_node = min(unseenNodes, key=lambda node: energy[node])
+        
+        if energy[current_node] == 999999999:
+                break
+        neighbourhood=list(G.neighbors(current_node))
+        for neighbour in neighbourhood:
+             energy[neighbour]=G.node[neighbour]['pot']
+        
+        iteration[current_node]=i
+        i=i+1
+        print(i)
+        print(current_node)
+        unseenNodes.remove(current_node)
+        
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+           print(iteration[neigh])
+           
+       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       pathlist.append(step)
+       target=step
+       
+       return pathlist
+           
+           
+           
+           
+    
+
+    
             
             
             
@@ -145,10 +169,9 @@ def mypath(G,source,target):
 #    shortestpaths.append(shortestpaths)
 
 
-h=nx.shortest_path(G,26,
-                2575,weight='weight')     
+h=mypath(G,1,2599)     
 
-h=pathlist
+
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
 for i,val in enumerate(h):
         path.loc[i]=zmap.iloc[val][['x','y']]
