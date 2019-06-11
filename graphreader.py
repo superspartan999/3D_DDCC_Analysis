@@ -76,35 +76,35 @@ for key, n in list(G.nodes.items())[:-1]:
     if key==xneighs[0]:
        g=0
     else:
-        G.add_edge(key,xneighs[0],weight=float(edgeweight(key,xneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+        G.add_edge(key,xneighs[0])
     
     if key==xneighs[1]:
        g=0
     else:
 
-        G.add_edge(key,xneighs[1],weight=float(edgeweight(key,xneighs[1],xvalues,yvalues,zvalues,Ecdf)))
+        G.add_edge(key,xneighs[1])
 
 
     if key==yneighs[0]:
        g=0
     else:
 
-        G.add_edge(key,yneighs[0],weight=float(edgeweight(key,yneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+        G.add_edge(key,yneighs[0])
     
     if key==yneighs[1]:
         g=0
     else:
-        G.add_edge(key,yneighs[1],weight=float(edgeweight(key,yneighs[1],xvalues,yvalues,zvalues,Ecdf)))
+        G.add_edge(key,yneighs[1])
         
     if key==zneighs[0]:
        g=0
     else:
-        G.add_edge(key,zneighs[0],weight=float(edgeweight(key,zneighs[0],xvalues,yvalues,zvalues,Ecdf)))
+        G.add_edge(key,zneighs[0])
    
     if key==zneighs[1]:
       g=0
     else:
-        G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
+        G.add_edge(key,zneighs[1])
     if key%100000==0:
-        print key
+        print(key)
         

@@ -25,7 +25,7 @@ from networkx.readwrite import json_graph
 import simplejson as json
 from matplotlib import cm
 from itertools import *
-
+import heapq
 from scipy.spatial import KDTree
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
@@ -120,12 +120,13 @@ def mypath(G,source,target):
 
     unseenNodes=list(G.nodes).copy()
     energy={node: 999999999 for node in unseenNodes}
-    iteration={node: None for node in unseenNodes}
+    iteration={node: 99999999999999 for node in unseenNodes}
 
     energy[source]=G.node[source]['pot']
     i=1
-    while unseenNodes:
-        current_node = min(unseenNodes, key=lambda node: energy[node])
+
+    while target in unseenNodes:
+        current_node = heapq.nsmallest(1,((k, i) for i, k in enumerate(energy)))[0][1]
         
         if energy[current_node] == 999999999:
                 break
@@ -147,16 +148,58 @@ def mypath(G,source,target):
            neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
            print(iteration[neigh])
            
+       neighdf=neighdf[neighdf['iteration']!='place_holder']
        step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
        pathlist.append(step)
        target=step
-       
-       return pathlist
+    return pathlist
            
+def mypath2(G,source,target):       
+    pathlist=[]
+
+    unseenNodes=list(G.nodes).copy()
+    energy=[999999999 for node in unseenNodes]
+    iteration=[99999999999999 for node in unseenNodes]
+    heapq.heapify(energy)
+    heapq.heapify(iteration)
+
+    energy[source]=G.node[source]['pot']
+    i=1
+
+    while target in unseenNodes:
+        current_node = heapq.nsmallest(1,unseenNodes, key=lambda node: energy[node])[0]
+        
+        if energy[current_node] == 999999999:
+                break
+        neighbourhood=list(G.neighbors(current_node))
+        for neighbour in neighbourhood:
+             energy[neighbour]=G.node[neighbour]['pot']
+        
+        iteration[current_node]=i
+        i=i+1
+        print(i)
+        print(current_node)
+        unseenNodes.remove(current_node)
+        
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+           print(iteration[neigh])
            
-           
-           
+       neighdf=neighdf[neighdf['iteration']!='place_holder']
+       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       pathlist.append(step)
+       target=step
+    return pathlist
     
+        
+        
+
+    
+        
 
     
             
@@ -169,7 +212,7 @@ def mypath(G,source,target):
 #    shortestpaths.append(shortestpaths)
 
 
-h=mypath(G,1,2599)     
+h=mypath2(G,1,2599)     
 
 
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
