@@ -106,5 +106,5 @@ for key, n in list(G.nodes.items())[:-1]:
     else:
         G.add_edge(key,zneighs[1],weight=float(edgeweight(key,zneighs[1],xvalues,yvalues,zvalues,Ecdf)))
     if key%100000==0:
-        print key
+        print(key)
         

@@ -121,7 +121,7 @@ def mypath(G,source,target):
     unseenNodes=list(G.nodes).copy()
     energy={node: 999999999 for node in unseenNodes}
     iteration={node: None for node in unseenNodes}
-
+    
     energy[source]=G.node[source]['pot']
     i=1
     while unseenNodes:
@@ -140,18 +140,18 @@ def mypath(G,source,target):
         unseenNodes.remove(current_node)
         
     while target != source:
-       backtrackneigh=list(G.neighbors(target))
-       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
-       neighdf['neighbour']=backtrackneigh
-       for neigh in backtrackneigh:
-           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
-           print(iteration[neigh])
-           
-       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
-       pathlist.append(step)
-       target=step
+        backtrackneigh=list(G.neighbors(target))
+        neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+        neighdf['neighbour']=backtrackneigh
+        for neigh in backtrackneigh:
+            neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+            print(iteration[neigh])
+        
+        step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+        pathlist.append(step)
+        target=step
        
-       return pathlist
+    return pathlist
            
            
            

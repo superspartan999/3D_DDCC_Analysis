@@ -490,13 +490,52 @@ for key, n in list(G.nodes.items())[:-1]:
 ##            G.add_edge(key+1,nkey+1, weight=dist)
 ##            G[key+1][nkey+1]['dist']=dist
 ##        
-##    
+## 
+        
+def mypath(G,source,target):
+
+    pathlist=[]
+
+    unseenNodes=list(G.nodes).copy()
+    energy={node: 999999999 for node in unseenNodes}
+    iteration={node: None for node in unseenNodes}
+    
+    energy[source]=G.node[source]['pot']
+    i=1
+    while unseenNodes:
+        current_node = min(unseenNodes, key=lambda node: energy[node])
+        
+        if energy[current_node] == 999999999:
+                break
+        neighbourhood=list(G.neighbors(current_node))
+        for neighbour in neighbourhood:
+             energy[neighbour]=G.node[neighbour]['pot']
+        
+        iteration[current_node]=i
+        i=i+1
+        print(i)
+        print(current_node)
+        unseenNodes.remove(current_node)
+        
+    while target != source:
+        backtrackneigh=list(G.neighbors(target))
+        neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+        neighdf['neighbour']=backtrackneigh
+        for neigh in backtrackneigh:
+            neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+            print(iteration[neigh])
+        
+        step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+        pathlist.append(step)
+        target=step
+       
+    return pathlist
 start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
 
 end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]
 s=nx.shortest_path_length(G,start.index.values[0],end.index.values[0],weight='weight')
 
-h=nx.shortest_path(G,start.index.values[0],end.index.values[0],weight='weight')
+h=mypath(G,start.index.values[0],end.index.values[0])
 ##
 #nodeweights=0
 ##
