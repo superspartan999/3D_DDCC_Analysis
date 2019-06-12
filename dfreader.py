@@ -118,7 +118,7 @@ def mypath(G,source,target):
 
     pathlist=[]
 
-    unseenNodes=list(G.nodes).copy()
+    unseenNodes=list(G.nodes)
     energy={node: 999999999 for node in unseenNodes}
     iteration={node: 99999999999999 for node in unseenNodes}
 
@@ -157,17 +157,17 @@ def mypath(G,source,target):
 
 def mypath2(G,source,target):       
     pathlist=[]
-
-    unseenNodes=list(G.nodes).copy()
-    energy=[999999999 for node in unseenNodes]
-    iteration=[99999999999999 for node in unseenNodes]
+    place_holder=99999999
+    unseenNodes=list(G.nodes)
+    energy=[place_holder for node in unseenNodes]
+    iteration=[place_holder for node in unseenNodes]
     heapq.heapify(energy)
     heapq.heapify(iteration)
 
     energy[source]=G.node[source]['pot']
     i=1
 
-    while target in unseenNodes:
+    while unseenNodes:
         current_node = heapq.nsmallest(1,unseenNodes, key=lambda node: energy[node])[0]
         
         if energy[current_node] == 999999999:
@@ -190,19 +190,44 @@ def mypath2(G,source,target):
            neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
            print(iteration[neigh])
            
-       neighdf=neighdf[neighdf['iteration']!='place_holder']
+       neighdf=neighdf[neighdf['iteration']!=place_holder]
        step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
        pathlist.append(step)
        target=step
     return pathlist
     
         
-        
+def mypath3(G,source,target):
+    pathlist=[]
+    place_holder=99999999
+    A = [None] * len(list(G.nodes))
+    iteration=[place_holder for node in list(G.nodes)]
+    queue = [(G.node[source]['pot'], source)]
+    i=1
+    while queue:
+        current_energy, current_node = heapq.heappop(queue)
+        iteration[current_node]=i
+        i+=1
+        if A[current_node] is None: # v is unvisited
+            A[current_node] = G.node[current_node]['pot']
+            for neigh in list(G.neighbors(current_node)):
+                if A[neigh] is None:
+                    heapq.heappush(queue, (G.node[neigh]['pot'],neigh))
 
-    
-        
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+           print(iteration[neigh])
+           
+       neighdf=neighdf[neighdf['iteration']!=place_holder]
+       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       pathlist.append(step)
+       target=step
+    return pathlist
 
-    
             
             
             
