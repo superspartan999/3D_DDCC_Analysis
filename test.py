@@ -22,7 +22,7 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
 from functions import *
-
+import heapq
 
 def mypath(G,source,target):       
     pathlist=[]
@@ -104,10 +104,46 @@ def mypath2(G,source,target):
        pathlist.append(step)
        target=step
     return pathlist
+
+
+        
+def mypath3(G,source,target):
+    pathlist=[]
+    place_holder=99999999
+    A = [None] * len(list(G.nodes))
+    iteration=[place_holder for node in list(G.nodes)]
+    queue = [(G.node[source]['pot'], source)]
+    i=1
+    while queue:
+        current_energy, current_node = heapq.heappop(queue)
+        iteration[current_node]=i
+        i+=1
+        if A[current_node] is None: # v is unvisited
+            A[current_node] = G.node[current_node][u'pot']
+            for neigh in list(G.neighbors(current_node)):
+                if A[neigh] is None:
+                    heapq.heappush(queue, (G.node[neigh][u'pot'],neigh))
+
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+
+           
+       neighdf=neighdf[neighdf['iteration']!=place_holder]
+       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       print(step)
+       pathlist.append(step)
+       target=step
+    return pathlist
+
 G=read_json_file('C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\graph.json')
 directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
-h=mypath(G,25,25991)
+
+G.node[0][u'pot']=0
 
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
@@ -144,7 +180,7 @@ start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])
 
 end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 6.9902e-06)]
 
-h=mypath(G,start.index,25991)
+h=mypath3(G,start.index.values[0],end.index.values[0])
 ##function to plot band diagram
 #def band_diagram_z(df1):
 #    #find all the values of z and put them in a list

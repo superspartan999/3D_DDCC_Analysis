@@ -28,6 +28,10 @@ import simplejson as json
 directory = 'E:\\10nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
+file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+
+
 
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
@@ -61,50 +65,50 @@ Ecdf=sorted_data[['x','y','z','Ec']].copy()
 Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 Ecarr=Ecdf.values
 dictEc=dict(enumerate(Ecarr, 1))
-G=nx.Graph()
-G.add_nodes_from(dictEc.keys())
-for key, n in G.nodes.items():
-    n['pos']=dictEc[key][0:3].tolist()
-    n['pot']=dictEc[key][3]
-    
-        
-for key, n in list(G.nodes.items())[:-1]:
-    xneighs=NNX(key,xvalues,yvalues,zvalues)
-    yneighs=NNY(key,xvalues,yvalues,zvalues)
-    zneighs=NNZ(key,xvalues,yvalues,zvalues)
-    
-    if key==xneighs[0]:
-       g=0
-    else:
-        G.add_edge(key,xneighs[0])
-    
-    if key==xneighs[1]:
-       g=0
-    else:
-
-        G.add_edge(key,xneighs[1])
-
-
-    if key==yneighs[0]:
-       g=0
-    else:
-
-        G.add_edge(key,yneighs[0])
-    
-    if key==yneighs[1]:
-        g=0
-    else:
-        G.add_edge(key,yneighs[1])
-        
-    if key==zneighs[0]:
-       g=0
-    else:
-        G.add_edge(key,zneighs[0])
-   
-    if key==zneighs[1]:
-      g=0
-    else:
-        G.add_edge(key,zneighs[1])
-    if key%100000==0:
-        print(key)
-        
+#G=nx.Graph()
+#G.add_nodes_from(dictEc.keys())
+#for key, n in G.nodes.items():
+#    n['pos']=dictEc[key][0:3].tolist()
+#    n['pot']=dictEc[key][3]
+#    
+#        
+#for key, n in list(G.nodes.items())[:-1]:
+#    xneighs=NNX(key,xvalues,yvalues,zvalues)
+#    yneighs=NNY(key,xvalues,yvalues,zvalues)
+#    zneighs=NNZ(key,xvalues,yvalues,zvalues)
+#    
+#    if key==xneighs[0]:
+#       g=0
+#    else:
+#        G.add_edge(key,xneighs[0])
+#    
+#    if key==xneighs[1]:
+#       g=0
+#    else:
+#
+#        G.add_edge(key,xneighs[1])
+#
+#
+#    if key==yneighs[0]:
+#       g=0
+#    else:
+#
+#        G.add_edge(key,yneighs[0])
+#    
+#    if key==yneighs[1]:
+#        g=0
+#    else:
+#        G.add_edge(key,yneighs[1])
+#        
+#    if key==zneighs[0]:
+#       g=0
+#    else:
+#        G.add_edge(key,zneighs[0])
+#   
+#    if key==zneighs[1]:
+#      g=0
+#    else:
+#        G.add_edge(key,zneighs[1])
+#    if key%100000==0:
+#        print(key)
+#        

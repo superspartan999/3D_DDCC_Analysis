@@ -67,8 +67,7 @@ G=graphfromdf(df,xvalues,yvalues,zvalues)
 
 #sort these dataframes in acsending order
 xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=True)
-yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).res
-et_index(drop=True)
+yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 
     

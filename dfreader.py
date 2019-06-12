@@ -238,7 +238,7 @@ def mypath3(G,source,target):
 #    shortestpaths.append(shortestpaths)
 
 
-h=mypath2(G,1,2599)     
+h=mypath3(G,1,2599)     
 
 
 path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
