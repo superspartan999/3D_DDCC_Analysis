@@ -199,7 +199,7 @@ def mypath2(G,source,target):
         
 def mypath3(G,source,target):
     pathlist=[]
-    place_holder=99999999
+    place_holder=99999999.0
     A = [None] * len(list(G.nodes))
     iteration=[place_holder for node in list(G.nodes)]
     queue = [(G.node[source]['pot'], source)]
@@ -219,11 +219,13 @@ def mypath3(G,source,target):
        neighdf=pd.DataFrame(columns={'neighbour','iteration'})
        neighdf['neighbour']=backtrackneigh
        for neigh in backtrackneigh:
-           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
-           print(iteration[neigh])
-           
+           if neigh not in pathlist:
+               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+               
+       neighdf=neighdf.dropna().reset_index(drop=True)
        neighdf=neighdf[neighdf['iteration']!=place_holder]
-       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
+       print(step)
        pathlist.append(step)
        target=step
     return pathlist

@@ -24,6 +24,8 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
 
+
+        
 def mypath3(G,source,target):
     pathlist=[]
     place_holder=99999999
@@ -46,10 +48,11 @@ def mypath3(G,source,target):
        neighdf=pd.DataFrame(columns={'neighbour','iteration'})
        neighdf['neighbour']=backtrackneigh
        for neigh in backtrackneigh:
-           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
-
-
-       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+           if neigh not in pathlist:
+               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+               
+       neighdf=neighdf.dropna().reset_index(drop=True)
+       step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
        print(step)
        pathlist.append(step)
        target=step
