@@ -149,4 +149,30 @@ for key, n in list(G.nodes.items()):
     if key%100000==0:
         print(key)
         
-h=mypath3(G,1,13090)
+h=mypath3(G,1,642446)
+
+h2=nx.dijkstra_path(G,1,642446)
+path=pd.DataFrame(index=range(len(h2)),columns={'Node','x','y','z'})
+
+for i,val in enumerate(h2):
+    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+   
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')
+
+x=path['x'].values
+
+y=path['y'].values
+
+z=path['z'].values
+
+ax.set_xlim(0, xvalues[0].iat[-1]) 
+ax.set_ylim(0,yvalues[0].iat[-1])
+ax.set_zlim(0,zvalues[0].iat[-1])
+ax.scatter(x, y, z, c='r', marker='o')
+
+
+
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
