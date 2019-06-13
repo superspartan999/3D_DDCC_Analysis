@@ -117,40 +117,38 @@ def k_shortest_paths(G, source, target, k, weight=None):
 def mypath(G,source,target):
 
     pathlist=[]
-
+    place_holder=99999999999999
     unseenNodes=list(G.nodes)
-    energy={node: 999999999 for node in unseenNodes}
-    iteration={node: 99999999999999 for node in unseenNodes}
+    energy={node: place_holder for node in unseenNodes}
+    iteration=[place_holder for node in unseenNodes]
 
     energy[source]=G.node[source]['pot']
     i=1
 
-    while target in unseenNodes:
-        current_node = heapq.nsmallest(1,((k, i) for i, k in enumerate(energy)))[0][1]
-        
-        if energy[current_node] == 999999999:
-                break
+    while unseenNodes:
+        current_node = min(unseenNodes, key=lambda node: energy[node])
+
         neighbourhood=list(G.neighbors(current_node))
         for neighbour in neighbourhood:
              energy[neighbour]=G.node[neighbour]['pot']
         
         iteration[current_node]=i
         i=i+1
-        print(i)
-        print(current_node)
+
         unseenNodes.remove(current_node)
         
     while target != source:
-        backtrackneigh=list(G.neighbors(target))
-        neighdf=pd.DataFrame(columns={'neighbour','iteration'})
-        neighdf['neighbour']=backtrackneigh
-        for neigh in backtrackneigh:
-            neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
-            print(iteration[neigh])
-        
-        step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
-        pathlist.append(step)
-        target=step
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+
+           
+       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       pathlist.append(step)
+       print(step)
+       target=step
        
     return pathlist
            
@@ -200,18 +198,20 @@ def mypath2(G,source,target):
 def mypath3(G,source,target):
     pathlist=[]
     place_holder=99999999.0
-    A = [None] * len(list(G.nodes))
-    iteration=[place_holder for node in list(G.nodes)]
+    energy = [place_holder] * len(list(G.nodes))
+    iteration2=[place_holder for node in list(G.nodes)]
     queue = [(G.node[source]['pot'], source)]
     i=1
     while queue:
         current_energy, current_node = heapq.heappop(queue)
-        iteration[current_node]=i
+        iteration2[current_node]=i
         i+=1
-        if A[current_node] is None: # v is unvisited
-            A[current_node] = G.node[current_node]['pot']
-            for neigh in list(G.neighbors(current_node)):
-                if A[neigh] is None:
+        if energy[current_node] is place_holder: # v is unvisited
+            energy[current_node] = G.node[current_node]['pot']
+        neighbourhood= list(G.neighbors(current_node))
+        for neigh in neighbourhood:
+                if energy[neigh] is place_holder:
+                    energy[neigh]=G.node[neigh]['pot']
                     heapq.heappush(queue, (G.node[neigh]['pot'],neigh))
 
     while target != source:
@@ -220,7 +220,7 @@ def mypath3(G,source,target):
        neighdf['neighbour']=backtrackneigh
        for neigh in backtrackneigh:
            if neigh not in pathlist:
-               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration2[neigh]
                
        neighdf=neighdf.dropna().reset_index(drop=True)
        neighdf=neighdf[neighdf['iteration']!=place_holder]
@@ -233,43 +233,45 @@ def mypath3(G,source,target):
             
             
             
-
-    
+source=1
+target=2599
+h=mypath(G,source,target)
+h2=mypath(G,source,target)
 #shortestpaths=[]
 #for path in k_shortest_paths(G, 1, 2600, 3, weight='weight'):
 #    shortestpaths.append(shortestpaths)
 
-
-h=mypath3(G,1,2599)     
-
-
-path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
-for i,val in enumerate(h):
-        path.loc[i]=zmap.iloc[val][['x','y']]
-nodeweights=0
 #
-for node in h:
-    nodeweights=G.node[node]['pot']+nodeweights
-#    
-averagenodeenergy=nodeweights/len(h)
+#h=mypath3(G,source,target)     
 
 
-
-
-
-xx,yy=np.meshgrid(x_vals,y_vals)
-zz=np.zeros_like(xx)
-
-for xind, x in enumerate(x_vals):
-    for yind, y in enumerate(y_vals):
-        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
-
-fig = plt.figure()
-CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
-
-CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
-
-plt.scatter(path['x'],path['y'], s=1)
+#path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+#for i,val in enumerate(h):
+#        path.loc[i]=zmap.iloc[val][['x','y']]
+#nodeweights=0
+##
+#for node in h:
+#    nodeweights=G.node[node]['pot']+nodeweights
+##    
+#averagenodeenergy=nodeweights/len(h)
+#
+#
+#
+#
+#
+#xx,yy=np.meshgrid(x_vals,y_vals)
+#zz=np.zeros_like(xx)
+#
+#for xind, x in enumerate(x_vals):
+#    for yind, y in enumerate(y_vals):
+#        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
+#
+#fig = plt.figure()
+#CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
+#
+#CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
+#
+#plt.scatter(path['x'],path['y'], s=1)
 #plt.clabel(CS2)
 
 #

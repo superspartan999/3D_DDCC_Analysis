@@ -28,19 +28,21 @@ import simplejson as json
         
 def mypath3(G,source,target):
     pathlist=[]
-    place_holder=99999999
-    A = [None] * len(list(G.nodes))
-    iteration=[place_holder for node in list(G.nodes)]
+    place_holder=99999999.0
+    energy = [place_holder] * len(list(G.nodes))
+    iteration2=[place_holder for node in list(G.nodes)]
     queue = [(G.node[source]['pot'], source)]
     i=1
     while queue:
         current_energy, current_node = heapq.heappop(queue)
-        iteration[current_node]=i
+        iteration2[current_node]=i
         i+=1
-        if A[current_node] is None: # v is unvisited
-            A[current_node] = G.node[current_node][u'pot']
-            for neigh in list(G.neighbors(current_node)):
-                if A[neigh] is None:
+        if energy[current_node] is place_holder: # v is unvisited
+            energy[current_node] = G.node[current_node][u'pot']
+        neighbourhood= list(G.neighbors(current_node))
+        for neigh in neighbourhood:
+                if energy[neigh] is place_holder:
+                    energy[neigh]=G.node[neigh][u'pot']
                     heapq.heappush(queue, (G.node[neigh][u'pot'],neigh))
 
     while target != source:
@@ -49,9 +51,10 @@ def mypath3(G,source,target):
        neighdf['neighbour']=backtrackneigh
        for neigh in backtrackneigh:
            if neigh not in pathlist:
-               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration2[neigh]
                
        neighdf=neighdf.dropna().reset_index(drop=True)
+       neighdf=neighdf[neighdf['iteration']!=place_holder]
        step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
        print(step)
        pathlist.append(step)

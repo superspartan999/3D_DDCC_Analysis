@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun 12 23:41:25 2019
+Created on Wed Jun 12 23:44:16 2019
 
 @author: Clayton
-"""
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May 31 01:33:08 2019
-
-@author: Kun
 """
 
 from functions import *
@@ -116,15 +110,19 @@ for key, n in list(G.nodes.items()):
     neighbourhood.remove(key)
     for neigh in neighbourhood:
         G.add_edge(key,neigh,weight=edgeweight2d(key,neigh,space,merged))
-        
-        
+
+source=1
+target=2599
+def k_shortest_paths(G, source, target, k, weight=None):
+     return list(islice(nx.shortest_simple_paths(G, source, target, weight=weight), k))
+
 def mypath(G,source,target):
 
     pathlist=[]
-
+    place_holder=99999999999999
     unseenNodes=list(G.nodes)
-    energy={node: 999999999 for node in unseenNodes}
-    iteration={node: 99999999999999 for node in unseenNodes}
+    energy={node: place_holder for node in unseenNodes}
+    iteration=[place_holder for node in unseenNodes]
 
     energy[source]=G.node[source]['pot']
     i=1
@@ -138,8 +136,7 @@ def mypath(G,source,target):
         
         iteration[current_node]=i
         i=i+1
-        print(i)
-        print(current_node)
+
         unseenNodes.remove(current_node)
         
     while target != source:
@@ -148,12 +145,17 @@ def mypath(G,source,target):
        neighdf['neighbour']=backtrackneigh
        for neigh in backtrackneigh:
            neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
-           print(iteration[neigh])
+
            
        step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
        pathlist.append(step)
+       print(step)
        target=step
        
 
        
     return pathlist
+           
+
+
+    
