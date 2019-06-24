@@ -80,8 +80,10 @@ rounded_nodes=node_map.round(decimals=10)
 sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=sorted_data[(sorted_data['z']>3e-6) & (sorted_data['z']<7e-6)]
-sorted_data=sorted_data.reset_index()
+
+
+sorted_data=sorted_data[(sorted_data['z']>3e-6) & (sorted_data['z']<7e-6)].reset_index(drop=True)
+
 
 if sorted_data['Ec'].min()<0:   
     sorted_data['Ec']=sorted_data['Ec']-sorted_data['Ec'].min()
@@ -149,6 +151,7 @@ for key, n in list(G.nodes.items()):
         G.add_edge(key,zneighs[1])
     if key%100000==0:
         print(key)
+
        
 source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
                       (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
@@ -172,10 +175,21 @@ for i,val in enumerate(h):
     path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
    
     
+
+start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] \
+                       == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
+
+end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]       
+h=mypath3(G,1,642446)
+
+h2=nx.dijkstra_path(G,1,642446)
+
+
 fig = plt.figure()
 
 ax = fig.add_subplot(111, projection='3d')
 
+HEAD
 x=path['x'].values
 
 y=path['y'].values
@@ -187,4 +201,38 @@ ax.set_ylim(0,yvalues[0].iat[-1])
 ax.set_zlim(3e-6,zvalues[0].iat[-1])
 ax.scatter(x, y, z, c='r', marker='o')
 
+for h in pathlist[0:50]:
+
+    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+    
+    for i,val in enumerate(h):
+        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+
+    
+    x=path['x'].values
+    
+    y=path['y'].values
+    
+    z=path['z'].values
+    
+    ax.set_xlim(0, xvalues[0].iat[-1]) 
+    ax.set_ylim(0,yvalues[0].iat[-1])
+    ax.set_zlim(0,zvalues[0].iat[-1])
+    ax.scatter(x, y, z, c='r', marker='o')
+
+
+start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
+end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0],drop=True)
+
+start_node_list=np.array(start_slice.index)
+end_node_list=np.array(end_slice.index)
+
+pathlist=[]
+for i in range(1,100):
+    random_start=random.choice(start_node_list)
+    random_target=random.choice(end_slice.index)
+    pathway=mypath3(G,random_start,random_target)
+    pathlist.append(pathway)
+    
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
 
