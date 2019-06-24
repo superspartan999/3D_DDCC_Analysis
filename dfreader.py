@@ -245,16 +245,16 @@ h2=mypath(G,source,target)
 #h=mypath3(G,source,target)     
 
 
-#path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
-#for i,val in enumerate(h):
-#        path.loc[i]=zmap.iloc[val][['x','y']]
-#nodeweights=0
-##
-#for node in h:
-#    nodeweights=G.node[node]['pot']+nodeweights
-##    
-#averagenodeenergy=nodeweights/len(h)
+path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
+for i,val in enumerate(h):
+        path.loc[i]=zmap.iloc[val][['x','y']]
+nodeweights=0
 #
+for node in h:
+    nodeweights=G.node[node]['pot']+nodeweights
+#    
+averagenodeenergy=nodeweights/len(h)
+
 #
 #
 #
@@ -265,20 +265,20 @@ h2=mypath(G,source,target)
 #for xind, x in enumerate(x_vals):
 #    for yind, y in enumerate(y_vals):
 #        zz[xind][yind]=zmap['Ec'].iloc[coordtonode2d(xind,yind, x_vals,y_vals)] 
-#
-#fig = plt.figure()
-#CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
-#
-#CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
-#
-#plt.scatter(path['x'],path['y'], s=1)
-#plt.clabel(CS2)
 
-#
+fig = plt.figure()
+CS=plt.contourf(x_vals,y_vals,Ec_array,30,cmap=cm.plasma) 
+
+CS2=plt.contour(x_vals,y_vals,Ec_array, colors='black',linewidths=0.5)
+
+plt.scatter(path['x'],path['y'], s=20)
+plt.clabel(CS2)
+
+
 #h4=k_shortest_paths(G,1,2600,50,weight='weight')
 #path_list= {}
 #
-#for index,h in enumerate(h4):
+#for index,h in enumerate(h):
 #    path=pd.DataFrame(index=range(len(h)),columns={'x','y'})
 #    for i,val in enumerate(h):
 #            path.loc[i]=zmap.iloc[val][['x','y']]
@@ -286,8 +286,8 @@ h2=mypath(G,source,target)
 ##    
 #for i, path in path_list.items():
 #    plt.scatter(path['x'],path['y'], s=0.5)
-#
-#cbar = plt.colorbar(CS)
+
+cbar = plt.colorbar(CS)
 
 #fig = plt.figure()
 #ax = fig.add_subplot(111, projection='3d')  

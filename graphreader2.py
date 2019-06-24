@@ -23,7 +23,7 @@ import os
 import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
-
+import heapq
 
         
 def mypath3(G,source,target):
@@ -81,6 +81,7 @@ sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True])
 sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 sorted_data=sorted_data[(sorted_data['z']>3e-6) & (sorted_data['z']<7e-6)]
+sorted_data=sorted_data.reset_index()
 
 if sorted_data['Ec'].min()<0:   
     sorted_data['Ec']=sorted_data['Ec']-sorted_data['Ec'].min()
@@ -148,5 +149,42 @@ for key, n in list(G.nodes.items()):
         G.add_edge(key,zneighs[1])
     if key%100000==0:
         print(key)
-        
-h=mypath3(G,1,13090)
+       
+source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
+                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
+
+target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
+                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
+source=source.index[0]
+target=target.index[0]
+h=mypath3(G,source,target)
+
+nodeweights=0
+#
+for node in h:
+    nodeweights=G.node[node]['pot']+nodeweights
+#    
+averagenodeenergy=nodeweights/len(h)
+
+path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+
+for i,val in enumerate(h):
+    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+   
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')
+
+x=path['x'].values
+
+y=path['y'].values
+
+z=path['z'].values
+
+ax.set_xlim(0, xvalues[0].iat[-1]) 
+ax.set_ylim(0,yvalues[0].iat[-1])
+ax.set_zlim(3e-6,zvalues[0].iat[-1])
+ax.scatter(x, y, z, c='r', marker='o')
+
+
