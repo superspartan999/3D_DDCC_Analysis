@@ -103,7 +103,36 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues
 
+def low_energy_path(G,source,target):
+    pathlist=[]
+    place_holder=99999999
+    A = [None] * len(list(G.nodes))
+    iteration=[place_holder for node in list(G.nodes)]
+    queue = [(G.node[source]['pot'], source)]
+    i=1
+    while queue:
+        current_energy, current_node = heapq.heappop(queue)
+        iteration[current_node]=i
+        i+=1
+        if A[current_node] is None: # v is unvisited
+            A[current_node] = G.node[current_node][u'pot']
+            for neigh in list(G.neighbors(current_node)):
+                if A[neigh] is None:
+                    heapq.heappush(queue, (G.node[neigh][u'pot'],neigh))
 
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration[neigh]
+
+
+       step=neighdf.loc[neighdf['iteration'].idxmin()]['neighbour']
+       print(step)
+       pathlist.append(step)
+       target=step
+    return pathlist
 
 
 def checkFrameRows(raw_data):
@@ -113,6 +142,16 @@ def checkFrameRows(raw_data):
         print('Error! Node max value does not match number of rows!\n Node Max: ' + str(node_max) + '\n Row Max: ' + str(num_rows))
     else:
         return num_rows
+
+def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
+    
+    center=nodetocoord(source,xvalues,yvalues,zvalues)
+    neighbour=nodetocoord(target,xvalues,yvalues,zvalues)
+    
+    distance=np.linalg.norm(np.array(center[0:3])-np.array(neighbour[0:3]))
+    potentialdiff=(Ecdf['Ec'].iloc[source]+Ecdf['Ec'].iloc[target])/2
+    
+    return distance*potentialdiff
 
 def extract_slice(data, slice_var, slice_val, drop=False):
 
