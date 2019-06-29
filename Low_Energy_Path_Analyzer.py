@@ -74,7 +74,6 @@ xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=
 yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 
-
 Ecdf=sorted_data[['x','y','z','Ec']].copy()
 Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 Ecarr=Ecdf.values
