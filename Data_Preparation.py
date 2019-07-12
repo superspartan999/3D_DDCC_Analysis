@@ -20,12 +20,12 @@ __status__ = "Development"
 directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
 
 directory = 'E:\\10nmAlGaN\\Bias -42'
-directory= 'C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias -42'
+directory= 'C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
 
 
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
 
-directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
 
 os.chdir(directory)
@@ -216,9 +216,9 @@ def create_unified_data_file(model_ID, node_map):
 #
 
 
-node_map = write_space_df('LED4In.msh')
+node_map = write_space_df('p_structure_0.17_2nm.msh')
 
 
 
-mydf = create_unified_data_file('LED4In-out.vg_0.00.vd_3.20.vs_0.00', node_map)
+mydf = create_unified_data_file('p_structure_0.17_2nm-out.vg_0.00.vd_-4.20.vs_0.00', node_map)
 

@@ -64,8 +64,11 @@ def mypath3(G,source,target):
 directory = 'E:\\10nmAlGaN\\Bias -42'
 file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
-directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
-file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+
+directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
+file= 'p_structure_0.17_2nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
+#file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 
 
@@ -82,7 +85,7 @@ sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 
 
-sorted_data=sorted_data[(sorted_data['z']>3e-6) & (sorted_data['z']<7e-6)].reset_index(drop=True)
+sorted_data=sorted_data[(sorted_data['z']>3.9e-6) & (sorted_data['z']<4.3e-6)].reset_index(drop=True)
 
 
 if sorted_data['Ec'].min()<0:   
@@ -153,14 +156,24 @@ for key, n in list(G.nodes.items()):
         print(key)
 
        
-source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
+#source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
+#                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
+#
+#target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
+#                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
+#source=source.index[0]
+#target=target.index[0]
+#h=mypath3(G,source,target)
 
-target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
-source=source.index[0]
-target=target.index[0]
-h=mypath3(G,source,target)
+
+   
+    
+
+start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] \
+                       == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
+
+end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]       
+h=mypath3(G,1,end.index[0])
 
 nodeweights=0
 #
@@ -173,66 +186,62 @@ path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
 
 for i,val in enumerate(h):
     path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-   
-    
-
-start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] \
-                       == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
-
-end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]       
-h=mypath3(G,1,642446)
-
-h2=nx.dijkstra_path(G,1,642446)
-
 
 fig = plt.figure()
 
 ax = fig.add_subplot(111, projection='3d')
 
-HEAD
+path['x']=path['x'].astype(float)
+path['y']=path['y'].astype(float)
+path['z']=path['z'].astype(float)
+
+
 x=path['x'].values
 
 y=path['y'].values
 
 z=path['z'].values
 
+
 ax.set_xlim(0, xvalues[0].iat[-1]) 
 ax.set_ylim(0,yvalues[0].iat[-1])
-ax.set_zlim(3e-6,zvalues[0].iat[-1])
-ax.scatter(x, y, z, c='r', marker='o')
-
-for h in pathlist[0:50]:
-
-    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-    
-    for i,val in enumerate(h):
-        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-
-    
-    x=path['x'].values
-    
-    y=path['y'].values
-    
-    z=path['z'].values
-    
-    ax.set_xlim(0, xvalues[0].iat[-1]) 
-    ax.set_ylim(0,yvalues[0].iat[-1])
-    ax.set_zlim(0,zvalues[0].iat[-1])
-    ax.scatter(x, y, z, c='r', marker='o')
+ax.set_zlim(4e-6,zvalues[0].iat[-1])
+ax.scatter(x, y, z)
 
 
-start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
-end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0],drop=True)
+#
+#
+#start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
+#end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0],drop=True)
+#
+#start_node_list=np.array(start_slice.index)
+#end_node_list=np.array(end_slice.index)
+#
+#pathlist=[]
+#for i in range(1,100):
+#    random_start=random.choice(start_node_list)
+#    random_target=random.choice(end_slice.index)
+#    pathway=mypath3(G,random_start,random_target)
+#    pathlist.append(pathway)
 
-start_node_list=np.array(start_slice.index)
-end_node_list=np.array(end_slice.index)
-
-pathlist=[]
-for i in range(1,100):
-    random_start=random.choice(start_node_list)
-    random_target=random.choice(end_slice.index)
-    pathway=mypath3(G,random_start,random_target)
-    pathlist.append(pathway)
-    
+#for h in pathlist[0:50]:
+#
+#    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+#    
+#    for i,val in enumerate(h):
+#        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+#
+#    
+#    x=path['x'].values
+#    
+#    y=path['y'].values
+#    
+#    z=path['z'].values
+#    
+#    ax.set_xlim(0, xvalues[0].iat[-1]) 
+#    ax.set_ylim(0,yvalues[0].iat[-1])
+#    ax.set_zlim(0,zvalues[0].iat[-1])
+#    ax.scatter(x, y, z, c='r', marker='o')
+#    
 save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
 

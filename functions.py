@@ -116,9 +116,9 @@ def low_energy_path(G,source,target):
         i+=1
         if A[current_node] is None: # v is unvisited
             A[current_node] = G.node[current_node][u'pot']
-            for neigh in list(G.neighbors(current_node)):
-                if A[neigh] is None:
-                    heapq.heappush(queue, (G.node[neigh][u'pot'],neigh))
+        for neigh in list(G.neighbors(current_node)):
+            if A[neigh] is None:
+                heapq.heappush(queue, (G.node[neigh][u'pot'],neigh))
 
     while target != source:
        backtrackneigh=list(G.neighbors(target))
