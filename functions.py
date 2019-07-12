@@ -103,6 +103,7 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues
 
+
 def low_energy_path(G,source,target):
     pathlist=[]
     place_holder=99999999
@@ -135,6 +136,7 @@ def low_energy_path(G,source,target):
     return pathlist
 
 
+
 def checkFrameRows(raw_data):
     (num_rows, num_cols) = raw_data.shape
     node_max = raw_data.Node.max()
@@ -142,16 +144,6 @@ def checkFrameRows(raw_data):
         print('Error! Node max value does not match number of rows!\n Node Max: ' + str(node_max) + '\n Row Max: ' + str(num_rows))
     else:
         return num_rows
-
-def edgeweight(source,target,xvalues,yvalues,zvalues,Ecdf):
-    
-    center=nodetocoord(source,xvalues,yvalues,zvalues)
-    neighbour=nodetocoord(target,xvalues,yvalues,zvalues)
-    
-    distance=np.linalg.norm(np.array(center[0:3])-np.array(neighbour[0:3]))
-    potentialdiff=(Ecdf['Ec'].iloc[source]+Ecdf['Ec'].iloc[target])/2
-    
-    return distance*potentialdiff
 
 def extract_slice(data, slice_var, slice_val, drop=False):
 
