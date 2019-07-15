@@ -61,12 +61,13 @@ def mypath3(G,source,target):
        target=step
     return pathlist
 
-directory = 'E:\\10nmAlGaN\\Bias -42'
-file= 'p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
 
 
-directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
-file= 'p_structure_0.17_2nm-out.vg_0.00.vd_-4.20.vs_0.00.unified'
+
+#
+#directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
+directory = 'D:\\3D Simulations\\4nmAlN\\Bias0'
+file= 'p_structure_0.17_4nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
@@ -85,7 +86,7 @@ sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 
 
-sorted_data=sorted_data[(sorted_data['z']>3.9e-6) & (sorted_data['z']<4.3e-6)].reset_index(drop=True)
+#sorted_data=sorted_data[(sorted_data['z']>4e-6) & (sorted_data['z']<4.1e-6)].reset_index(drop=True)
 
 
 if sorted_data['Ec'].min()<0:   
@@ -186,27 +187,27 @@ path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
 
 for i,val in enumerate(h):
     path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-
-fig = plt.figure()
-
-ax = fig.add_subplot(111, projection='3d')
-
-path['x']=path['x'].astype(float)
-path['y']=path['y'].astype(float)
-path['z']=path['z'].astype(float)
-
-
-x=path['x'].values
-
-y=path['y'].values
-
-z=path['z'].values
-
-
-ax.set_xlim(0, xvalues[0].iat[-1]) 
-ax.set_ylim(0,yvalues[0].iat[-1])
-ax.set_zlim(4e-6,zvalues[0].iat[-1])
-ax.scatter(x, y, z)
+#
+#fig = plt.figure()
+#
+#ax = fig.add_subplot(111, projection='3d')
+#
+#path['x']=path['x'].astype(float)
+#path['y']=path['y'].astype(float)
+#path['z']=path['z'].astype(float)
+#
+#
+#x=path['x'].values
+#
+#y=path['y'].values
+#
+#z=path['z'].values
+#
+#
+#ax.set_xlim(0, xvalues[0].iat[-1]) 
+#ax.set_ylim(0,yvalues[0].iat[-1])
+#ax.set_zlim(4e-6,zvalues[0].iat[-1])
+#ax.scatter(x, y, z)
 
 
 #
