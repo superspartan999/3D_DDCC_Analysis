@@ -67,7 +67,7 @@ def mypath3(G,source,target):
 #
 #directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
     
-lengtharray=[1,2,8,16]
+lengtharray=[1,2,4,8,16,32]
 energyarray=np.empty(len(lengtharray))
 for iteration,length in enumerate(lengtharray):
     directory = 'D:\\3D Simulations\\'+str(length)+'nmAlN\\Bias0'
@@ -193,7 +193,7 @@ for iteration,length in enumerate(lengtharray):
 #        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
 #     
     EcEv=band_diagram_z(sorted_data)
-    
+    plt.plot(EcEv[0]['z'],EcEv[0]['Ec'])
     energyarray[iteration]=EcEv[0]['Ec'].max()
     #
 #fig = plt.figure()
