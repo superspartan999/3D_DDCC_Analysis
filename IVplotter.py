@@ -54,19 +54,19 @@ def silvaco(FileName):
     
     return file
 #
-directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\10nmAlGaN\\"
+directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\3D IV Sim\\"
 os.chdir(directory)
-#x=DDCC("IV curves 10nm AlGaN - Copy.ivn", "3D Simulation")  
-#y=DDCC("IV curves 30nm AlGaN - Copy.ivn", "3D Simulation")
-#z=DDCC("IV curves 50nm AlGaN - Copy.ivn", "3D Simulation") 
+x=DDCC("IV curves 10nm AlGaN - Copy.ivn", "10nm thickness")  
+y=DDCC("IV curves 30nm AlGaN - Copy.ivn", "30nm thickness")
+z=DDCC("IV curves 50nm AlGaN - Copy.ivn", "50nm thickness") 
 #
-
-directory="D:\\1"
-os.chdir(directory)
-file=pd.read_csv(filename,header=None)
-x=OneD("10nmIV.csv",'1D Simulation')
-y=OneD("30nmIV.csv",'1D Simulation')
-z=OneD("50nmIV.csv",'1D Simulation')
+#
+#directory="D:\\1"
+#os.chdir(directory)
+##file=pd.read_csv(filename,header=None)
+#x=OneD("10nmIV.csv",'10nm thickness')
+#y=OneD("30nmIV.csv",'30nm thickness')
+#z=OneD("50nmIV.csv",'50nm thickness')
 
 plt.grid(color='black')
 plt.xlim(-4,0.5)
