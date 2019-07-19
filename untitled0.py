@@ -63,7 +63,9 @@ def silvaco(FileName):
     
     return file
 directory = 'D:\\1D-DDCC'
-#directory ='C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\1D Band Structure\\1'
+directory ='C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\1D Band Structure\\1'
+directory ='C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\1D-DDCC'
+
 #filedict={}
 #for i in np.arange(-5,5,1.0,dtype=float):
 #    i=round(i,2)
@@ -109,63 +111,157 @@ os.chdir(directory)
 #
 #final=pd.concat([dat_1,dat_2])
 ##df3.iloc[51:]=df4
-###file=pd.read_csv('Project_1_10_doped_result.ivn.iv', sep='  |   |    ', header=None)
-x=OneD("10nm_undoped_spacer.csv",'10nm')
-y=OneD("30nm_undoped_spacer.csv",'30nm')
-z=OneD("50nm_undoped_spacer.csv",'50nm')
+
+#x=OneD("10nm_doped_spacer.csv",'10nm')
+#y=OneD("30nm_doped_spacer.csv",'30nm')
+#z=OneD("50nm_doped_spacer.csv",'50nm')
+###
+##
+#plt.grid(color='black')
+#plt.xlim(-0.5,0.5)
+#plt.ylim(-5000,5000)
+#plt.legend()
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+#plt.tight_layout()
+#plt.savefig('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Doped AlgaN with spacer.png')
+##
+#
+#fig=plt.figure()
+#x=OneD("10nm_undoped_spacer.csv",'Undoped')
+#y=OneD("10nm_doped_spacer.csv",'Doped')
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+##plt.xlim(-2,1)
+#plt.ylim(-3000,3000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Doped vs Undoped AlgaN with spacer (10nm).png')
+#
+#fig=plt.figure()
+#
+#x=OneD("30nm_undoped_spacer.csv",'Undoped')
+#y=OneD("30nm_doped_spacer.csv",'Doped')
 #
 #
-plt.grid(color='black')
-plt.xlim(-8,2)
-plt.ylim(-5000,5000)
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+##plt.xlim(-4,0.5)
+#plt.ylim(-5000,5000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Doped vs Undoped AlgaN with spacer (30nm).png')
+#
+#
+#fig=plt.figure()
+#x=OneD("50nm_undoped_spacer.csv",'Undoped')
+#y=OneD("50nm_doped_spacer.csv",'Doped')
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+##plt.xlim(-4,0.5)
+#plt.ylim(-5000,5000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Doped vs Undoped AlgaN with spacer (50nm).png')
+#
+#
+#fig=plt.figure()
+#x=OneD("50nm_doped.csv",'No Spacer')
+#y=OneD("50nm_doped_spacer.csv",'Spacer')
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+#plt.xlim(-2,2)
+#plt.ylim(-5000,5000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (50nm).png')
+#
+fig=plt.figure()
+x=OneD("10nm_doped.csv",'No Spacer')
+y=OneD("10nm_doped_spacer.csv",'Spacer')
+
 plt.legend()
+plt.grid(color='black')
 plt.xlabel('Voltage (V)')
 plt.ylabel('Current Density (A/cm^2)')
-#
+plt.xlim(-2,2)
+plt.ylim(-5000,5000)
+plt.tight_layout()
+plt.savefig\
+('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (10nm).png')
 
 fig=plt.figure()
-x=OneD("10nm_undoped_spacer.csv",'Undoped')
-y=OneD("10nm_doped_spacer.csv",'Doped')
+x=OneD("30nm_doped.csv",'No Spacer')
+y=OneD("30nm_doped_spacer.csv",'Spacer')
 
 plt.legend()
 plt.grid(color='black')
 plt.xlabel('Voltage (V)')
 plt.ylabel('Current Density (A/cm^2)')
-plt.xlim(-2,1)
-plt.ylim(-3000,3000)
+plt.xlim(-2,2)
+plt.ylim(-5000,5000)
 plt.tight_layout()
-#
+plt.savefig\
+('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (30nm).png')
+
+fig=plt.figure()
+x=OneD("50nm_doped.csv",'No Spacer')
+y=OneD("50nm_doped_spacer.csv",'Spacer')
+
+plt.legend()
+plt.grid(color='black')
+plt.xlabel('Voltage (V)')
+plt.ylabel('Current Density (A/cm^2)')
+plt.xlim(-2,2)
+plt.ylim(-5000,5000)
+plt.tight_layout()
+plt.savefig\
+('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (50nm).png')
+#file=pd.read_csv("50nm_undoped.csv",header=None)
 #fig=plt.figure()
-#
-#x=OneD("30nm_undoped.csv",'Undoped')
-#y=OneD("30nm_doped.csv",'Doped')
-#
-#
+#a=OneD("10nm_undoped.csv",'10nm (No Spacer)')
+#b=OneD("10nm_Undoped_spacer.csv",'10nm (With Spacer)')
+#c=OneD("30nm_undoped.csv",'30nm (No Spacer)')
+#d=OneD("30nm_Undoped_spacer.csv",'30nm (With Spacer)')
+#e=OneD("50nm_undoped.csv",'50nm (No Spacer)')
+#f=OneD("50nm_Undoped_spacer.csv",'50nm (With Spacer)')
 #
 #plt.legend()
 #plt.grid(color='black')
 #plt.xlabel('Voltage (V)')
 #plt.ylabel('Current Density (A/cm^2)')
-#plt.xlim(-4,0.5)
+#plt.xlim(-8,6)
 #plt.ylim(-5000,5000)
 #plt.tight_layout()
-
-#
-#
-#
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Undoped AlGaN (10nm).png')
+##
 #fig=plt.figure()
-#x=OneD("50nm_undoped.csv",'Undoped')
-#y=OneD("50nm_doped.csv",'Doped')
+#x=OneD("30nm_undoped.csv",'No Spacer')
+#y=OneD("30nm_Undoped_spacer.csv",'Spacer')
 #
 #plt.legend()
 #plt.grid(color='black')
 #plt.xlabel('Voltage (V)')
 #plt.ylabel('Current Density (A/cm^2)')
-#plt.xlim(-4,0.5)
+#plt.xlim(-5,6)
 #plt.ylim(-5000,5000)
 #plt.tight_layout()
-
-
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Undoped AlGaN (30nm).png')
+##Band Diagram
 #fig=plt.figure()    
 #i=-0.0
 #i=round(i,2)
