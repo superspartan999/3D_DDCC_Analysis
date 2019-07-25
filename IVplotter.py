@@ -53,7 +53,7 @@ def silvaco(FileName):
     plt.plot(-file[5],file[3])
     
     return file
-#
+
 directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\SiLENSe IV\\"
 os.chdir(directory)
 #tjdata=pd.read_csv('C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\SiO2\\052719AB\\200umr.csv')
@@ -155,6 +155,21 @@ fifty=pd.read_csv(file, delimiter=',')
 fifty=fifty.reset_index(drop=False)
 
 #plt.plot(fifty['level_0'],fifty['level_3'],label='50nm DDCC' )
+
+directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\3D IV Sim\\"
+os.chdir(directory)
+x=DDCC("IV curves 10nm AlGaN - Copy.ivn", "10nm thickness")  
+y=DDCC("IV curves 30nm AlGaN - Copy.ivn", "30nm thickness")
+z=DDCC("IV curves 50nm AlGaN - Copy.ivn", "50nm thickness") 
+#
+#
+#directory="D:\\1"
+#os.chdir(directory)
+##file=pd.read_csv(filename,header=None)
+#x=OneD("10nmIV.csv",'10nm thickness')
+#y=OneD("30nmIV.csv",'30nm thickness')
+#z=OneD("50nmIV.csv",'50nm thickness')
+
 
 plt.grid(color='black')
 plt.xlim(-2,2)
