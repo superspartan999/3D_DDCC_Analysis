@@ -67,10 +67,15 @@ def mypath3(G,source,target):
 #
 #directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
     
-lengtharray=[1,2,4,8,16,32]
+lengtharray=[1,2,4,8,16,32,64]
 energyarray=np.empty(len(lengtharray))
+averageenergy=np.empty(len(lengtharray))
+bandgap=np.empty(len(lengtharray))
+band_dict={}
 for iteration,length in enumerate(lengtharray):
-    directory = 'D:\\3D Simulations\\'+str(length)+'nmAlN\\Bias0'
+#    directory = 'D:\\'+str(length)+'nmInGaN'
+#    file= 'InGaN_0.17_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+    directory='D:\\3D Simulations\\'+str(length)+'nmAlGaN017\\Bias0'
     file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
     #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
     #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
@@ -169,11 +174,11 @@ for iteration,length in enumerate(lengtharray):
 #    #source=source.index[0]
 #    #target=target.index[0]
 #    #h=mypath3(G,source,target)
-#    
-#    
-#       
-#        
-#    
+##    
+##    
+##       
+##        
+##    
 #    start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] \
 #                           == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
 #    
@@ -193,8 +198,12 @@ for iteration,length in enumerate(lengtharray):
 #        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
 #     
     EcEv=band_diagram_z(sorted_data)
-    plt.plot(EcEv[0]['z'],EcEv[0]['Ec'])
+    band_dict.update({length:EcEv})
+    plt.plot(EcEv[0]['z'],EcEv[0]['Ec'], label=str(length))
+    plt.plot(EcEv[1]['z'],EcEv[1]['Ev'],label=str(length))
     energyarray[iteration]=EcEv[0]['Ec'].max()
+    averageenergy[iteration]=EcEv[0]['Ec'].mean()
+    bandgap[iteration]=EcEv[0]['Ec'].iloc[EcEv[0]['Ec'].idxmax()]-EcEv[1]['Ev'].iloc[EcEv[0]['Ec'].idxmax()]
     #
 #fig = plt.figure()
 #
@@ -252,5 +261,5 @@ for iteration,length in enumerate(lengtharray):
 #    ax.set_zlim(0,zvalues[0].iat[-1])
 #    ax.scatter(x, y, z, c='r', marker='o')
 #    
-save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+#save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
 
