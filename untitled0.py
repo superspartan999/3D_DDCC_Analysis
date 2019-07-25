@@ -62,8 +62,8 @@ def silvaco(FileName):
     plt.plot(-file[5],file[3])
     
     return file
-directory = 'D:\\1D-DDCC'
-directory ='C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\1D Band Structure\\1'
+directory = 'D:\\1'
+#directory ='C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\1D Band Structure\\1'
 directory ='C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\1D-DDCC'
 
 #filedict={}
@@ -188,47 +188,47 @@ os.chdir(directory)
 #plt.savefig\
 #('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (50nm).png')
 #
-fig=plt.figure()
-x=OneD("10nm_doped.csv",'No Spacer')
-y=OneD("10nm_doped_spacer.csv",'Spacer')
-
-plt.legend()
-plt.grid(color='black')
-plt.xlabel('Voltage (V)')
-plt.ylabel('Current Density (A/cm^2)')
-plt.xlim(-2,2)
-plt.ylim(-5000,5000)
-plt.tight_layout()
-plt.savefig\
-('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (10nm).png')
-
-fig=plt.figure()
-x=OneD("30nm_doped.csv",'No Spacer')
-y=OneD("30nm_doped_spacer.csv",'Spacer')
-
-plt.legend()
-plt.grid(color='black')
-plt.xlabel('Voltage (V)')
-plt.ylabel('Current Density (A/cm^2)')
-plt.xlim(-2,2)
-plt.ylim(-5000,5000)
-plt.tight_layout()
-plt.savefig\
-('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (30nm).png')
-
-fig=plt.figure()
-x=OneD("50nm_doped.csv",'No Spacer')
-y=OneD("50nm_doped_spacer.csv",'Spacer')
-
-plt.legend()
-plt.grid(color='black')
-plt.xlabel('Voltage (V)')
-plt.ylabel('Current Density (A/cm^2)')
-plt.xlim(-2,2)
-plt.ylim(-5000,5000)
-plt.tight_layout()
-plt.savefig\
-('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (50nm).png')
+#fig=plt.figure()
+#x=OneD("10nm_doped.csv",'No Spacer')
+#y=OneD("10nm_doped_spacer.csv",'Spacer')
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+#plt.xlim(-2,2)
+#plt.ylim(-5000,5000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (10nm).png')
+#
+#fig=plt.figure()
+#x=OneD("30nm_doped.csv",'No Spacer')
+#y=OneD("30nm_doped_spacer.csv",'Spacer')
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+#plt.xlim(-2,2)
+#plt.ylim(-5000,5000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (30nm).png')
+#
+#fig=plt.figure()
+#x=OneD("50nm_doped.csv",'No Spacer')
+#y=OneD("50nm_doped_spacer.csv",'Spacer')
+#
+#plt.legend()
+#plt.grid(color='black')
+#plt.xlabel('Voltage (V)')
+#plt.ylabel('Current Density (A/cm^2)')
+#plt.xlim(-2,2)
+#plt.ylim(-5000,5000)
+#plt.tight_layout()
+#plt.savefig\
+#('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Doped AlGaN (50nm).png')
 #file=pd.read_csv("50nm_undoped.csv",header=None)
 #fig=plt.figure()
 #a=OneD("10nm_undoped.csv",'10nm (No Spacer)')
@@ -261,27 +261,71 @@ plt.savefig\
 #plt.tight_layout()
 #plt.savefig\
 #('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\Spacer vs No Spacer Undoped AlGaN (30nm).png')
-##Band Diagram
-#fig=plt.figure()    
-#i=-0.0
-#i=round(i,2)
-#print(i)
-#file='TJ_Full_95_13'
-#filename = str(file)+'_result.out.vg_'+str(i)+'00-cb.res'
-#os.chdir(directory)
-#headerlist= ['Position', 'Ec', 'Ev', 'Efn','Efp', 'n', 'p','Jn','Jp', 'Rad','Non-Rad','Rauger','RspPL', 'eb', 'ebh',\
-#             'generation','active dopant','impactG','1/uEc','1/uEv','1/uEhh','Electric field','mun','mup','uEc',\
-#             'uEv','uEv2','effective trap','layernumber']
-#file=pd.read_csv(filename, sep="   ",header= None,engine='python')
-#file.columns=headerlist
-#
-#plt.plot(file['Position']/1e-7,file['Ec'], label='Ec')
-#plt.plot(file['Position']/1e-7,file['Ev'], label='Ev')
-#plt.xlabel('z (nm)')
-#plt.ylabel('Energy (eV)')
-#plt.tight_layout()
-##plt.xlim(0,1.6e-5)
-##plt.ylim(-7,10)
-#plt.legend()
-#plt.grid()
+file='Project_1_30_doped'
+filename = str(file)+'_result.out.vg_'+str(i)+'00-cb.ivn.csv'
+fig=plt.figure()
+undoped=pd.read_csv("30nm_undoped.csv",header=None)
+
+plt.plot(undoped[0],undoped[3],label='Undoped AlGaN')
+
+doped=pd.read_csv("30nm_doped.csv",header=None)
+
+plt.plot(doped[0],doped[3],label='Doped AlGaN')
+
+plt.xlabel('Voltage (V)')
+plt.ylabel('Current Density (A/cm^2)')
+plt.tight_layout()
+plt.xlim(-4,2)
+plt.ylim(-5000,5000)
+#plt.ylim(-7,10)
+plt.legend(framealpha=100)
+plt.grid()
+
+#Band Diagram
+fig=plt.figure()    
+i=-0.0
+i=round(i,2)
+print(i)
+file='Project_1_10_doped'
+filename = str(file)+'_result.out.vg_'+str(i)+'00-cb.res'
+os.chdir(directory)
+headerlist= ['Position', 'Ec', 'Ev', 'Efn','Efp', 'n', 'p','Jn','Jp', 'Rad','Non-Rad','Rauger','RspPL', 'eb', 'ebh',\
+             'generation','active dopant','impactG','1/uEc','1/uEv','1/uEhh','Electric field','mun','mup','uEc',\
+             'uEv','uEv2','effective trap','layernumber']
+file=pd.read_csv(filename, sep="   ",header= None,engine='python')
+file.columns=headerlist
+
+plt.plot(file['Position']/1e-7,file['Ec'], label='Ec doped AlGaN',color='red')
+#plt.plot(file['Position']/1e-7,file['Efp'], label='Hole Fermi Level',color='blue')
+plt.plot(file['Position']/1e-7,file['Ev'], label='Ev doped AlGaN',color='orange')
+plt.xlabel('z (nm)')
+plt.ylabel('Energy (eV)')
+plt.tight_layout()
+plt.xlim(30,60)
+#plt.ylim(-7,10)
+plt.legend(framealpha=100)
+plt.grid()
+#plt.savefig('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\'+str(filename)+'Valence.png')
+directory = 'D:\\1'
+os.chdir(directory)
+i=round(i,2)
+print(i)
+file='Project_1'
+filename = str(file)+'_result.out.vg_'+str(i)+'00-cb.res'
+os.chdir(directory)
+headerlist= ['Position', 'Ec', 'Ev', 'Efn','Efp', 'n', 'p','Jn','Jp', 'Rad','Non-Rad','Rauger','RspPL', 'eb', 'ebh',\
+             'generation','active dopant','impactG','1/uEc','1/uEv','1/uEhh','Electric field','mun','mup','uEc',\
+             'uEv','uEv2','effective trap','layernumber']
+file=pd.read_csv(filename, sep="   ",header= None,engine='python')
+file.columns=headerlist
+
+plt.plot(file['Position']/1e-7,file['Ec'], label='Ec undoped AlGaN', color='blue')
+plt.plot(file['Position']/1e-7,file['Ev'], label='Ev undoped AlGaN', color='green')
+plt.xlabel('z (nm)')
+plt.ylabel('Energy (eV)')
+plt.tight_layout()
+#plt.xlim(0,1.6e-5)
+#plt.ylim(-7,10)
+plt.legend()
+plt.grid()
 #plt.savefig('C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\'+str(filename)+'.png')
