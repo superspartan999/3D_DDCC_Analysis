@@ -67,16 +67,20 @@ def mypath3(G,source,target):
 #
 #directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
     
-lengtharray=[1,2,4,8,16,32,64]
+lengtharray=[2,4,8,16,32,64]
 energyarray=np.empty(len(lengtharray))
 averageenergy=np.empty(len(lengtharray))
+averagepathenergy=np.empty(len(lengtharray))
 bandgap=np.empty(len(lengtharray))
 band_dict={}
 for iteration,length in enumerate(lengtharray):
 #    directory = 'D:\\'+str(length)+'nmInGaN'
 #    file= 'InGaN_0.17_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
-    directory='D:\\3D Simulations\\'+str(length)+'nmAlGaN017\\Bias0'
-    file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#    directory='D:\\3D Simulations\\'+str(length)+'nmAlGaN017\\Bias0'
+#    file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+    
+    directory='C:\\Users\\Clayton\\Desktop\\'+str(length)+'nmInGaN'
+    file= 'InGaN_0.17_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
     #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
     #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
     
@@ -114,96 +118,99 @@ for iteration,length in enumerate(lengtharray):
     yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
     zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
     
-#    Ecdf=sorted_data[['x','y','z','Ec']].copy()
-#    Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-#    Ecarr=Ecdf.values
-#    dictEc=dict(enumerate(Ecarr))
-#    G=nx.Graph()
-#    G.add_nodes_from(dictEc.keys())
-#    for key, n in G.nodes.items():
-#        n['pos']=dictEc[key][0:3].tolist()
-#        n['pot']=dictEc[key][3]
-#        
-#            
-#    for key, n in list(G.nodes.items()):
-#        xneighs=NNX(key,xvalues,yvalues,zvalues)
-#        yneighs=NNY(key,xvalues,yvalues,zvalues)
-#        zneighs=NNZ(key,xvalues,yvalues,zvalues)
-#        
-#        if key==xneighs[0]:
-#           g=0
-#        else:
-#            G.add_edge(key,xneighs[0])
-#        
-#        if key==xneighs[1]:
-#           g=0
-#        else:
+    Ecdf=sorted_data[['x','y','z','Ec']].copy()
+    Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
+    Ecarr=Ecdf.values
+    dictEc=dict(enumerate(Ecarr))
+    G=nx.Graph()
+    G.add_nodes_from(dictEc.keys())
+    for key, n in G.nodes.items():
+        n['pos']=dictEc[key][0:3].tolist()
+        n['pot']=dictEc[key][3]
+        
+            
+    for key, n in list(G.nodes.items()):
+        xneighs=NNX(key,xvalues,yvalues,zvalues)
+        yneighs=NNY(key,xvalues,yvalues,zvalues)
+        zneighs=NNZ(key,xvalues,yvalues,zvalues)
+        
+        if key==xneighs[0]:
+           g=0
+        else:
+            G.add_edge(key,xneighs[0])
+        
+        if key==xneighs[1]:
+           g=0
+        else:
+    
+            G.add_edge(key,xneighs[1])
+    
+    
+        if key==yneighs[0]:
+           g=0
+        else:
+    
+            G.add_edge(key,yneighs[0])
+        
+        if key==yneighs[1]:
+            g=0
+        else:
+            G.add_edge(key,yneighs[1])
+            
+        if key==zneighs[0]:
+           g=0
+        else:
+            G.add_edge(key,zneighs[0])
+       
+        if key==zneighs[1]:
+          g=0
+        else:
+            G.add_edge(key,zneighs[1])
+        if key%100000==0:
+            print(key)
+    
+           
+    #source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
+    #                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
+    #
+    #target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
+    #                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
+    #source=source.index[0]
+    #target=target.index[0]
+    #h=mypath3(G,source,target)
 #    
-#            G.add_edge(key,xneighs[1])
 #    
-#    
-#        if key==yneighs[0]:
-#           g=0
-#        else:
-#    
-#            G.add_edge(key,yneighs[0])
-#        
-#        if key==yneighs[1]:
-#            g=0
-#        else:
-#            G.add_edge(key,yneighs[1])
-#            
-#        if key==zneighs[0]:
-#           g=0
-#        else:
-#            G.add_edge(key,zneighs[0])
 #       
-#        if key==zneighs[1]:
-#          g=0
-#        else:
-#            G.add_edge(key,zneighs[1])
-#        if key%100000==0:
-#            print(key)
+#        
 #    
-#           
-#    #source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-#    #                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
-#    #
-#    #target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-#    #                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
-#    #source=source.index[0]
-#    #target=target.index[0]
-#    #h=mypath3(G,source,target)
-##    
-##    
-##       
-##        
-##    
 #    start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] \
 #                           == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
 #    
 #    end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]       
-#    h=mypath3(G,1,end.index[0])
-#    
-#    nodeweights=0
-#    #
-#    for node in h:
-#        nodeweights=G.node[node]['pot']+nodeweights
-#    #    
-#    averagenodeenergy=nodeweights/len(h)
-#    
-#    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-#    
-#    for i,val in enumerate(h):
-#        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+#   h=mypath3(G,1,end.index[0])
+    start=sorted_data.loc[(sorted_data['z'] == zvalues.iloc[0].values[0])]['Ec'].idxmin()
+    end=sorted_data.loc[(sorted_data['z'] == zvalues.tail(1).values[0][0])]['Ec'].idxmin()
+    h=mypath3(G,start,end)
+    nodeweights=0
+    #
+    for node in h:
+        nodeweights=G.node[node]['pot']+nodeweights
+    #    
+    averagenodeenergy=nodeweights/len(h)
+    
+    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+    
+    for i,val in enumerate(h):
+        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
 #     
     EcEv=band_diagram_z(sorted_data)
     band_dict.update({length:EcEv})
     plt.plot(EcEv[0]['z'],EcEv[0]['Ec'], label=str(length))
     plt.plot(EcEv[1]['z'],EcEv[1]['Ev'],label=str(length))
-    energyarray[iteration]=EcEv[0]['Ec'].max()
+    energyarray[iteration]=EcEv[0]['Ec'].min()
     averageenergy[iteration]=EcEv[0]['Ec'].mean()
-    bandgap[iteration]=EcEv[0]['Ec'].iloc[EcEv[0]['Ec'].idxmax()]-EcEv[1]['Ev'].iloc[EcEv[0]['Ec'].idxmax()]
+    averagepathenergy[iteration]=averagenodeenergy
+#    bandgap[iteration]=EcEv[0]['Ec'].iloc[EcEv[0]['Ec'].idxmax()]-EcEv[1]['Ev'].iloc[EcEv[0]['Ec'].idxmax()]
     #
 #fig = plt.figure()
 #
