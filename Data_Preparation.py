@@ -20,7 +20,7 @@ __status__ = "Development"
 directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
 
 directory = 'D:\\3D Simulations\\64nmAlGaN017\\Bias0'
-directory= 'C:\\Users\\Clayton\\Desktop\\64nmInGaN'
+directory= 'C:\\Users\\Clayton\\Desktop\\64nmAlGaN'
 
 
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
@@ -216,9 +216,9 @@ def create_unified_data_file(model_ID, node_map):
 #
 
 
-node_map = write_space_df('InGaN_0.17_64nm_.msh')
+node_map = write_space_df('p_structure_0.17_64nm_.msh')
 
 
 
-mydf = create_unified_data_file('InGaN_0.17_64nm_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+mydf = create_unified_data_file('p_structure_0.17_64nm_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 

@@ -65,8 +65,8 @@ def mypath3(G,source,target):
 
 
 #
-#directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
-directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
+directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
+#directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
 file= 'p_structure_0.17_8nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'

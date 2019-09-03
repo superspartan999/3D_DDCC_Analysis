@@ -29,6 +29,7 @@ import heapq
 def mypath3(G,source,target):
     pathlist=[]
     place_holder=99999999.0
+    # create energy list with default value specified in place_holder
     energy = [place_holder] * len(list(G.nodes))
     iteration2=[place_holder for node in list(G.nodes)]
     queue = [(G.node[source]['pot'], source)]
@@ -67,7 +68,7 @@ def mypath3(G,source,target):
 #
 #directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
     
-lengtharray=[2,4,8,16,32,64]
+lengtharray=[1,2,4,8,16,32]
 energyarray=np.empty(len(lengtharray))
 averageenergy=np.empty(len(lengtharray))
 averagepathenergy=np.empty(len(lengtharray))
@@ -79,8 +80,8 @@ for iteration,length in enumerate(lengtharray):
 #    directory='D:\\3D Simulations\\'+str(length)+'nmAlGaN017\\Bias0'
 #    file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
     
-    directory='C:\\Users\\Clayton\\Desktop\\'+str(length)+'nmInGaN'
-    file= 'InGaN_0.17_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+    directory='C:\\Users\\Clayton\\Desktop\\'+str(length)+'nmAlGaN'
+    file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
     #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
     #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
     
@@ -170,14 +171,7 @@ for iteration,length in enumerate(lengtharray):
             print(key)
     
            
-    #source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-    #                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
-    #
-    #target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-    #                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
-    #source=source.index[0]
-    #target=target.index[0]
-    #h=mypath3(G,source,target)
+ 
 #    
 #    
 #       
@@ -197,20 +191,20 @@ for iteration,length in enumerate(lengtharray):
         nodeweights=G.node[node]['pot']+nodeweights
     #    
     averagenodeenergy=nodeweights/len(h)
-    
-    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-    
-    for i,val in enumerate(h):
-        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-#     
+#    
+#    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+#    
+#    for i,val in enumerate(h):
+#        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+##     
     EcEv=band_diagram_z(sorted_data)
     band_dict.update({length:EcEv})
-    plt.plot(EcEv[0]['z'],EcEv[0]['Ec'], label=str(length))
-    plt.plot(EcEv[1]['z'],EcEv[1]['Ev'],label=str(length))
-    energyarray[iteration]=EcEv[0]['Ec'].min()
+#    plt.plot(EcEv[0]['z'],EcEv[0]['Ec'], label=str(length))
+#    plt.plot(EcEv[1]['z'],EcEv[1]['Ev'],label=str(length))
+    energyarray[iteration]=EcEv[0]['Ec'].max()
     averageenergy[iteration]=EcEv[0]['Ec'].mean()
     averagepathenergy[iteration]=averagenodeenergy
-#    bandgap[iteration]=EcEv[0]['Ec'].iloc[EcEv[0]['Ec'].idxmax()]-EcEv[1]['Ev'].iloc[EcEv[0]['Ec'].idxmax()]
+    bandgap[iteration]=EcEv[0]['Ec'].iloc[EcEv[0]['Ec'].idxmax()]-EcEv[1]['Ev'].iloc[EcEv[0]['Ec'].idxmax()]
     #
 #fig = plt.figure()
 #
