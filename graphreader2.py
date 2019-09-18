@@ -56,6 +56,41 @@ def mypath3(G,source,target):
        neighdf=neighdf.dropna().reset_index(drop=True)
        neighdf=neighdf[neighdf['iteration']!=place_holder]
        step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
+#       print(step)
+       pathlist.append(step)
+       target=step
+    return pathlist
+
+def mypath3(G,source,target):
+    pathlist=[]
+    place_holder=99999999.0
+    energy = [place_holder] * len(list(G.nodes))
+    iteration2=[place_holder for node in list(G.nodes)]
+    queue = [(G.node[source]['pot'], source)]
+    i=1
+    while queue:
+        current_energy, current_node = heapq.heappop(queue)
+        iteration2[current_node]=i
+        i+=1
+        if energy[current_node] is place_holder: # v is unvisited
+            energy[current_node] = G.node[current_node]['pot']
+        neighbourhood= list(G.neighbors(current_node))
+        for neigh in neighbourhood:
+                if energy[neigh] is place_holder:
+                    energy[neigh]=G.node[neigh]['pot']
+                    heapq.heappush(queue, (G.node[neigh]['pot'],neigh))
+
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           if neigh not in pathlist:
+               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration2[neigh]
+               
+       neighdf=neighdf.dropna().reset_index(drop=True)
+       neighdf=neighdf[neighdf['iteration']!=place_holder]
+       step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
        print(step)
        pathlist.append(step)
        target=step
@@ -63,11 +98,10 @@ def mypath3(G,source,target):
 
 
 
-
 #
-directory='C:\\Users\\Clayton\\Desktop\\2nmAlGaN\\Bias -42'
-#directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
-file= 'p_structure_0.17_8nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+directory='C:\\Users\\Clayton\\Desktop\\32nmAlGaN'
+##directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
+file= 'p_structure_0.17_32nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
@@ -84,8 +118,9 @@ rounded_nodes=node_map.round(decimals=10)
 sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-
-
+length=32
+thickness=1e-7*length
+sorted_data=sorted_data[(sorted_data['z']>4.0e-6) & (sorted_data['z']<(4.01e-6+thickness))].reset_index(drop=True)
 #sorted_data=sorted_data[(sorted_data['z']>4e-6) & (sorted_data['z']<4.1e-6)].reset_index(drop=True)
 
 
@@ -167,27 +202,27 @@ for key, n in list(G.nodes.items()):
 #h=mypath3(G,source,target)
 
 
-   
+thickness=31e-7
     
-
-start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] \
-                       == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
-
-end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]       
-h=mypath3(G,1,end.index[0])
-
-nodeweights=0
 #
-for node in h:
-    nodeweights=G.node[node]['pot']+nodeweights
+#start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y']== yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
 #    
-averagenodeenergy=nodeweights/len(h)
-
-path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-
-for i,val in enumerate(h):
-    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+#end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]            
+##start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y']== yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 4E-6)]
+#h=mypath3(G,start.index[0],end.index[0])
 #
+#nodeweights=0
+##
+#for node in h:
+#    nodeweights=G.node[node]['pot']+nodeweights
+##    
+#averagenodeenergy=nodeweights/len(h)
+#
+#path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+#
+#for i,val in enumerate(h):
+#    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+##
 #fig = plt.figure()
 #
 #ax = fig.add_subplot(111, projection='3d')
@@ -204,45 +239,67 @@ for i,val in enumerate(h):
 #z=path['z'].values
 #
 #
-#ax.set_xlim(0, xvalues[0].iat[-1]) 
-#ax.set_ylim(0,yvalues[0].iat[-1])
-#ax.set_zlim(4e-6,zvalues[0].iat[-1])
+##ax.set_xlim(0, xvalues[0].iat[-1]) 
+##ax.set_ylim(0,yvalues[0].iat[-1])
+##ax.set_zlim(4e-6,zvalues[0].iat[-1])
 #ax.scatter(x, y, z)
 
 
 #
-#
-#start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
-#end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0],drop=True)
-#
-#start_node_list=np.array(start_slice.index)
-#end_node_list=np.array(end_slice.index)
-#
-#pathlist=[]
-#for i in range(1,100):
-#    random_start=random.choice(start_node_list)
-#    random_target=random.choice(end_slice.index)
-#    pathway=mypath3(G,random_start,random_target)
-#    pathlist.append(pathway)
 
-#for h in pathlist[0:50]:
-#
-#    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-#    
-#    for i,val in enumerate(h):
-#        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-#
-#    
-#    x=path['x'].values
-#    
-#    y=path['y'].values
-#    
-#    z=path['z'].values
-#    
+
+minindex = abs(zvalues[0] - 4e-6).idxmin()
+maxindex=  abs(zvalues[0] - (4e-6+thickness)).idxmin()
+ 
+#start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0])
+#end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0])
+
+start_node_list=np.array(start_slice.index)
+end_node_list=np.array(end_slice.index)
+
+pathlist=[]
+for i in range(1,1000):
+    random_start=random.choice(start_node_list)
+    random_target=random.choice(end_slice.index)
+    pathway=mypath3(G,random_start,random_target)
+    pathlist.append(pathway)
+    print(i)
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')    
+
+for h in pathlist[0:100]:
+
+    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+    
+    for i,val in enumerate(h):
+        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+    
+    path['x']=path['x'].astype(float)
+    path['y']=path['y'].astype(float)
+    path['z']=path['z'].astype(float)
+
+    
+    x=path['x'].values
+    
+    y=path['y'].values
+    
+    z=path['z'].values
+    
 #    ax.set_xlim(0, xvalues[0].iat[-1]) 
 #    ax.set_ylim(0,yvalues[0].iat[-1])
 #    ax.set_zlim(0,zvalues[0].iat[-1])
-#    ax.scatter(x, y, z, c='r', marker='o')
+    ax.scatter(x, y, z)
 #    
-save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
-
+#save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+energylist=[]
+for h in pathlist[0:1000]: 
+    nodeweights=0
+    #
+    for node in h:
+        nodeweights=G.node[node]['pot']+nodeweights
+#    
+    averagenodeenergy=nodeweights/len(h)
+    energylist.append(averagenodeenergy)
+    

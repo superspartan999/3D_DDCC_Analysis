@@ -182,8 +182,13 @@ for iteration,length in enumerate(lengtharray):
 #    
 #    end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]       
 #   h=mypath3(G,1,end.index[0])
-    start=sorted_data.loc[(sorted_data['z'] == zvalues.iloc[0].values[0])]['Ec'].idxmin()
-    end=sorted_data.loc[(sorted_data['z'] == zvalues.tail(1).values[0][0])]['Ec'].idxmin()
+#    start=sorted_data.loc[(sorted_data['z'] == zvalues.iloc[0].values[0])]['Ec'].idxmin()
+#    end=sorted_data.loc[(sorted_data['z'] == zvalues.tail(1).values[0][0])]['Ec'].idxmin()
+    
+    minindex = abs(zvalues[0] - 4e-6).idxmin()
+    maxindex=  abs(zvalues[0] - (4e-6+length)).idxmin()
+    start=sorted_data.loc[(sorted_data['z'] == zvalues.iloc[minindex].values[0])]['Ec'].idxmin()
+    end=sorted_data.loc[(sorted_data['z'] == zvalues.iloc[maxindex].values[0])]['Ec'].idxmin()
     h=mypath3(G,start,end)
     nodeweights=0
     #

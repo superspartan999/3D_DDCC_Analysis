@@ -233,8 +233,8 @@ def mypath3(G,source,target):
             
             
             
-source=1
-target=2575
+source=57
+target=2000
 h=mypath(G,source,target)
 
 #shortestpaths=[]
