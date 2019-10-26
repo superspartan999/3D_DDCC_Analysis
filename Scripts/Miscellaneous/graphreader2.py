@@ -24,7 +24,7 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
 import heapq
-
+import pickle
         
 def mypath3(G,source,target):
     pathlist=[]
@@ -91,20 +91,20 @@ def mypath3(G,source,target):
        neighdf=neighdf.dropna().reset_index(drop=True)
        neighdf=neighdf[neighdf['iteration']!=place_holder]
        step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
-       print(step)
+#       print(step)
        pathlist.append(step)
        target=step
     return pathlist
 
 
-
+length=32
 #
-directory='C:\\Users\\Clayton\\Desktop\\32nmAlGaN'
+directory='C:\\Users\\Clayton\\Desktop\\'+str(length)+'nmAlGaN'
 ##directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
-file= 'p_structure_0.17_32nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
-
+no_of_paths=1000
 
 
 os.chdir(directory)
@@ -118,9 +118,9 @@ rounded_nodes=node_map.round(decimals=10)
 sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-length=32
+
 thickness=1e-7*length
-sorted_data=sorted_data[(sorted_data['z']>4.0e-6) & (sorted_data['z']<(4.01e-6+thickness))].reset_index(drop=True)
+sorted_data=sorted_data[(sorted_data['z']>4.0e-6) & (sorted_data['z']<(4.0e-6+thickness))].reset_index(drop=True)
 #sorted_data=sorted_data[(sorted_data['z']>4e-6) & (sorted_data['z']<4.1e-6)].reset_index(drop=True)
 
 
@@ -202,7 +202,7 @@ for key, n in list(G.nodes.items()):
 #h=mypath3(G,source,target)
 
 
-thickness=31e-7
+thickness=(length)*e-7
     
 #
 #start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y']== yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
@@ -248,17 +248,20 @@ thickness=31e-7
 #
 
 
-minindex = abs(zvalues[0] - 4e-6).idxmin()
-maxindex=  abs(zvalues[0] - (4e-6+thickness)).idxmin()
+minindex = abs(zvalues[0]).idxmin()
+maxindex=  abs(zvalues[0]-(zvalues.iloc[minindex][0]+thickness)).idxmin()
  
+start_slice=extract_slice(sorted_data,'z',zvalues.iloc[minindex][0])
+end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-11][0])
+
 #start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0])
 #end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0])
-
+ 
 start_node_list=np.array(start_slice.index)
 end_node_list=np.array(end_slice.index)
 
 pathlist=[]
-for i in range(1,1000):
+for i in range(1,no_of_paths):
     random_start=random.choice(start_node_list)
     random_target=random.choice(end_slice.index)
     pathway=mypath3(G,random_start,random_target)
@@ -292,9 +295,9 @@ for h in pathlist[0:100]:
 #    ax.set_zlim(0,zvalues[0].iat[-1])
     ax.scatter(x, y, z)
 #    
-#save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\graph.js',G)
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nmAlGaNgraph.js',G)
 energylist=[]
-for h in pathlist[0:1000]: 
+for h in pathlist[0:no_of_paths]: 
     nodeweights=0
     #
     for node in h:
@@ -303,3 +306,5 @@ for h in pathlist[0:1000]:
     averagenodeenergy=nodeweights/len(h)
     energylist.append(averagenodeenergy)
     
+with open('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nmpathlist.txt','wb') as fp:
+    pickle.dump(pathlist,fp)

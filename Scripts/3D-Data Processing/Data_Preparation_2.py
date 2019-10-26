@@ -16,19 +16,14 @@ __maintainer__ = "Christian Robertson"
 __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
+# Sets the current directory to the data folder
+directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
+directory= 'D:/Users/Clayton/Desktop/64nmAlGaN/Bias -42
 
-directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-
-directory = 'D:\\3D Simulations\\64nmAlGaN017\\Bias0'
-directory= 'C:\\Users\\Clayton\\Desktop\\64nmAlGaN'
-
-
-#directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
-
-#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
 
 os.chdir(directory)
+
+hl=11
 
 
 def write_space_df(file, head_len=5):
@@ -51,6 +46,8 @@ def write_space_df(file, head_len=5):
         # Dynamically determines the node space size.
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
+        print data_info
+        print num_nodes
 
         raw_data = pd.read_csv(file, skiprows=head_len,
                                nrows=num_nodes, header=None,
@@ -62,7 +59,7 @@ def write_space_df(file, head_len=5):
         return
 
 
-def extract_data(file, head_len=12):
+def extract_data(file, head_len=hl):
 
     """
     This function is the most general extractor that pulls energy bands,
@@ -93,15 +90,21 @@ def extract_data(file, head_len=12):
 
     print("Extrating " + head + " data...")
     data_info = pd.read_csv(file, nrows=head_len, header=None)
+    print data_info
     num_nodes = int(data_info.iloc[head_len-1, 0])
+    print 'g'
+    print num_nodes
+    
+    
 
     my_data = pd.read_csv(file, skiprows=head_len, nrows=num_nodes, 
                           delim_whitespace=True, header=None, names=[head], 
                           engine='python')
+    print len(my_data)
     return my_data
 
 
-def extract_carriers(file, head_len=12):
+def extract_carriers(file, head_len=hl):
 
     """
     This function extracts the free carrier concentrations. Since the .np file
@@ -116,9 +119,11 @@ def extract_carriers(file, head_len=12):
 
     # Only run method if the file type is a .np
     if file.endswith('.np'):
- 
+
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
+        print 'fishy'
+        print num_nodes
 
         print("Extracting electron concentration...")
         ndat = pd.read_csv(file, skiprows=head_len, nrows=num_nodes,
@@ -129,7 +134,9 @@ def extract_carriers(file, head_len=12):
                            nrows=num_nodes, header=None, names=['p'],
                            delim_whitespace=True, engine='python')
 
+
         output = pd.concat([ndat, pdat], axis=1, join='outer')
+
 
         return output
     else:
@@ -137,7 +144,7 @@ def extract_carriers(file, head_len=12):
         return
 
 
-def extract_recombination(file, head_len=12):
+def extract_recombination(file, head_len=hl):
 
     """
     This function extracts the recombination rates from their corresponding
@@ -204,21 +211,33 @@ def create_unified_data_file(model_ID, node_map):
         
         if success:
             output_data = pd.concat([output_data, my_data], axis=1, join='outer')
+            print 'f'
+            print len(output_data)
 
         success = True
     
     # Reorder the headers to be easier to read
-    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Temperature']]
+    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n',
+                               'p', 'Radiative', 'Non-Radiative', 'Auger',
+                               'Temperature']]
     
     output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
+
+  
+def comp(mydf,comp_map):
+    
+    comp_header=10
+    #comp=pd.read_csv(file, sep='    ',names=['z','Comp'])
+    comp_map_info=pd.read_csv('Al_map.out',nrows=comp_header)
+    num_nodes = int(comp_map_info.iloc[comp_header-1, 0])
+    
+    my_data = pd.read_csv('Al_map.out', skiprows=head_len, nrows=num_nodes, 
+                              delim_whitespace=True, header=None, names=['Node','Comp'], 
+                              engine='python')
         
-#
+      
 
-
-node_map = write_space_df('p_structure_0.17_64nm_.msh')
-
-
-
-mydf = create_unified_data_file('p_structure_0.17_64nm_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.17_10nm.msh')
+mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00', node_map)
 

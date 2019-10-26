@@ -80,7 +80,7 @@ for iteration,length in enumerate(lengtharray):
 #    directory='D:\\3D Simulations\\'+str(length)+'nmAlGaN017\\Bias0'
 #    file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
     
-    directory='C:\\Users\\Clayton\\Desktop\\'+str(length)+'nmAlGaN'
+    directory='D:/'+str(length)+'nmAlGaN'
     file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
     #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
     #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
