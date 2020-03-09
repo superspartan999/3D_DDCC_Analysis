@@ -40,7 +40,7 @@ def DDCC(FileName, legend_label):
     
     file=pd.read_csv(FileName,delimiter='  ',header=None, engine='python')
 
-    plt.plot(file[1],file[14]/(30e-7)**2,label=legend_label)
+    plt.plot(file[1],file[14]/(30e-9)**2,label=legend_label)
     
     
     
@@ -156,15 +156,17 @@ os.chdir(directory)
 
 #plt.plot(fifty['level_0'],fifty['level_3'],label='50nm DDCC' )
 
-directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\3D IV Sim\\"
+directory="D:\\IV"
 os.chdir(directory)
-x=DDCC("IV curves 10nm AlGaN - copy.ivn", "10nm")  
-y=DDCC("IV curves 30nm AlGaN - copy.ivn", "30nm")
-z=DDCC("IV curves 50nm AlGaN - copy.ivn", "50nm") 
-
+#x=DDCC("40nmAlGaN0.14IVmerged.txt", "40nm")  
+#y=DDCC("13nmAlGaN0.14IVmerged.txt", "13nm")
+#z=DDCC("IV curves 50nm AlGaN - copy.ivn", "50nm") 
+#x=DDCC("10nmDopedAlGaN_-35to1.txt", "10nm")  
+#y=DDCC("30nmDopedAlGaN_-35to1.txt", "30nm") 
+#z=DDCC("50nmDopedAlGaN_-35to1.txt", "50nm")
 #
-directory="D:\\1"
-os.chdir(directory)
+#directory="D:\\1"
+#os.chdir(directory)
 ###file=pd.read_csv(filename,header=None)
 ##x=OneD("10nmIV.csv",'10nm thickness')
 ##y=OneD("30nmIV.csv",'30nm thickness')
