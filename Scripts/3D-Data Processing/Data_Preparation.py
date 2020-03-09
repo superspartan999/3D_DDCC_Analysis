@@ -21,7 +21,7 @@ directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\B
 comp=0.5
 
 directory = 'D:\\30nmAlGaN'+str(comp)
-directory= 'D:\\20nmAlGaN'
+directory= 'D:\\20nmAlGaN0.5'
 
 
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
@@ -88,6 +88,14 @@ def extract_data(file, head_len=12):
         head = 'NDA'
     elif file.endswith('.T'):
         head = 'Temperature'
+    elif file.endswith('.L'):
+        head = 'Landscape_Electrons'
+    elif file.endswith('.Lp'):
+        head = 'Landscape_Holes'
+    elif file.endswith('.Jns'):
+        head = 'Electron_current'
+    elif file.endswith('.Jps'):
+        head = 'Hole_current'
         
     else:
         print("Error! File extension is not correct!")
@@ -198,7 +206,7 @@ def create_unified_data_file(model_ID, node_map):
             my_data = extract_carriers(file)
         elif file.endswith(('.Auger', '.nonRad', '.Rad')):
             my_data = extract_recombination(file)
-        elif file.endswith(('.out', '.ef', '.Ev', '.nda', '.T', '.Jns','Jnp')):
+        elif file.endswith(('.out', '.ef', '.Ev', '.nda', '.T','.L','.Lp')):
             my_data = extract_data(file)
         else:
             print(file + ' is not parseable at this time.')
@@ -210,7 +218,7 @@ def create_unified_data_file(model_ID, node_map):
         success = True
     
     # Reorder the headers to be easier to read
-    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Temperature']]
+    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Temperature','Landscape_Electrons','Landscape_Holes']]
     
     output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
