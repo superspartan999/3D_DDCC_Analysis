@@ -40,7 +40,7 @@ def DDCC(FileName, legend_label):
     
     file=pd.read_csv(FileName,delimiter='  ',header=None, engine='python')
 
-    plt.plot(file[1],file[14]/(30e-9)**2,label=legend_label)
+    plt.plot(file[1],file[14]/(30e-7)**2,label=legend_label)
     
     
     
@@ -160,6 +160,7 @@ directory="D:\\IV"
 os.chdir(directory)
 #x=DDCC("40nmAlGaN0.14IVmerged.txt", "40nm")  
 #y=DDCC("13nmAlGaN0.14IVmerged.txt", "13nm")
+y=DDCC("13nmAlGaN0.14IVmerged_python.txt", "13nm p")
 #z=DDCC("IV curves 50nm AlGaN - copy.ivn", "50nm") 
 #x=DDCC("10nmDopedAlGaN_-35to1.txt", "10nm")  
 #y=DDCC("30nmDopedAlGaN_-35to1.txt", "30nm") 
