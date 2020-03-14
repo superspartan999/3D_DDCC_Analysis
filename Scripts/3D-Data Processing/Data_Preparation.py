@@ -18,12 +18,13 @@ __status__ = "Development"
 
 
 directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-comp=0.5
+comp=1
+thickness=20
 
 directory = 'D:\\30nmAlGaN'+str(comp)
 directory= 'D:\\20nmAlGaN0.5'
 
-
+directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_\\Bias3'
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
 
 #directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
@@ -92,11 +93,11 @@ def extract_data(file, head_len=12):
         head = 'Landscape_Electrons'
     elif file.endswith('.Lp'):
         head = 'Landscape_Holes'
-    elif file.endswith('.Jns'):
-        head = 'Electron_current'
-    elif file.endswith('.Jps'):
-        head = 'Hole_current'
-        
+#    elif file.endswith('.Jns'):
+#        head = 'Electron_current'
+#    elif file.endswith('.Jps'):
+#        head = 'Hole_current'
+#        
     else:
         print("Error! File extension is not correct!")
         return
@@ -206,7 +207,7 @@ def create_unified_data_file(model_ID, node_map):
             my_data = extract_carriers(file)
         elif file.endswith(('.Auger', '.nonRad', '.Rad')):
             my_data = extract_recombination(file)
-        elif file.endswith(('.out', '.ef', '.Ev', '.nda', '.T','.L','.Lp')):
+        elif file.endswith(('.out', '.ef', '.Ev', '.nda', '.T','.L','.Lp','.Jns','Jps')):
             my_data = extract_data(file)
         else:
             print(file + ' is not parseable at this time.')
@@ -236,11 +237,11 @@ def composition(file):
     return my_data
 
 
-node_map = write_space_df('AlGaN_'+str(comp)+'_20nm_.msh')
+node_map = write_space_df('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_.msh')
 
 
 
-mydf = create_unified_data_file('AlGaN_'+str(comp)+'_20nm_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 composition_map=composition('Al_map.out')
 composition_map=composition_map.set_index('Node')
 mydf=pd.concat([mydf,composition_map], axis=1, join='outer')

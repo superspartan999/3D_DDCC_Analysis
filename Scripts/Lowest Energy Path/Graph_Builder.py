@@ -33,20 +33,22 @@ import simplejson as json
 import heapq
 import pickle
 
-length=30
+length=20
 
 material='AlGaN'
-comp=32
-
+comp=1
 directory='D:/'+str(length)+'nm'+material+''+str(comp)
+directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_\\Bias3'
 ##directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
 #if material=='AlGaN':
 #    material='p_structure'
 os.chdir(directory)
 #file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
-file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+
+file = 'LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00.unified'
 no_of_paths=10
 
 
@@ -71,7 +73,7 @@ if sorted_data['Ec'].min()<0:
     
     sorted_data['Ec']=sorted_data['Ec']-sorted_data['Ec'].min()
     
-
+ 
 #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
 #that gives us the total no. of grid points in any given direction
 unique_x=sorted_data['x'].unique()
@@ -92,6 +94,8 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 Evdf=sorted_data[['x','y','z','Ev']].copy()
 Evdf['Ev']=Evdf['Ev'].abs()
 Evarr=Evdf.values
+#
+#Jpdf=sorted_data[['x','y','z','Hole_current']].copy()
 
 
 dictEc=dict(enumerate(Evarr))
@@ -143,4 +147,4 @@ for key, n in list(G.nodes.items()):
         print(key)
 
 
-save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nm'+material+''+str(comp)+'graph.js',G)
+save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nm'+material+''+str(comp)+'_graph.js',G)
