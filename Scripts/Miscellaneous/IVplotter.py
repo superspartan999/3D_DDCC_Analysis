@@ -26,7 +26,7 @@ def SiLENSE(FileName):
     plt.plot(newfile["Bias"],newfile["Current_density"])
 
     return newfile
-    
+    .
 def OneD(FileName, legend_label):
     file=pd.read_csv(FileName,header=None)
 

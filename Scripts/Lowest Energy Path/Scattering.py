@@ -12,19 +12,21 @@ import matplotlib.pyplot as plt
 import scipy as scp
 
 
-comp=0.5
+comp=1
 length=20
 material='AlGaN'
 #
 directory='D:/'+str(length)+'nm'+material+''+str(comp)
+
+directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_\\Bias3'
 os.chdir(directory)
 
 #file= directory+'/'+material+'_0.5_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
-file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+file='LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
-
+#
 node_map=df[['x','y','z']].copy()
 #round up values in node map to prevent floating point errors
 rounded_nodes=node_map.round(decimals=10)
@@ -54,6 +56,36 @@ xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=
 yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 
-bg=df['Landscape_Electrons']-df['Landscape_Holes']
-yn=3.437-bg
+sorted_data['Bg']=sorted_data['Landscape_Electrons']-sorted_data['Landscape_Holes']
+Bg_dat=sorted_data[['Node','Bg']]
+Bg_dat=Bg_dat.set_index('Node')
+Bg_dat=Bg_dat.sort_index()
+yn=abs(3.437-Bg_dat)
 Uo=yn.round(4)
+num_nodes=len(yn)
+
+
+Name="Offset.out"
+if os.path.isfile(Name):
+    print ("File exist")
+    os.remove(Name)
+else:
+    print ("File not exist")
+f=open(Name, "a")
+f.write('$MeshFormat\n\
+2 0 8\n\
+$NodeData\n\
+1\n\
+Offset_check\n\
+1\n\
+1.0\n\
+3\n\
+0\n\
+1\n\
+'+str(num_nodes)+'\n\
+')
+
+for i in range(num_nodes):
+    f.write('           '+str(i)+'   '+str(Uo['Bg'].iloc[i])+'\n')
+#    print(Uo['Bg'].iloc[i])
+f.close()

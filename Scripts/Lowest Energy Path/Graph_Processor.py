@@ -70,21 +70,25 @@ def mypath3(G,source,target):
 ###directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
 #file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
-comp=16
-length=30
+comp=1
+length=10
 material='AlGaN'
 #
-directory='D:/'+str(length)+'nm'+material+''+str(comp)
-##directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
+#directory='D:/'+str(length)+'nm'+material+''+str(comp)
+###directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
+#
+#os.chdir(directory)
+#
+##file= directory+'/'+material+'_0.5_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+##file='p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+##directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
+##file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
+directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_\\Bias3'
 
 os.chdir(directory)
 
-#file= directory+'/'+material+'_0.5_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
-file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
-#file='p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
-#directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
-#file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
-
+file = 'LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
 
 #material='AlGaN'
@@ -96,7 +100,7 @@ file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified
 #os.chdir(directory)
 ##file= directory+'/'+material+'_0.17_'+str(length)+'nm_out.vg_0.00.vd_0.00.vs_0.00.unified'
 #file='AlGaN_'+str(comp)+'_'+str(length)+'nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
-no_of_paths=10
+no_of_paths=15
 
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
@@ -133,7 +137,7 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 Ecdf=sorted_data[['x','y','z','Ec']].copy()
 Ecdf=Ecdf.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 Ecarr=Ecdf.values
-G=read_json_file('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nm'+material+''+str(comp)+'graph.js')
+G=read_json_file('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nm'+material+''+str(comp)+'_graph.js')
 
 minindex = abs(zvalues[0]).idxmin()
 maxindex=  abs(zvalues[0]-(zvalues.iloc[minindex][0]+thickness)).idxmin()
@@ -155,42 +159,42 @@ for i in range(1,no_of_paths):
     pathlist.append(pathway)
     print(i)
     
-#fig = plt.figure()
-#
-#ax = fig.add_subplot(111, projection='3d')    
-#
-#for h in pathlist[0:100]:
-#
-#    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')    
+
+for h in pathlist[0:100]:
+    
+    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+    
+    for i,val in enumerate(h):
+        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+    
+    path['x']=path['x'].astype(float)
+    path['y']=path['y'].astype(float)
+    path['z']=path['z'].astype(float)
+
+    
+    x=path['x'].values
+    
+    y=path['y'].values
+    
+    z=path['z'].values
+    
+#    ax.set_xlim(0, xvalues[0].iat[-1]) 
+#    ax.set_ylim(0,yvalues[0].iat[-1])
+#    ax.set_zlim(0,zvalues[0].iat[-1])
+    ax.scatter(x, y, z)
 #    
-#    for i,val in enumerate(h):
-#        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+energylist=[]
+for h in pathlist[0:no_of_paths]: 
+    nodeweights=0
+    #
+    for node in h:
+        nodeweights=G.node[node]['pot']+nodeweights
 #    
-#    path['x']=path['x'].astype(float)
-#    path['y']=path['y'].astype(float)
-#    path['z']=path['z'].astype(float)
-#
-#    
-#    x=path['x'].values
-#    
-#    y=path['y'].values
-#    
-#    z=path['z'].values
-#    
-##    ax.set_xlim(0, xvalues[0].iat[-1]) 
-##    ax.set_ylim(0,yvalues[0].iat[-1])
-##    ax.set_zlim(0,zvalues[0].iat[-1])
-#    ax.scatter(x, y, z)
-##    
-#energylist=[]
-#for h in pathlist[0:no_of_paths]: 
-#    nodeweights=0
-#    #
-#    for node in h:
-#        nodeweights=G.node[node]['pot']+nodeweights
-##    
-#    averagenodeenergy=nodeweights/len(h)
-#    energylist.append(averagenodeenergy)
+    averagenodeenergy=nodeweights/len(h)
+    energylist.append(averagenodeenergy)
     
 with open('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nm'+material+''+str(comp)+'pathlist.txt','wb') as fp:
     pickle.dump(pathlist,fp)
