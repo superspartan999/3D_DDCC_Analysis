@@ -26,7 +26,7 @@ def SiLENSE(FileName):
     plt.plot(newfile["Bias"],newfile["Current_density"])
 
     return newfile
-    .
+    
 def OneD(FileName, legend_label):
     file=pd.read_csv(FileName,header=None)
 
@@ -36,12 +36,15 @@ def OneD(FileName, legend_label):
     
     return file
        
-def DDCC(FileName, legend_label):
+def DDCC(FileName, legend_label, current):
     
-    file=pd.read_csv(FileName,delimiter='  ',header=None, engine='python')
+    file=pd.read_csv(FileName,delimiter=r"\s+",header=None, engine='python')
+    file=file.drop([6,7],axis=1)
+    file.columns=['Vg','Vd','Vs','Ig_n','Id_n','Is_n','Ig_p','Id_p','Is_p']
+    
+    plt.plot(file['Vd'],file[current]/(30e-7)**2,label=legend_label)
 
-    plt.plot(file[1],file[14]/(30e-7)**2,label=legend_label)
-    
+
     
     
     return file
@@ -158,9 +161,10 @@ os.chdir(directory)
 
 directory="D:\\IV"
 os.chdir(directory)
-#x=DDCC("40nmAlGaN0.14IVmerged.txt", "40nm")  
+x=DDCC("40nmAlGaN0.14IVmerged.txt", "40nm p", 'Ig_p')  
 #y=DDCC("13nmAlGaN0.14IVmerged.txt", "13nm")
-y=DDCC("13nmAlGaN0.14IVmerged_python.txt", "13nm p")
+y=DDCC("IV_nstructure_40nm_3d-ddcc.txt", "40nm n",'Is_n')
+#y=DDCC("IV_pstructure_13nm_3d-ddcc.txt", "13nm p",'Ig_p')
 #z=DDCC("IV curves 50nm AlGaN - copy.ivn", "50nm") 
 #x=DDCC("10nmDopedAlGaN_-35to1.txt", "10nm")  
 #y=DDCC("30nmDopedAlGaN_-35to1.txt", "30nm") 

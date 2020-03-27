@@ -49,6 +49,8 @@ os.chdir(directory)
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
 file = 'LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+
+file = 'p_structure_0.17_32nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 no_of_paths=10
 
 

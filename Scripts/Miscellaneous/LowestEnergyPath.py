@@ -31,10 +31,14 @@ from scipy.spatial import KDTree
 directory = 'E:\\10nmAlGaN\\Bias -42'
 directory = 'E:\\Google Drive\\Research\\Guillaume'
 directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
+
+directory = 'D:\\3D Simulations\\32nmAlGaN017\\Bias0'
+
+file = 'p_structure_0.17_32nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 os.chdir(directory)
 
 
-df=pd.read_csv("LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified", delimiter=',')
+df=pd.read_csv(file, delimiter=',')
 
 sorted_data,xvalues,yvalues,zvalues=processdf(df)
 
