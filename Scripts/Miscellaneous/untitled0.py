@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 16 16:37:17 2019
+Created on Fri Apr  3 15:08:07 2020
 
 @author: Clayton
 """
-import os
-import pandas as pd
 import numpy as np
-directory='D:/16nmAlGaN'
-os.chdir(directory)
+import matplotlib.pyplot as plt
 
-file='EBLAlavg.out'
-comp_header=10
-#comp=pd.read_csv(file, sep='    ',names=['z','Comp'])
-comp_map_info=pd.read_csv('Al_map.out',nrows=comp_header)
-num_nodes = int(comp_map_info.iloc[comp_header-1, 0])
 
-my_data = pd.read_csv('Al_map.out', skiprows=head_len, nrows=num_nodes, 
-                          delim_whitespace=True, header=None, names=['Node','Comp'], 
-                          engine='python')
+def f(x):
+    return (1-np.exp(x))/(1+np.exp(x)+np.exp(-x))
+
+
+x=np.arange(-25,25,0.01)
+y=f(x)
+dx=np.diff(x)[0]
+y_prime=np.gradient(y)/dx
+y_dprime=np.gradient(y_prime)/dx
+plt.plot(x,y)
+plt.plot(x,y_prime)
+plt.plot(x,y_dprime)
