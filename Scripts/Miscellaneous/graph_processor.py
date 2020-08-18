@@ -44,7 +44,7 @@ minbandgap=np.empty(len(lengtharray))
 comparray= [16]
 lengtharray= [32]
 
-comp
+
 #for iteration,comp in enumerate(comparray):
 for iteration,length in enumerate(lengtharray):
     directory='D:/Bandgap Path and Network/'

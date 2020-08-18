@@ -161,8 +161,8 @@ os.chdir(directory)
 
 directory="D:\\IV"
 os.chdir(directory)
-x=DDCC("40nmn-AlGaN0.14IVmerged_CNSI.txt", "40nm n", 'Is_n')  
-y=DDCC("40nmAlGaN0.14IVmerged_CNSI.txt", "40nm p", 'Ig_p')  
+x=DDCC("13nmn-AlGaN0.14IVmerged_CNSI.txt", "13nm n", 'Is_n')  
+y=DDCC("40nmn-AlGaN0.14IVmerged_CNSI.txt", "40nm n", 'Is_n')  
 #y=DDCC("13nmAlGaN0.14IVmerged.txt", "13nm")
 #y=DDCC("IV_nstructure_40nm_3d-ddcc.txt", "40nm n",'Is_n')
 #y=DDCC("IV_pstructure_13nm_3d-ddcc.txt", "13nm p",'Ig_p')

@@ -13,14 +13,8 @@ import scipy as scp
 from tvtk.util import ctf
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D 
 from math import floor, sqrt
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import scipy as scp
-import os
 import networkx as nx
 from networkx.readwrite import json_graph
 import simplejson as json
@@ -32,9 +26,7 @@ import scipy.ndimage as ndimage
 from mayavi.mlab import *
 from mayavi import mlab
 from matplotlib.mlab import griddata
-from matplotlib.colors import LightSource
 
-from moviepy.editor import VideoClip
 #
 #def make_frame(t):
 #    
@@ -44,6 +36,8 @@ from moviepy.editor import VideoClip
 
 directory = 'D:\\n_type_AlGaN_0.14_40nm_2\\Bias18'
 file = 'n_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#directory = 'D:\\p_type_AlGaN_0.14_40nm_2\\Bias26'
+#file = 'p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
 
@@ -211,7 +205,10 @@ plt.colorbar()
 
 CS2=plt.contour(x_vals/1e-7,y_vals/1e-7,Ec_array, colors='black',linewidths=0.5)
 
-#
+
+
+n=sorted_data['n'].values
+
 #fig = plt.figure()
 #ax = fig.gca(projection='3d')
 #x_vals_new=np.arange(x_vals.min(),x_vals.max(),np.diff(x_vals)[0]/factor)

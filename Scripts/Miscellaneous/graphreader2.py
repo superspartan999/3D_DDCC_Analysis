@@ -97,14 +97,14 @@ def mypath3(G,source,target):
     return pathlist
 
 
-length=32
+length=8
 #
 directory='C:\\Users\\Clayton\\Desktop\\'+str(length)+'nmAlGaN'
-##directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
+directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
 file= 'p_structure_0.17_'+str(length)+'nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
-no_of_paths=1000
+no_of_paths=10
 
 
 os.chdir(directory)
@@ -202,7 +202,7 @@ for key, n in list(G.nodes.items()):
 #h=mypath3(G,source,target)
 
 
-thickness=(length)*e-7
+thickness=(length)*1e-7
     
 #
 #start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y']== yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]

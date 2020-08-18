@@ -11,7 +11,7 @@ import pandas as pd
 import os
 import scipy as scp
 
-directory="C:\\Users\\Clayton\\Downloads\\simsdata"
+directory="C:\\Users\\Clayton\\Google Drive\\Research\\SIMS data"
 
 filelist=[]
 for fname in os.listdir(directory):
@@ -19,7 +19,7 @@ for fname in os.listdir(directory):
                filelist.append(fname)
                 
         
-filename=filelist[5]
+filename=filelist[0]
 
 os.chdir(directory)
 dat=pd.read_csv(filename, delimiter=",", engine='python',header=None)
@@ -64,10 +64,16 @@ for key in elements:
     x=x.astype(np.float)
     y=DataFrameDict[key]['C[atom/cm3]'].values
     y=y.astype(np.float)
-    if key=='133Cs 24Mg':
-        print(y.max())
+    if key =='l':
+        y=y*1e-4
+#    if key=='133Cs 24Mg':
+#        print(y.max())
     plt.semilogy(x,y,label=key)
   
 plt.legend()
 plt.title(filename)
+plt.xlim([0,1300])
+plt.ylim([1e16,1e20])
+plt.xlabel('Depth (nm)')
+plt.ylabel('Concentration (atom/cm3)')
 

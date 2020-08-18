@@ -23,7 +23,7 @@ thickness=20
 
 directory = 'D:\\30nmAlGaN'+str(comp)
 directory= 'D:\\20nmAlGaN0.5'
-directory= 'D:\\n_type_AlGaN_0.14_40nm_2\\Bias18'
+directory= 'D:\\p_type_AlGaN_0.14_40nm_2\\Bias26'
 
 #directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_\\Bias3'
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
@@ -238,12 +238,12 @@ def composition(file):
     return my_data
 
 
-node_map = write_space_df('n_type_AlGaN_0.14_40nm_2.msh')
+node_map = write_space_df('p_type_AlGaN_0.14_40nm_2.msh')
 
 
-model_ID='n_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
+model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
 #mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
-mydf = create_unified_data_file('n_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00', node_map)
+mydf = create_unified_data_file('p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 composition_map=composition('Al_map.out')
 composition_map=composition_map.set_index('Node')
 mydf=pd.concat([mydf,composition_map], axis=1, join='outer')
