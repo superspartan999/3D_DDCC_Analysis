@@ -33,11 +33,9 @@ from matplotlib.mlab import griddata
 #    return frame_for_time_t
 #
 #animation=VideoClip(make_frame,duration=duration)
+directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
+file = 'n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
-directory = 'D:\\n_type_AlGaN_0.14_40nm_2\\Bias18'
-file = 'n_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
-#directory = 'D:\\p_type_AlGaN_0.14_40nm_2\\Bias26'
-#file = 'p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
 
@@ -110,14 +108,15 @@ def plotsurf(surf,Var):
        fig = plt.figure(figsize=(len(y_vals)/20, len(x_vals)/20)) 
 
 
-    plt.contourf(y_vals/10e-7,x_vals/10e-7,Ec_array,20,cmap=cmap) 
+    plt.contourf(y_vals/10e-7,x_vals/10e-7,Ec_array,500,cmap=cmap) 
 
-    plt.colorbar()
+    plt.colorbar(orientation='horizontal')
+    plt.axis('off')
         
     
 #    
 #p=plotsurf(cross_section,'Ev')
-var='n'
+var='Landscape_Electrons'
 
 
 def  volume_slicer(axes,var):
@@ -172,7 +171,7 @@ def volumeplot(sorted_data):
     #ctf.load_ctfs(c, volume._volume_property)
     #volume.update_ctf = True
 
-surf=cross_section
+surf=s1_surf
 factor=5
 zmap=surf[[surf.columns[1],surf.columns[2], var ]].reset_index().round({'x':10,'y':10,'z':10})
 
@@ -200,14 +199,14 @@ if len(y_vals)==len(x_vals):
         fig = plt.figure()
 else:
    fig = plt.figure(figsize=(len(y_vals)/30, len(x_vals)/30)) 
-CS=plt.contourf(x_vals/1e-7,y_vals/1e-7,Ec_array,30,cmap=cm.viridis) 
+CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,cmap=cm.viridis) 
 plt.colorbar()
 
-CS2=plt.contour(x_vals/1e-7,y_vals/1e-7,Ec_array, colors='black',linewidths=0.5)
+#CS2=plt.contour(x_vals/1e-7,y_vals/1e-7,Ec_array, colors='black',linewidths=0.5)
 
 
-
-n=sorted_data['n'].values
+#
+#n=sorted_data['n'].values
 
 #fig = plt.figure()
 #ax = fig.gca(projection='3d')
@@ -222,38 +221,35 @@ n=sorted_data['n'].values
 
 #plotting outer surfaces
  
-##zslice=extract_slice(sorted_data,'z',zvalues.iloc[int((len(zvalues)-1)/2)][0],drop=True)
-#    print(i)
-#    
-#    Var='Ec'
-#    zmap=surf[[surf.columns[1],surf.columns[2], Var ]].reset_index().round({'x':10,'y':10,'z':10})
-#    
-#    
-#    x=zmap[zmap.columns[1]].values
-#    
-#    y=zmap[zmap.columns[2]].values
-#    
-#    z=zmap[Var].values
-#    
-#    x_vals, x_idx = np.unique(x, return_inverse=True)
-#    y_vals, y_idx = np.unique(y, return_inverse=True)
-#    
-#    Ec_array = np.empty(x_vals.shape + y_vals.shape)
-#    
-#    Ec_array.fill(np.nan)
-#    
-#    Ec_array[x_idx, y_idx] = zmap[Var].values
-#    
-#    cmap=cm.viridis
-#    
-#    fig = plt.figure(figsize=(len(y_vals)/20, len(x_vals)/20))
-#    plt.contourf(y_vals/10e-7,x_vals/10e-7,Ec_array,100,cmap=cmap) 
+#zslice=extract_slice(sorted_data,'z',zvalues.iloc[int((len(zvalues)-1)/2)][0],drop=True)
+#print(i)
+
+#Var='Ec'
+#zmap=surf[[surf.columns[1],surf.columns[2], Var ]].reset_index().round({'x':10,'y':10,'z':10})
 #
-#    plt.colorbar()
-#        
-#    plt.savefig(str(i)+'.png')
-#    plt.close()
-    
+#
+#x=zmap[zmap.columns[1]].values
+#
+#y=zmap[zmap.columns[2]].values
+#
+#z=zmap[Var].values
+#
+#x_vals, x_idx = np.unique(x, return_inverse=True)
+#y_vals, y_idx = np.unique(y, return_inverse=True)
+#
+#Ec_array = np.empty(x_vals.shape + y_vals.shape)
+#
+#Ec_array.fill(np.nan)
+#
+#Ec_array[x_idx, y_idx] = zmap[Var].values
+#
+#cmap=cm.viridis
+#
+#fig = plt.figure(figsize=(len(y_vals)/20, len(x_vals)/20))
+#plt.contourf(y_vals/10e-7,x_vals/10e-7,Ec_array,100,cmap=cmap) 
+#
+#plt.colorbar()
+
 #    
 #fig = plt.figure()
 #ax = fig.gca(projection='3d')

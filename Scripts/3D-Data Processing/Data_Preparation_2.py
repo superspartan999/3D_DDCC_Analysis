@@ -18,9 +18,9 @@ __status__ = "Development"
 
 # Sets the current directory to the data folder
 directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-directory= 'D:/Users/Clayton/Desktop/64nmAlGaN/Bias -42
+#directory= 'D:/Users/Clayton/Desktop/64nmAlGaN/Bias -42
 
-
+directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
 os.chdir(directory)
 
 hl=11
@@ -46,8 +46,8 @@ def write_space_df(file, head_len=5):
         # Dynamically determines the node space size.
         data_info = pd.read_csv(file, nrows=head_len, header=None)
         num_nodes = int(data_info.iloc[head_len-1, 0])
-        print data_info
-        print num_nodes
+        print(data_info)
+        print(num_nodes)
 
         raw_data = pd.read_csv(file, skiprows=head_len,
                                nrows=num_nodes, header=None,
@@ -84,23 +84,27 @@ def extract_data(file, head_len=hl):
         head = 'NDA'
     elif file.endswith('.T'):
         head = 'Temperature'
+    elif file.endswith('.L'):
+        head = 'Electron Landscape'
+    elif file.endswith('.Lp'):
+        head = 'Hole Landscape'
     else:
         print("Error! File extension is not correct!")
         return
 
     print("Extrating " + head + " data...")
     data_info = pd.read_csv(file, nrows=head_len, header=None)
-    print data_info
+    print(data_info)
     num_nodes = int(data_info.iloc[head_len-1, 0])
-    print 'g'
-    print num_nodes
+    print('g')
+    print(num_nodes)
     
     
 
     my_data = pd.read_csv(file, skiprows=head_len, nrows=num_nodes, 
                           delim_whitespace=True, header=None, names=[head], 
                           engine='python')
-    print len(my_data)
+    print(len(my_data))
     return my_data
 
 
@@ -121,9 +125,7 @@ def extract_carriers(file, head_len=hl):
     if file.endswith('.np'):
 
         data_info = pd.read_csv(file, nrows=head_len, header=None)
-        num_nodes = int(data_info.iloc[head_len-1, 0])
-        print 'fishy'
-        print num_nodes
+
 
         print("Extracting electron concentration...")
         ndat = pd.read_csv(file, skiprows=head_len, nrows=num_nodes,
@@ -238,6 +240,6 @@ def comp(mydf,comp_map):
         
       
 
-node_map = write_space_df('p_structure_0.17_10nm.msh')
-mydf = create_unified_data_file('p_structure_0.17_10nm-out.vg_0.00.vd_-4.20.vs_0.00', node_map)
+node_map = write_space_df('p_structure_0.30_40nm.msh')
+mydf = create_unified_data_file('p_structure_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 

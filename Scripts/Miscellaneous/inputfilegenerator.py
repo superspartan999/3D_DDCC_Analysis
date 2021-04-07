@@ -251,7 +251,7 @@ f.close()
 #writing the job file
 #=-----------------------------------------------------------------------------------------------------------------------#
 for x in range(int(FilesNumber)):
-    JobName = NameJob+"_"+str(x+1)+".sh"
+    JobName = "Job_"+str(x+1)+".sh"
     os.remove(JobName)
     g = open(JobName, "a")
     g.write("#!/bin/bash\n\

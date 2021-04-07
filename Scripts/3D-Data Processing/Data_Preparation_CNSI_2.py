@@ -17,24 +17,7 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-comp=1
-thickness=20
-
-directory = 'D:\\30nmAlGaN'+str(comp)
-directory= 'D:\\20nmAlGaN0.5'
-directory= 'D:\\Bias10'
-
-directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
-
-#directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_\\Bias3'
-#directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
-
-#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-
-os.chdir(directory)
-
+directory=os.path.dirname(os.path.realpath(__file__))
 
 def write_space_df(file, head_len=5):
 
@@ -248,23 +231,24 @@ def composition(file):
     return my_data
 
 #extract map of nodes
-node_map = write_space_df('n_type_AlGaN_0.30_40nm.msh')
+node_map = write_space_df('n_type_AlGaN_0.14_13nm.msh')
 
 #detect files in directory
 filelist=[]
 for fname in os.listdir(directory):
-            if 'n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_' in fname:
-               filelist.append(fname[0:50])
+            if 'n_type_AlGaN_0.14_13nm-out.vg_0.00.vd_' in fname:
+               filelist.append(fname[0:51])
 
 #extract different filenames               
 filelist = list(dict.fromkeys(filelist))
 
-filelist=['n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00']
+print(filelist)
 #model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
-##mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
-
+#mydf = create_unified_data_file('n_type_AlGaN_0.14_13nm-out.vg_0.00.vd_-4.00.vs_0.00', node_map)
+##
 #create unified data file for each bias
 for file in filelist:
+    print('Extracting',file)
     mydf = create_unified_data_file(file, node_map)
     composition_map=composition('Al_map.out')
     composition_map=composition_map.set_index('Node')

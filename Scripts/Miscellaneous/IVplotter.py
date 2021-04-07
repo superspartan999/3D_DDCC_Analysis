@@ -159,13 +159,14 @@ os.chdir(directory)
 
 #plt.plot(fifty['level_0'],fifty['level_3'],label='50nm DDCC' )
 
-directory="D:\\IV"
+directory="D:\\Research\\Simulation Data\\IV"
+#directory="D:\\1D-DDCC"
 os.chdir(directory)
-x=DDCC("13nmn-AlGaN0.14IVmerged_CNSI.txt", "13nm n", 'Is_n')  
-y=DDCC("40nmn-AlGaN0.14IVmerged_CNSI.txt", "40nm n", 'Is_n')  
-#y=DDCC("13nmAlGaN0.14IVmerged.txt", "13nm")
-#y=DDCC("IV_nstructure_40nm_3d-ddcc.txt", "40nm n",'Is_n')
-#y=DDCC("IV_pstructure_13nm_3d-ddcc.txt", "13nm p",'Ig_p')
+#x=DDCC("13nmAlGaN0.14IVmerged_python.txt", "13nm p", 'Ig_p')  
+#y=DDCC("40nmAlGaN0.14IVmerged_CNSI_2.txt", "40nm p", 'Ig_p')  
+#y=DDCC("p_type_InGaN_0.10_40nm_IV_CNSI.txt", "40nm p", 'Ig_p')
+y=DDCC("IV_nstructure_13nm_3d-ddcc.txt", "40nm n",'Is_n')
+y=DDCC("IV_pstructure_13nm_3d-ddcc.txt", "13nm p",'Ig_p')
 #z=DDCC("IV curves 50nm AlGaN - copy.ivn", "50nm") 
 #x=DDCC("10nmDopedAlGaN_-35to1.txt", "10nm")  
 #y=DDCC("30nmDopedAlGaN_-35to1.txt", "30nm") 
@@ -176,7 +177,7 @@ y=DDCC("40nmn-AlGaN0.14IVmerged_CNSI.txt", "40nm n", 'Is_n')
 ###file=pd.read_csv(filename,header=None)
 ##x=OneD("10nmIV.csv",'10nm thickness')
 ##y=OneD("30nmIV.csv",'30nm thickness')
-#z=OneD("50nmIV.csv",'1D simulations')
+#z=OneD("IV_nstructure_13nm_3d-ddcc.txt",'1D simulations')
 
 
 plt.grid(color='black')

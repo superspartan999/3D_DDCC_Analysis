@@ -16,13 +16,13 @@ from scipy.signal import lfilter
 
 directory="C:\\Users\\Clayton\\Downloads\\xrdfiles"
 directory="C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\XRD Data"
-
+directory="D:\\"
 filelist=[]
 for fname in os.listdir(directory):
-            if '.csv' in fname:
+            if '071720AA.csv' in fname:
                filelist.append(fname)
                
-filename=filelist[7]
+filename=filelist[0]
 
 
 os.chdir(directory)

@@ -32,14 +32,15 @@ from networkx.readwrite import json_graph
 import simplejson as json
 import heapq
 import pickle
-
-length=20
+import random
+length=40
 
 material='AlGaN'
 comp=1
 directory='D:/'+str(length)+'nm'+material+''+str(comp)
 directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_\\Bias3'
-##directory = 'D:\\3D Simulations\\8nmAlN\\Bias0'
+directory = 'D:\\Research\\Simulation Data\\3D Simulations\\32nmAlGaN017\\Bias0'
+directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
 #if material=='AlGaN':
 #    material='p_structure'
 os.chdir(directory)
@@ -48,9 +49,9 @@ os.chdir(directory)
 #directory = 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume\\'
 #file= 'LED4In-out.vg_0.00.vd_3.20.vs_0.00.unified'
 
-file = 'LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00.unified'
-
-file = 'p_structure_0.17_32nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#file = 'LEDIndiumCompo_'+str(comp)+'Al_'+str(length)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+filename='n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00.'
+file = filename+'unified'
 no_of_paths=10
 
 
@@ -67,13 +68,13 @@ sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 
 thickness=1e-7*length
-sorted_data=sorted_data[(sorted_data['z']>4.0e-6) & (sorted_data['z']<(4.0e-6+thickness))].reset_index(drop=True)
+sorted_data=sorted_data[(sorted_data['z']>5.0e-6) & (sorted_data['z']<(5.0e-6+thickness))].reset_index(drop=True)
 #sorted_data=sorted_data[(sorted_data['z']>4e-6) & (sorted_data['z']<4.1e-6)].reset_index(drop=True)
 
 
-if sorted_data['Ec'].min()<0:  
+if sorted_data['Landscape_Electrons'].min()<0:  
     
-    sorted_data['Ec']=sorted_data['Ec']-sorted_data['Ec'].min()
+    sorted_data['Landscape_Electrons']=sorted_data['Landscape_Electrons']-sorted_data['Landscape_Electrons'].min()
     
  
 #create dataframes for each xyz dimension in the mesh. this creates a dimension list 
@@ -93,8 +94,8 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 #Ecdf['Bgap']=Ecdf['Ec']-Ecdf['Ev']
 #Bgapdf=Ecdf[['x','y','z','Bgap']].copy()
 #Bgaparr=Bgapdf.values
-Evdf=sorted_data[['x','y','z','Ev']].copy()
-Evdf['Ev']=Evdf['Ev'].abs()
+Evdf=sorted_data[['x','y','z','Landscape_Electrons']].copy()
+Evdf['Landscape_Electrons']=Evdf['Landscape_Electrons'].abs()
 Evarr=Evdf.values
 #
 #Jpdf=sorted_data[['x','y','z','Hole_current']].copy()
@@ -147,6 +148,94 @@ for key, n in list(G.nodes.items()):
         G.add_edge(key,zneighs[1])
     if key%100000==0:
         print(key)
+save_json(directory+'\\'+filename+'js',G)
 
 
-save_json('C:\\Users\\Clayton\\Desktop\\Guillaume\\'+str(length)+'nm'+material+''+str(comp)+'_graph.js',G)
+def mypath3(G,source,target):
+    pathlist=[]
+    place_holder=99999999.0
+    energy = [place_holder] * len(list(G.nodes))
+    iteration2=[place_holder for node in list(G.nodes)]
+    queue = [(G.node[source]['pot'], source)]
+    i=1
+    while queue:
+        current_energy, current_node = heapq.heappop(queue)
+        iteration2[current_node]=i
+        i+=1
+        if energy[current_node] is place_holder: # v is unvisited
+            energy[current_node] = G.node[current_node]['pot']
+        neighbourhood= list(G.neighbors(current_node))
+        for neigh in neighbourhood:
+                if energy[neigh] is place_holder:
+                    energy[neigh]=G.node[neigh]['pot']
+                    heapq.heappush(queue, (G.node[neigh]['pot'],neigh))
+
+    while target != source:
+       backtrackneigh=list(G.neighbors(target))
+       neighdf=pd.DataFrame(columns={'neighbour','iteration'})
+       neighdf['neighbour']=backtrackneigh
+       for neigh in backtrackneigh:
+           if neigh not in pathlist:
+               neighdf.loc[neighdf['neighbour']==neigh,'iteration']=iteration2[neigh]
+               
+       neighdf=neighdf.dropna().reset_index(drop=True)
+       neighdf=neighdf[neighdf['iteration']!=place_holder]
+       step=neighdf.loc[(neighdf['iteration']==min(neighdf['iteration']))]['neighbour'].values[0]
+#       print(step)
+       pathlist.append(step)
+       target=step
+    return pathlist
+
+
+
+G=read_json_file(directory+'/'+filename+'js')
+
+
+minindex = abs(zvalues[0]).idxmin()
+maxindex=  abs(zvalues[0]-(zvalues.iloc[minindex][0]+thickness)).idxmin()
+
+start_slice=extract_slice(sorted_data,'z',zvalues.iloc[minindex+1][0])
+end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0])
+
+#start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0])
+#end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0])
+ 
+start_node_list=np.array(start_slice.index)
+end_node_list=np.array(end_slice.index)
+
+pathlist=[]
+for i in range(0,no_of_paths):
+    random_start=random.choice(start_node_list)
+    random_target=random.choice(end_slice.index)
+    pathway=mypath3(G,random_start,random_target)
+    pathlist.append(pathway)
+    print(i)
+    
+fig = plt.figure()
+
+ax = fig.add_subplot(111, projection='3d')    
+
+for h in pathlist[0:9]:
+    
+    path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
+    
+    for i,val in enumerate(h):
+        print (i)
+        path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
+    
+    path['x']=path['x'].astype(float)
+    path['y']=path['y'].astype(float)
+    path['z']=path['z'].astype(float)
+
+    
+    x=path['x'].values
+    
+    y=path['y'].values
+    
+    z=path['z'].values
+    
+#    ax.set_xlim(0, xvalues[0].iat[-1]) 
+#    ax.set_ylim(0,yvalues[0].iat[-1])
+#    ax.set_zlim(0,zvalues[0].iat[-1])
+    ax.scatter(x, y, z)    
+

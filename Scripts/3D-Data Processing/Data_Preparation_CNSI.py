@@ -17,25 +17,10 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-directory = 'E:\\Google Drive\\Research\\Transport Structure Project\\3D data\\Bias10'
-comp=1
-thickness=20
-
-directory = 'D:\\30nmAlGaN'+str(comp)
-directory= 'D:\\20nmAlGaN0.5'
-directory= 'D:\\Bias10'
-
-directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
-
-#directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_\\Bias3'
-#directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
-
-#directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
-#directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
+directory=os.path.dirname(os.path.realpath(__file__))
+directory = 'D:\\p_type_InGaN_0.10_30nm_2\\Bias10'
 
 os.chdir(directory)
-
-
 def write_space_df(file, head_len=5):
 
     """
@@ -96,11 +81,7 @@ def extract_data(file, head_len=12):
         head = 'Landscape_Electrons'
     elif file.endswith('.Lp'):
         head = 'Landscape_Holes'
-#    elif file.endswith('.Jns'):
-#        head = 'Electron_current'
-#    elif file.endswith('.Jps'):
-#        head = 'Hole_current'
-##        
+
     else:
         print("Error! File extension is not correct!")
         return
@@ -224,7 +205,7 @@ def create_unified_data_file(model_ID, node_map):
     # Reorder the headers to be easier to read
     output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Temperature','Landscape_Electrons','Landscape_Holes']]
     
-    output_data.to_csv(model_ID + '.unified', index_label='Node')
+#    output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
   
 
@@ -248,24 +229,23 @@ def composition(file):
     return my_data
 
 #extract map of nodes
-node_map = write_space_df('n_type_AlGaN_0.30_40nm.msh')
+node_map = write_space_df('n_type_AlGaN_0.14_13nm.msh')
 
 #detect files in directory
 filelist=[]
 for fname in os.listdir(directory):
-            if 'n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_' in fname:
+            if 'n_type_AlGaN_0.14_13nm-out.vg_0.00.vd_' in fname:
                filelist.append(fname[0:50])
 
-#extract different filenames               
+#extract different filenames  for different biases              
 filelist = list(dict.fromkeys(filelist))
-
-filelist=['n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00']
-#model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
-##mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
-
+filelist=['n_type_AlGaN_0.14_13nm-out.vg_0.00.vd_2.40.vs_0.00']
 #create unified data file for each bias
 for file in filelist:
+    #create a unified dataframe for each bias
     mydf = create_unified_data_file(file, node_map)
+    
+    #attach composition dataframe to unified dataframe
     composition_map=composition('Al_map.out')
     composition_map=composition_map.set_index('Node')
     mydf=pd.concat([mydf,composition_map], axis=1, join='outer')
