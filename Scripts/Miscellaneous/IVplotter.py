@@ -57,8 +57,8 @@ def silvaco(FileName):
     
     return file
 
-directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\SiLENSe IV\\"
-os.chdir(directory)
+# directory="C:\\Users\\Clayton\\Google Drive\\Research\\Simulations\\SiLENSe IV\\"
+# os.chdir(directory)
 #tjdata=pd.read_csv('C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\SiO2\\052719AB\\200umr.csv')
 #
 #x=DDCC("IV curves 10nm AlGaN - Copy.ivn", "10nm")  
@@ -165,8 +165,8 @@ os.chdir(directory)
 #x=DDCC("13nmAlGaN0.14IVmerged_python.txt", "13nm p", 'Ig_p')  
 #y=DDCC("40nmAlGaN0.14IVmerged_CNSI_2.txt", "40nm p", 'Ig_p')  
 #y=DDCC("p_type_InGaN_0.10_40nm_IV_CNSI.txt", "40nm p", 'Ig_p')
-y=DDCC("IV_nstructure_13nm_3d-ddcc.txt", "40nm n",'Is_n')
-y=DDCC("IV_pstructure_13nm_3d-ddcc.txt", "13nm p",'Ig_p')
+y=DDCC("15nmInGaN0.10IVmerged_CNSI.txt", "15 nm",'Ig_p')
+y=DDCC("30nmInGaN0.10IVmerged_CNSI.txt", "30 nm",'Ig_p')
 #z=DDCC("IV curves 50nm AlGaN - copy.ivn", "50nm") 
 #x=DDCC("10nmDopedAlGaN_-35to1.txt", "10nm")  
 #y=DDCC("30nmDopedAlGaN_-35to1.txt", "30nm") 
@@ -181,8 +181,8 @@ y=DDCC("IV_pstructure_13nm_3d-ddcc.txt", "13nm p",'Ig_p')
 
 
 plt.grid(color='black')
-#plt.xlim(-2,2)
-#plt.ylim(-4000,20000)
+plt.xlim(-2,2)
+plt.ylim(-400,400)
 plt.legend()
 #plt.tight_layout()
 

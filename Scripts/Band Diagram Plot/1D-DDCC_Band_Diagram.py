@@ -13,26 +13,26 @@ import scipy as scp
 
 
 directory = 'D:\\1'
-directory ='C:\\Users\\Clayton\\Google Drive\Research\\Simulations\\1D-DDCC'
+directory ='C:\\Users\\me_hi\\Downloads\\NTU-ITRI-DDCC-1D-3.4.7\\DDCC-1D'
 os.chdir(directory)
 
 def data(filename):
     
     headerlist= ['Position', 'Ec', 'Ev', 'Efn','Efp', 'n', 'p','Jn','Jp', 'Rad','Non-Rad','Rauger','RspPL', 'eb', 'ebh',\
              'generation','active dopant','impactG','1/uEc','1/uEv','1/uEhh','Electric field','mun','mup','uEc',\
-             'uEv','uEv2','effective trap','layernumber']
+             'uEv','uEv2','effective trap','layernumber', 'g']
     file=pd.read_csv(filename, sep="   ",header= None,engine='python')
     file.columns=headerlist
     return file
 
-def plotter(file,x_label='x_placeholder',y_label='y_placeholder',)
+# def plotter(file,x_label='x_placeholder',y_label='y_placeholder',)
 
 #Band Diagram
 
 i=-0.0
 i=round(i,2)
 print(i)
-file='Project_1_10_doped'
+file='Simple_LED.inp'
 filename = str(file)+'_result.out.vg_'+str(i)+'00-cb.res'
 os.chdir(directory)
 
@@ -52,12 +52,12 @@ plt.grid()
 
 i=round(i,2)
 print(i)
-file='Project_1'
+file='Simple_LED.inp'
 filename = str(file)+'_result.out.vg_'+str(i)+'00-cb.res'
 os.chdir(directory)
 headerlist= ['Position', 'Ec', 'Ev', 'Efn','Efp', 'n', 'p','Jn','Jp', 'Rad','Non-Rad','Rauger','RspPL', 'eb', 'ebh',\
-             'generation','active dopant','impactG','1/uEc','1/uEv','1/uEhh','Electric field','mun','mup','uEc',\
-             'uEv','uEv2','effective trap','layernumber']
+              'generation','active dopant','impactG','1/uEc','1/uEv','1/uEhh','Electric field','mun','mup','uEc',\
+              'uEv','uEv2','effective trap','layernumber', 'g']
 file=pd.read_csv(filename, sep="   ",header= None,engine='python')
 file.columns=headerlist
 
