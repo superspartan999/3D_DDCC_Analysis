@@ -30,7 +30,7 @@ directory='G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
 
 directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
-directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072420AC - 3 x 5nm QW']
+directorylist=['G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
 for directory in directorylist:
     os.chdir(directory)
 
@@ -166,4 +166,4 @@ for directory in directorylist:
     plt.plot(mc['V'],mc['Intercept'],label='J$^_{diode}')  
     plt.plot(mc['V'],mc['Slope'],label='J$^_{perimeter}')  
              
-         
+mc.to_csv('G:\\My Drive\\Research\\Transport Structure 2020\\30nm InGaN diode.csv')       
