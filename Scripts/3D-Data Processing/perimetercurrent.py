@@ -30,7 +30,7 @@ directory='G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
 
 directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
-directorylist=['G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
+directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072420AC - 3 x 5nm QW']
 for directory in directorylist:
     os.chdir(directory)
 
@@ -99,7 +99,7 @@ for directory in directorylist:
         maxvolt.append(PtoADict[key]['V'].iloc[0])
         minvolt.append(PtoADict[key]['V'].iloc[-1])    
         
-    voltages=np.linspace(-5,5,21)  
+    voltages=np.linspace(-4,5,51)  
     voltages=np.delete(voltages,np.where(voltages == 0))
     
     fits={}
