@@ -25,15 +25,15 @@ def interpolator(datt):
 
 
 
-directory='G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference'
+directorylist=['G:\\My Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
 
-directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
+# directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
 #directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AB - 30nm InGaN']
-directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
+# directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
 for directory in directorylist:
     os.chdir(directory)
 
@@ -60,7 +60,7 @@ for directory in directorylist:
     
     arealist=[(np.pi*float(x)**2)/4 for x in filelist]       
     
-    ptoalist=np.array(perimeterlist)/np.array(arealist)
+    # ptoalist=np.array(perimeterlist)/np.array(arealist)
     
     DataFrameDict = {elem : pd.DataFrame for elem in filelist}
     
@@ -73,9 +73,9 @@ for directory in directorylist:
         DataFrameDict[key] = pd.read_csv(key+'umr.csv')
         temp = re.findall(r'\d+', key)
         diameter=[int(x) for x in temp]
-        area=(np.pi*(diameter[0]*(1e-6))**2/4)
+        area=(np.pi*(diameter[0]*(1e-4))**2/4)
 #        area2=(np.pi*(diameter[0])**2/4)
-        perimeter=np.pi*diameter[0]*(1e-6)
+        perimeter=np.pi*diameter[0]*(1e-4)
         
     
         PtoA=perimeter/area
@@ -104,8 +104,8 @@ for directory in directorylist:
         
     contribution=[]
         
-    voltages=np.linspace(-5,4,11) 
-#    voltages=[3]
+    voltages=np.linspace(-5,5,101) 
+    # voltages=[5]
     voltages=np.delete(voltages,np.where(voltages == 0))
     
     fits={}
@@ -129,28 +129,47 @@ for directory in directorylist:
           
           p=np.polyfit(ptoalist1,jplist,1)
           jperimeterlist=np.array(ptoalist1)*(p[0])
+          jlist=jperimeterlist+p[1]
           
           ratio=np.array(jperimeterlist)/np.array(jplist)
-          diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-6).astype(int)
+          # ratio2=np.array((jperimeterlist)/np.array(jlist))
+          # ratio3=abs(p[1])/np.array(jlist)
+          diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-4).astype(int)
 
 #          plt.scatter(),ratio)
-#          jlist=jperimeterlist+p[1]
-#          f=np.poly1d(p)
-#          x=np.linspace(ptoalist1[-1],ptoalist1[0],100)
-#          y=f(x)
-#          plt.plot(x,y)
-#          plt.plot(ptoalist1,jplist,label=str(volt)+' V')
-#          plt.scatter(radius,ratio)
+          jlist=jperimeterlist+p[1]
+
+          f=np.poly1d(p)
+          x=np.linspace(ptoalist1[-1],ptoalist1[0],100)
+          y=f(x)
+          # x_fit=np.linspace(ptoalist1[-1],ptoalist1[0],np.array(ptoalist1).shape[0])
+          # y_fit=f(x_fit)
+          # ss_res = np.sum((jplist - y_fit) ** 2)
+          # ss_tot = np.sum((jplist - np.mean(jplist)) ** 2)
+          # r2 = 1 - (ss_res / ss_tot)
+  
+          # plt.plot(x,y, linestyle='dashed')
+          # plt.plot(ptoalist1,jplist,label=str(volt)+' V')
+          # plt.scatter(ptoalist1,jlist)
+          plt.grid()
+          # plt.scatter(radius,ratio)
 
           mcrow={'V':volt,'Slope':p[0], 'Intercept':p[1]}
           dr=pd.DataFrame({'Diameter':diameter,'Ratio':ratio})
           mc=mc.append(mcrow, ignore_index = True)
-          contribution.append(dr['Ratio'].iloc[dr['Diameter'].idxmax()])
+          print(dr['Diameter'].iloc[-1])
+          contribution.append(dr['Ratio'].iloc[-1])
+    # plt.title('J vs P/A')
+    # plt.xlabel('P/A (cm$^{-1}$)')
+    # plt.ylabel('J (A/cm$^2$')
 #          rr=rr.append(drrow, ignore_index= True)
     plt.title('Percentage Contribution of Jperimeter for 200 micron device')
     plt.xlabel('Voltage (V)')
     plt.ylabel('Percentage Contribution of Jperimeter (%)')
-    plt.scatter(voltages,np.array(contribution)*100)   
+    plt.grid()
+    name=directory
+    name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
+    plt.scatter(voltages,np.array(contribution)*100, label=name)   
     colors = plt.cm.jet(np.linspace(0,1,np.size(voltages)+1))
     poslist=[x for x in fits.keys() if x > 0]
     neglist=[x for x in fits.keys() if x < 0]
@@ -166,10 +185,10 @@ for directory in directorylist:
     fig=plt.figure(3)  
     # neg=sorted(neg.items(),key=operator.itemgetter(1),reverse=True)
     for i,key in enumerate(poslist):   
-            plt.semilogy(pos[key]['p/a'],abs(pos[key]['j']),label=str(key)+' V',color=colors[i])
+            plt.plot(pos[key]['p/a'],abs(pos[key]['j']),label=str(key)+' V',color=colors[i])
             
-    for i,key in enumerate(neglist):   
-            plt.semilogy(neg[key]['p/a'],abs(neg[key]['j']),label=str(key)+' V',linestyle='dashed',color=colors[i])
+    # for i,key in enumerate(neglist):   
+    #         plt.semilogy(neg[key]['p/a'],abs(neg[key]['j']),label=str(key)+' V',linestyle='dashed',color=colors[i])
             
     plt.title('J vs P/A')
     plt.xlabel('P/A (cm$^{-1}$)')
@@ -194,4 +213,4 @@ for directory in directorylist:
     plt.plot(mc['V'],mc['Intercept'],label='J$^_{diode}')  
     plt.plot(mc['V'],mc['Slope'],label='J$^_{perimeter}')  
              
-mc.to_csv('C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\Reference.csv')       
+# mc.to_csv('C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\Reference.csv')       
