@@ -104,8 +104,8 @@ for directory in directorylist:
         
     contribution=[]
         
-    voltages=np.linspace(-5,5,35) 
-#    voltages=[-1]
+    voltages=np.linspace(-5,4,11) 
+#    voltages=[3]
     voltages=np.delete(voltages,np.where(voltages == 0))
     
     fits={}
@@ -139,7 +139,7 @@ for directory in directorylist:
 #          x=np.linspace(ptoalist1[-1],ptoalist1[0],100)
 #          y=f(x)
 #          plt.plot(x,y)
-#          plt.plot(ptoalist1,jplist)
+#          plt.plot(ptoalist1,jplist,label=str(volt)+' V')
 #          plt.scatter(radius,ratio)
 
           mcrow={'V':volt,'Slope':p[0], 'Intercept':p[1]}
