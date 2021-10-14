@@ -30,10 +30,10 @@ directory='G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
 
 directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
-#directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference',
+directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AB - 30nm InGaN']
-directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
+#directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\110819AA']
 for directory in directorylist:
     os.chdir(directory)
 
@@ -105,7 +105,7 @@ for directory in directorylist:
     contribution=[]
         
     voltages=np.linspace(-5,4,11) 
-#    voltages=[3]
+#    voltages=[5]
     voltages=np.delete(voltages,np.where(voltages == 0))
     
     fits={}
@@ -133,19 +133,20 @@ for directory in directorylist:
           ratio=np.array(jperimeterlist)/np.array(jplist)
           diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-6).astype(int)
 
-#          plt.scatter(),ratio)
 #          jlist=jperimeterlist+p[1]
 #          f=np.poly1d(p)
 #          x=np.linspace(ptoalist1[-1],ptoalist1[0],100)
 #          y=f(x)
 #          plt.plot(x,y)
-#          plt.plot(ptoalist1,jplist,label=str(volt)+' V')
+#          plt.scatter(ptoalist1,jplist,label=str(volt)+' V')
 #          plt.scatter(radius,ratio)
 
           mcrow={'V':volt,'Slope':p[0], 'Intercept':p[1]}
           dr=pd.DataFrame({'Diameter':diameter,'Ratio':ratio})
           mc=mc.append(mcrow, ignore_index = True)
-          contribution.append(dr['Ratio'].iloc[dr['Diameter'].idxmax()])
+          chosen_d=dr['Ratio'].iloc[-1]
+          print(chosen_d)
+          contribution.append(chosen_d)
 #          rr=rr.append(drrow, ignore_index= True)
     plt.title('Percentage Contribution of Jperimeter for 200 micron device')
     plt.xlabel('Voltage (V)')
