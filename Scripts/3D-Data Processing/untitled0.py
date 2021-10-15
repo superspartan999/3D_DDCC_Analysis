@@ -38,7 +38,7 @@ directorylist=['G:\\My Drive\\Research\\Transport Structure 2020\\072120AB - 30n
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
 
 #directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
-directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN']
+directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AB - 30nm InGaN']
 #directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\110819AA']
@@ -136,13 +136,13 @@ for directory in directorylist:
           
           
           p=np.polyfit(ptoalist1,jplist,1)
-
+          jperimeterlist=np.array(ptoalist1)*p[0]
           jlist=jperimeterlist+p[1]
 
           f=np.poly1d(p)
           x=np.linspace(0,ptoalist1[0],np.size(jplist))
           y=f(x)
-          ratio=p[1]/np.array(jplist)
+          ratio=np.array(jperimeterlist)/np.array(jplist)
           diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-4).astype(int)
 #          plt.plot(x,y, linestyle='dashed')
 #          plt.scatter(ptoalist1,jplist,label=str(volt)+' V')
@@ -155,18 +155,19 @@ for directory in directorylist:
           dr=pd.DataFrame({'Diameter':diameter,'Ratio':ratio})
           mc=mc.append(mcrow, ignore_index = True)
 #          print(dr['Diameter'].iloc[-1])
-          contribution.append(dr['Ratio'].iloc[-1])
+          size=100
+          contribution.append(dr['Ratio'].loc[dr['Diameter']==size].values[0])
 #     plt.title('J vs P/A')
 #     plt.xlabel('P/A (cm$^{-1}$)')
 #     plt.ylabel('J (A/cm$^2$')
 #          rr=rr.append(drrow, ignore_index= True)
-    plt.title('Percentage Contribution of Jdiode for 200 micron device')
+    plt.title('Percentage Contribution of Jperimeter for 200 micron device')
     plt.xlabel('Voltage (V)')
     plt.ylabel('Percentage Contribution of Jperimeter (%)')
 #    plt.grid()
 #    name=directory
     name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
-    plt.scatter(voltages,np.array(contribution)*100, label=name)   
+    plt.scatter(voltages,np.array(contribution)*100, label=size)   
     colors = plt.cm.jet(np.linspace(0,1,np.size(voltages)+1))
     poslist=[x for x in fits.keys() if x > 0]
     neglist=[x for x in fits.keys() if x < 0]
