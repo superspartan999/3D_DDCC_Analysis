@@ -25,13 +25,17 @@ def interpolator(datt):
     return f, xnew
 
 
-
-directorylist=['G:\\My Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
+# directorylist=['G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 3\\080819AB']
+# directorylist=['G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102419AA - Reference',
+               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102419AB - 15 nm AlGaN',
+               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102419AC - 30 nm AlGaN',
+               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102919AA - 40 nm GaN',
+               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\110819AA']
+directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072320AB  - 1 x 5nm QW','G:\My Drive\Research\Transport Structure 2020\\072420AC - 3 x 5nm QW']
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
-
-#directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
-directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
+directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
+#directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AB - 30nm InGaN']
 #directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\110819AA']
@@ -129,7 +133,7 @@ for directory in directorylist:
           
           
           p=np.polyfit(ptoalist1,jplist,1)
-          jperimeterlist=np.array(ptoalist1)*(p[0])
+          jperimeterlist=np.array(ptoalist1)*(p[1])
           jlist=jperimeterlist+p[1]
           
           ratio=np.array(jperimeterlist)/np.array(jplist)
@@ -138,7 +142,7 @@ for directory in directorylist:
           diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-4).astype(int)
 
 #          plt.scatter(),ratio)
-          jlist=jperimeterlist+p[1]
+          jlist=jperimeterlist+p[0]
 
           f=np.poly1d(p)
           x=np.linspace(ptoalist1[-1],ptoalist1[0],np.size(jplist))
@@ -196,7 +200,7 @@ for directory in directorylist:
     plt.xlabel('P/A (cm$^{-1}$)')
     plt.ylabel('J (A/cm$^2$')
     fig=plt.figure(4)
-    plt.plot(mc['V'],mc['Slope'],label=directory)
+    plt.plot(mc['V'],mc['Slope'],label=name)
     plt.title('J Perimeter vs Volt')  
     plt.grid()
     plt.xlabel('Applied Bias (V)')
@@ -204,15 +208,11 @@ for directory in directorylist:
     
     fig=plt.figure(5)
     
-    plt.plot(mc['V'],mc['Intercept'],label=directory)   
+    plt.plot(mc['V'],mc['Intercept'],label=name)   
     plt.title('J Diode vs Volt')  
     plt.xlabel('Applied Bias (V)')
     plt.grid()
     plt.ylabel('$J_{diode}$ (A/cm$^{2}$)') 
-    
-    fig=plt.figure(6)
-    
-    plt.plot(mc['V'],mc['Intercept'],label='J$^_{diode}')  
-    plt.plot(mc['V'],mc['Slope'],label='J$^_{perimeter}')  
+
              
 # mc.to_csv('C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\Reference.csv')       
