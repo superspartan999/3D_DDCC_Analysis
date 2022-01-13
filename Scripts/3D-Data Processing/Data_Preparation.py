@@ -32,7 +32,7 @@ directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
 
 #directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-
+directory = 'C:\\Users\\me_hi\\Downloads\\Research'
 os.chdir(directory)
 
 
