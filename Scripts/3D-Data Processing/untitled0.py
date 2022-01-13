@@ -111,6 +111,7 @@ for directory in directorylist:
         minvolt.append(PtoADict[key]['V'].iloc[-1])     
         
     contribution=[]
+    contribution_dict={}
         
     voltages=np.arange(-7,7,0.5)
     # voltages=[5]
@@ -157,6 +158,7 @@ for directory in directorylist:
 #          print(dr['Diameter'].iloc[-1])
           size=100
           contribution.append(dr['Ratio'].loc[dr['Diameter']==size].values[0])
+          contribution_dict[volt]=dr
 #     plt.title('J vs P/A')
 #     plt.xlabel('P/A (cm$^{-1}$)')
 #     plt.ylabel('J (A/cm$^2$')
@@ -166,7 +168,7 @@ for directory in directorylist:
     plt.ylabel('Percentage Contribution of Jperimeter (%)')
 #    plt.grid()
 #    name=directory
-    name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
+#    name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
     plt.scatter(voltages,np.array(contribution)*100, label=size)   
     colors = plt.cm.jet(np.linspace(0,1,np.size(voltages)+1))
     poslist=[x for x in fits.keys() if x > 0]

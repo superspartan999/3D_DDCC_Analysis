@@ -10,31 +10,49 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as scp
-from tvtk.util import ctf
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-from mpl_toolkits.mplot3d import axes3d, Axes3D 
-from math import floor, sqrt
-import networkx as nx
-from networkx.readwrite import json_graph
-import simplejson as json
+#from tvtk.util import ctf
+#import plotly.graph_objects as go
+#from plotly.subplots import make_subplots
+#from mpl_toolkits.mplot3d import axes3d, Axes3D 
+#from math import floor, sqrt
+#import networkx as nx
+#from networkx.readwrite import json_graph
+#import simplejson as json
 from matplotlib import cm
-from itertools import *
-import heapq
-from scipy.spatial import KDTree
-import scipy.ndimage as ndimage
-from mayavi.mlab import *
-from mayavi import mlab
-from matplotlib.mlab import griddata
+#from itertools import *
+#import heapq
+#from scipy.spatial import KDTree
+#import scipy.ndimage as ndimage
+#from mayavi.mlab import *
+#from mayavi import mlab
+#from matplotlib.mlab import griddata
 
 #
-#def make_frame(t):
-#    
-#    return frame_for_time_t
+
+#function to obtain in-plane averaged values. takes a dataframe and a string to denote the value that is chosen 
+def inplane(df1,variable):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    #create dataframe for z values and in plane average values
+    df=pd.DataFrame(columns=['z',variable])
+    #loop through different z values along the device
+    for i, z in enumerate(zvalues):
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average the values in the plane and insert them into dataframe
+        averagezsliceEc=zslice[variable].mean()
+        d1={'z':z,variable:averagezsliceEc}
+        df.loc[i]=d1
+        
+
+
+    return df
+directory = 'C:\\Users\\Clayton\\Downloads\\InGaAs0.1'
+file = 'InGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000.unified'
 #
-#animation=VideoClip(make_frame,duration=duration)
-directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
-file = 'n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00.unified'
+#directory= 'C:\\Users\\Clayton\\Downloads\\drive-download-20220111T223510Z-001'
+#file = 'InGaN_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000.unified'
 
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
@@ -171,7 +189,7 @@ def volumeplot(sorted_data):
     #ctf.load_ctfs(c, volume._volume_property)
     #volume.update_ctf = True
 
-surf=s1_surf
+surf=cross_section
 factor=5
 zmap=surf[[surf.columns[1],surf.columns[2], var ]].reset_index().round({'x':10,'y':10,'z':10})
 
@@ -185,7 +203,7 @@ z=zmap[var].values
 x_vals, x_idx = np.unique(x, return_inverse=True)
 y_vals, y_idx = np.unique(y, return_inverse=True)
 
-X,Y=np.meshgrid(x_vals,y_vals)
+X,Y=np.meshgrid(y_vals,x_vals)
 
 Ec_array = np.empty(x_vals.shape + y_vals.shape)
 
@@ -194,16 +212,26 @@ Ec_array.fill(np.nan)
 Ec_array[x_idx, y_idx] = zmap[var].values
 
 cmap=cm.viridis
+#CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,cmap=cm.viridis) 
 
-if len(y_vals)==len(x_vals):
-        fig = plt.figure()
-else:
-   fig = plt.figure(figsize=(len(y_vals)/30, len(x_vals)/30)) 
-CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,cmap=cm.viridis) 
-plt.colorbar()
-
-#CS2=plt.contour(x_vals/1e-7,y_vals/1e-7,Ec_array, colors='black',linewidths=0.5)
-
+#if len(y_vals)==len(x_vals):
+#        fig = plt.figure()
+#else:
+#   fig = plt.figure(figsize=(len(y_vals)/30, len(x_vals)/30)) 
+#fig=plt.figure(1)
+#CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,cmap=cm.viridis) 
+##plt.colorbar()
+#effective=inplane(sorted_data,'Landscape_Electrons')
+#plt.plot(effective['z'],effective['Landscape_Electrons'])
+#CS=plt.contour(y_vals/1e-7,x_vals/1e-7,Ec_array, colors='black',linewidths=0.5)
+fig=plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+surf = ax.plot_surface(Y/1e-7, X/1e-7, Ec_array-Ec_array.min(),cmap=cm.viridis,linewidths=0.1)
+#
+ax.set_zlim3d(0, 0.06) 
+##effective=inplane(sorted_data,'Landscape_Electrons')
+##plt.plot(effective['z'],effective['Landscape_Electrons'])
+#CS2=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,linewidths=0.5)
 
 #
 #n=sorted_data['n'].values

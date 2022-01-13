@@ -25,7 +25,8 @@ directory = 'D:\\30nmAlGaN'+str(comp)
 directory= 'D:\\20nmAlGaN0.5'
 directory= 'D:\\Bias10'
 
-directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
+directory ='C:\\Users\\Clayton\\Downloads\\InGaAs0.1'
+
 
 #directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_\\Bias3'
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
@@ -222,7 +223,7 @@ def create_unified_data_file(model_ID, node_map):
         success = True
     
     # Reorder the headers to be easier to read
-    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Temperature','Landscape_Electrons','Landscape_Holes']]
+    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Landscape_Electrons','Landscape_Holes']]
     
     output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
@@ -248,7 +249,7 @@ def composition(file):
     return my_data
 
 #extract map of nodes
-node_map = write_space_df('n_type_AlGaN_0.30_40nm.msh')
+node_map = write_space_df('LED_PBC2.msh')
 
 #detect files in directory
 filelist=[]
@@ -259,14 +260,14 @@ for fname in os.listdir(directory):
 #extract different filenames               
 filelist = list(dict.fromkeys(filelist))
 
-filelist=['n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_0.00.vs_0.00']
+filelist=['InGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000']
 #model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
 ##mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 
 #create unified data file for each bias
 for file in filelist:
     mydf = create_unified_data_file(file, node_map)
-    composition_map=composition('Al_map.out')
+    composition_map=composition('In_map.out')
     composition_map=composition_map.set_index('Node')
     mydf=pd.concat([mydf,composition_map], axis=1, join='outer')
     mydf.to_csv(file + '.unified', index_label='Node')
