@@ -23,6 +23,7 @@ from itertools import *
 import heapq
 from scipy.spatial import KDTree
 import scipy.ndimage as ndimage
+import matplotlib.colors as colors
 # from mayavi.mlab import *
 # from mayavi import mlab
 # from matplotlib.mlab import griddata
@@ -34,8 +35,8 @@ import scipy.ndimage as ndimage
 #
 #animation=VideoClip(make_frame,duration=duration)
 
-material_list=['InGaN','InGaAs']
-comp='0.1'
+material_list=['InGaN']
+comp='0.2'
 
 for material in material_list:
     directory = 'C:\\Users\\me_hi\\Downloads\\Research\\'+material+'_M1com'+comp
@@ -121,7 +122,7 @@ for material in material_list:
         
     #    
     #p=plotsurf(cross_section,'Ev')
-    var='Landscape_Electrons'
+    var='n'
     
     
     def  volume_slicer(axes,var):
@@ -176,7 +177,7 @@ for material in material_list:
         #ctf.load_ctfs(c, volume._volume_property)
         #volume.update_ctf = True
     
-    surf=s1_surf
+    surf=cross_section
     factor=5
     zmap=surf[[surf.columns[1],surf.columns[2], var ]].reset_index().round({'x':10,'y':10,'z':10})
     
@@ -205,19 +206,23 @@ for material in material_list:
             fig = plt.figure()
     else:
         fig = plt.figure(figsize=(len(x_vals)/5, len(y_vals)/5)) 
-    CS=plt.contourf(x_vals/1e-7,y_vals/1e-7,Ec_array-Ec_array.min(),100,cmap=cm.viridis) 
-    plt.colorbar()
-    plt.clim(0,0.25)
+    CS=plt.contourf(x_vals/1e-7,y_vals/1e-7,Ec_array-Ec_array.min(), 100, cmap=cm.viridis)
+    cbar=plt.colorbar()
+
+    # plt.clim(0,190000)
     plt.xlabel('x (nm)')
-    plt.ylabel('z (nm)')
+    plt.ylabel('y (nm)')
     plt.tight_layout()
     
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-    surf = ax.plot_surface(X/1e-7, Y/1e-7, Ec_array-Ec_array.min(), cmap=cm.viridis, linewidth=0)
-    # ax.set_zlim(0,0.07)
+    surf = ax.plot_surface(X/1e-7, Y/1e-7, Ec_array-Ec_array.min(), cmap=cm.viridis, linewidth=0)#, vmin=0, vmax=0.0405)
+#     fig.colorbar(surf)
+# colo
+    # ax.set_zlim(0,0.0405)
     ax.set_xlabel('x(nm)')
     ax.set_ylabel('y(nm)')
-    ax.set_zlabel('Landscape energy fluctuations (eV)')
+    ax.set_zscale('log')
+    ax.set_zlabel('Electron density')
     plt.tight_layout()
 
 #CS2=plt.contour(x_vals/1e-7,y_vals/1e-7,Ec_array, colors='black',linewidths=0.5)
