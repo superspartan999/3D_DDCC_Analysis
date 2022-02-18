@@ -32,10 +32,10 @@ directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
 
 #directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-directory = 'C:\\Users\\me_hi\\Downloads\\Research\\\AlGaAs_M1com0.1'
+directory = 'C:\\Users\\me_hi\\Downloads\\Research\\\InGaN_M1com0.3'
 os.chdir(directory)
 
-filelist=['AlGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000']
+filelist=['InGaN_M1com0.3-out.vg_    0.000.vd_    0.000.vs_    0.000']
 def write_space_df(file, head_len=5):
 
     """

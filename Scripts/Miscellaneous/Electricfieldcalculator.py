@@ -10,6 +10,7 @@ import scipy as scp
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D 
 from math import floor, sqrt
+from functions import *
 
 __author__ = "Christian Robertson, Guillaume Lheureux, Clayton Qwah"
 __copyright__ = "Copyright 2018"
@@ -22,14 +23,14 @@ __email__ = "09baylessc@gmail.com"
 __status__ = "Development"
 
 
-directory = 'C:\\Users\\Clayton\\Desktop\ \10nmAlGaN_test'
-file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
+directory = 'C:\\Users\\me_hi\\Downloads\\Research\\InGaN_M1com0.1'
+file = 'InGaN_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000.unified'
 #directory = '/home-b/quantumqwah/testpy/'
 #file = 'p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified'
 
 os.chdir(directory)
-my_data=pd.read_csv(file, delimiter=' ')
-EcEv=my_data[['x','y','z','Ec', 'Ev']]
+my_data=pd.read_csv(file, delimiter=',')
+# EcEv=my_data[['x','y','z','Ec', 'Ev']]
 
 
 
@@ -115,7 +116,7 @@ max_z=my_data.loc[my_data['z'].idxmax()]['z']
 
 #new_index=node_map['x']+node_map['y']*len(unique_x)+node_map['z']*len(unique_x)*len(unique_y)
 
-my_data=pd.read_csv('p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified', delimiter=' ')
+my_data=pd.read_csv(file)
 node_map=my_data[['x','y','z']].copy()
 
 
@@ -329,7 +330,56 @@ sorted_data["Ex2"]=E_x2
 sorted_data["Ey2"]=E_y2
 sorted_data["Ez2"]=E_z2 
 
- 
-filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
+
+
+# E=np.empty(len(my_data))
+# E_x=np.empty(len(my_data))
+# E_y=np.empty(len(my_data))
+# E_z=np.empty(len(my_data))
+# for i in range(len(my_data)-1):    
+#     x=E_field(i,xvalues,yvalues,zvalues,sorted_data)
+#     print(i)
+#     E[i]=x[0]
+#     E_x[i]=x[1]
+#     E_y[i]=x[2]
+#     E_z[i]=x[3]
+
+# sorted_data["E"]=E    
+# sorted_data["Ex"]=E_x
+# sorted_data["Ey"]=E_y
+# sorted_data["Ez"]=E_z  
+# Ez=electric_field_z(sorted_data) 
+
+
+#function to plot band diagram
+def av_val(df1, val):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+    Ecvalues=pd.DataFrame(columns=['z',val])
+    # Evvalues=pd.DataFrame(columns=['z','Ev'])
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average
+        averagezsliceEc=zslice[val].mean()
+
+        d1={'z':z,val:averagezsliceEc}
+        # d2={'z':z,'Ev':averagezsliceEv}
+        Ecvalues.loc[i]=d1
+
+        i=i+1
+
+
+
+    return Ecvalues
+
+E_av=av_val(sorted_data,'E1')
+plt.plot(E_av['z'],E_av['Ex1'])
+# filemake=sorted_data.to_csv('C:\\Users\\Clayton\\Desktop\\10nmAlGaN\\Bias8\\p_structure_0.17_10nm-out.vg_0.00.vd_-0.20.vs_0.00.unified',sep=' ')
 
 
