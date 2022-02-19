@@ -60,10 +60,11 @@ def evolve(M, boundary='wrap'):
     np.random.shuffle(filling)
     M[M==-1] = filling
 
-N = 500      # Grid will be N x N
-SIM_T = 0.7  # Similarity threshold (that is 1-τ)
-EMPTY = 0.1  # Fraction of vacant properties
-B_to_R = 0.3   # Ratio of blue to red people
+N = 100      # Grid will be N x N
+SIM_T = 0.3  # Similarity threshold (that is 1-τ)
+EMPTY = 0.05  # Fraction of vacant properties
+
+B_to_R = 0.6   # Ratio of blue to red people
 
 p=rand_init(N, B_to_R,EMPTY)
 plt.figure(1)
@@ -93,11 +94,11 @@ ones=0
 for coords in negs:
     rng=random.randint(0,9)
     
-    if rng <=2:
+    if rng <=B_to_R*10-1:
         p[coords[0]][coords[1]]=0
         zeros=zeros+1
         
-    elif rng>2:
+    elif rng>B_to_R*10-1:
         p[coords[0]][coords[1]]=1
         ones=ones+1
 
