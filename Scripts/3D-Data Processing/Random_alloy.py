@@ -52,9 +52,12 @@ from matplotlib import cm
 # file = 'p_type_InGaN_0.10_30nm_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
 material='InGaN'
-comp='0.4'
-directory = 'C:\\Users\\me_hi\\Downloads\\Research\\'+material+'_M1com'+comp
-file=material+'_M1com'+comp+'-out.vg_    0.000.vd_    0.000.vs_    0.000.unified'
+comp='0.14'
+# directory = 'C:\\Users\\me_hi\\Downloads\\Research\\'+material+'_M1com'+comp
+# file=material+'_M1com'+comp+'-out.vg_    0.000.vd_    0.000.vs_    0.000.unified'
+
+directory='D:\\Research\Simulation Data\\n_type_AlGaN_0.14_40nm_2\\Bias18'
+file='n_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00.unified'
 os.chdir(directory)
 df=pd.read_csv(file, delimiter=',')
 
@@ -82,14 +85,14 @@ xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=
 yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 
-bottom_surf=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
-top_surf=extract_slice(sorted_data,'z',zvalues.iloc[-1][0],drop=True)
+# bottom_surf=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
+# top_surf=extract_slice(sorted_data,'z',zvalues.iloc[-1][0],drop=True)
 cross_section=extract_slice(sorted_data,'z',zvalues.iloc[int((len(zvalues)-1)/2)][0],drop=True)
-p_section=extract_slice(sorted_data,'z',9e-6,drop=True)
-s1_surf=extract_slice(sorted_data,'x',xvalues.iloc[0][0],drop=True)
-s2_surf=extract_slice(sorted_data,'x',xvalues.iloc[-1][0],drop=True)
-s3_surf=extract_slice(sorted_data,'y',yvalues.iloc[0][0],drop=True)
-s4_surf=extract_slice(sorted_data,'y',yvalues.iloc[-1][0],drop=True)
+# p_section=extract_slice(sorted_data,'z',9e-6,drop=True)
+# s1_surf=extract_slice(sorted_data,'x',xvalues.iloc[0][0],drop=True)
+# s2_surf=extract_slice(sorted_data,'x',xvalues.iloc[-1][0],drop=True)
+# s3_surf=extract_slice(sorted_data,'y',yvalues.iloc[0][0],drop=True)
+# s4_surf=extract_slice(sorted_data,'y',yvalues.iloc[-1][0],drop=True)
 
 var='Comp'
 surf=cross_section
@@ -165,10 +168,10 @@ cmap=cm.viridis
 #         fig = plt.figure()
 # else:
 #     fig = plt.figure(figsize=(len(y_vals)/30, len(x_vals)/30)) 
-CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,cmap=cm.viridis) 
+# CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array,100,cmap=cm.viridis) 
 
 
-
+plt.imshow(Ec_array)
 # cbar=plt.colorbar(orientation='horizontal')
 
 

@@ -180,7 +180,7 @@ def extract_slice(data, slice_var, slice_val, drop=False):
         print('Input parameters of incorrect type.')
         return
 
-    print("Slicing data...")
+    # print("Slicing data...")
     my_filter = data[slice_var] == slice_val
     slice_data = data[my_filter]
 
