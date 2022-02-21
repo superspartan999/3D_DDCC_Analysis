@@ -73,7 +73,7 @@ zvalues=zvalues.loc[zvalues[0]<comp_av['z'].iloc[-1]]
 
 gb_full_ratio_list=np.array([])
 for z_ind in range(0,len(zvalues)-1):
-    print(z_ind)
+    # print(z_ind)
     cross_section=extract_slice(sorted_data,'z',zvalues.iloc[z_ind][0],drop=True)
 
 
@@ -152,7 +152,7 @@ for z_ind in range(0,len(zvalues)-1):
         ratiolist[i]=ratio
     gb_full_ratio_list=np.append(gb_full_ratio_list,ratiolist)
 
-
+gb_random_sample=random_sample.copy()
 gb_histogram=np.histogram(gb_full_ratio_list,bins=20)
 # cmap=cm.viridis
 

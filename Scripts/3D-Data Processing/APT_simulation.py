@@ -175,7 +175,7 @@ for i in range(iterations):
         ratiolist[i]=ratio
     cg_full_ratio_list=np.append(cg_full_ratio_list,ratiolist)
 
-
+cg_random_sample=random_sample.copy()
 plt.figure(1)     
     # plt.figure(3)
 # cluster_generator=np.histogram(full_ratio_list,bins=20)
