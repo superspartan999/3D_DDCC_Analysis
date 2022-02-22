@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Thu Oct 14 14:57:01 2021
+
+@author: Clayton
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Oct 11 00:12:41 2021
 
 @author: me_hi
@@ -25,20 +32,19 @@ def interpolator(datt):
     return f, xnew
 
 
-# directorylist=['G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 3\\080819AB']
-# directorylist=['G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102419AA - Reference',
-               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102419AB - 15 nm AlGaN',
-               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102419AC - 30 nm AlGaN',
-               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\102919AA - 40 nm GaN',
-               # 'G:\\My Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\110819AA']
-directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072320AB  - 1 x 5nm QW','G:\My Drive\Research\Transport Structure 2020\\072420AC - 3 x 5nm QW']
+
+directorylist=['G:\\My Drive\\Research\\Transport Structure 2020\\071420AA - Reference']
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
-directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
-#directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference',
+
+# directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
+# directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072320AB  - 1 x 5nm QW','G:\My Drive\Research\Transport Structure 2020\\072420AC - 3 x 5nm QW']
+# directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference']
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AB - 30nm InGaN']
 #directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure Project\\Tunnel Junction IV\\Batch 4\\AlGaN Comparison\\110819AA']
+
+filedict={}
 for directory in directorylist:
     os.chdir(directory)
 
@@ -60,10 +66,10 @@ for directory in directorylist:
     filelist=sorted(filelist)
     
     filelist=[str(x) for x in filelist]   
-    
-    perimeterlist=[np.pi*float(x) for x in filelist]   
-    
-    arealist=[(np.pi*float(x)**2)/4 for x in filelist]       
+#    
+#    perimeterlist=[np.pi*float(x) for x in filelist]   
+#    
+#    arealist=[(np.pi*float(x)**2)/4 for x in filelist]       
     
     # ptoalist=np.array(perimeterlist)/np.array(arealist)
     
@@ -78,12 +84,11 @@ for directory in directorylist:
         DataFrameDict[key] = pd.read_csv(key+'umr.csv')
         temp = re.findall(r'\d+', key)
         diameter=[int(x) for x in temp]
-        area=(np.pi*(diameter[0]*(1e-4))**2/4)
+        area=(np.pi*((diameter[0]*(1e-4))**2)/4)
 #        area2=(np.pi*(diameter[0])**2/4)
         perimeter=np.pi*diameter[0]*(1e-4)
-        
-    
-        PtoA=perimeter/area
+
+        PtoA=2/((diameter[0])*1e-4/2)
     
         
         PtoADict[PtoA] = pd.read_csv(key+'umr.csv')
@@ -93,10 +98,14 @@ for directory in directorylist:
         PtoADict[PtoA]['I']=PtoADict[PtoA]['I']/area
         x=DataFrameDict[key]['V']
         y=abs(DataFrameDict[key]['I'])
-        plt.semilogy(x,y,label=key)
+        plt.semilogy(x,y,label=key+ r' $\mu$m')
+#        plt.xlim(0,7)
         list_IV.append(DataFrameDict[key])
-        
     
+        plt.xlabel('Voltage (V)')
+        plt.ylabel('Current Density (A/cm$^2$)')
+        plt.grid()
+#    
     fig=plt.figure(2)
     
     maxvolt=[]
@@ -109,8 +118,7 @@ for directory in directorylist:
         
     contribution=[]
         
-    voltages=np.linspace(-5,5,11) 
-    # voltages=[5]
+    voltages=np.arange(-4,3,0.1)
     voltages=np.delete(voltages,np.where(voltages == 0))
     
     fits={}
@@ -133,49 +141,44 @@ for directory in directorylist:
           
           
           p=np.polyfit(ptoalist1,jplist,1)
-          jperimeterlist=np.array(ptoalist1)*(p[1])
+          jperimeterlist=np.array(ptoalist1)*p[0]
           jlist=jperimeterlist+p[1]
-          
-          ratio=np.array(jperimeterlist)/np.array(jplist)
-          # ratio2=np.array((jperimeterlist)/np.array(jlist))
-          # ratio3=abs(p[1])/np.array(jlist)
-          diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-4).astype(int)
-
-#          plt.scatter(),ratio)
-          jlist=jperimeterlist+p[0]
 
           f=np.poly1d(p)
           x=np.linspace(ptoalist1[-1],ptoalist1[0],np.size(jplist))
           y=f(x)
-          # x_fit=np.linspace(ptoalist1[-1],ptoalist1[0],np.array(ptoalist1).shape[0])
-          # y_fit=f(x_fit)
-          # ss_res = np.sum((jplist - y_fit) ** 2)
-          # ss_tot = np.sum((jplist - np.mean(jplist)) ** 2)
-          # r2 = 1 - (ss_res / ss_tot)
-  
+          ratio=np.array(jperimeterlist)/np.array(jplist)
+          diameter=np.array(4/np.array(ptoalist1).astype(int)/1e-4).astype(int)
           plt.plot(x,y, linestyle='dashed')
           plt.scatter(ptoalist1,jplist,label=str(volt)+' V')
-          regression=r2_score(jplist,f(x))
+          regression=r2_score(np.flip(jplist),f(x))
 #          plt.scatter(ptoalist1,jlist)
           plt.grid()
           # plt.scatter(radius,ratio)
-
+#
           mcrow={'V':volt,'Slope':p[0], 'Intercept':p[1],'r2':regression}
           dr=pd.DataFrame({'Diameter':diameter,'Ratio':ratio})
           mc=mc.append(mcrow, ignore_index = True)
-          print(dr['Diameter'].iloc[-1])
-          contribution.append(dr['Ratio'].iloc[-1])
-    # plt.title('J vs P/A')
-    # plt.xlabel('P/A (cm$^{-1}$)')
-    # plt.ylabel('J (A/cm$^2$')
+#          print(dr['Diameter'].iloc[-1])
+          size=100
+          contribution.append(dr['Ratio'].loc[dr['Diameter']==size].values[0])
+    plt.title('J vs P/A')
+    plt.xlabel('P/A (cm$^{-1}$)')
+    plt.ylabel('J (A/cm$^2$')
 #          rr=rr.append(drrow, ignore_index= True)
-#    plt.title('Percentage Contribution of Jperimeter for 200 micron device')
-#    plt.xlabel('Voltage (V)')
-#    plt.ylabel('Percentage Contribution of Jperimeter (%)')
+
+    fig=plt.figure(7)
+    plt.scatter(voltages,np.array(contribution)*100, label=size)
+    plt.title('Percentage Contribution of J$_{perimeter}$ for 200 micron device')
+    plt.xlabel('Voltage (V)')
+    plt.yticks(np.arange(0, 100, step=10))
+    plt.ylim(0,100)
+    plt.xlim(-4,2.5)
+    plt.ylabel('Percentage Contribution of J$_{perimeter}$ (%)')
     plt.grid()
     name=directory
     name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
-#    plt.scatter(voltages,np.array(contribution)*100, label=name)   
+       
     colors = plt.cm.jet(np.linspace(0,1,np.size(voltages)+1))
     poslist=[x for x in fits.keys() if x > 0]
     neglist=[x for x in fits.keys() if x < 0]
@@ -200,7 +203,7 @@ for directory in directorylist:
     plt.xlabel('P/A (cm$^{-1}$)')
     plt.ylabel('J (A/cm$^2$')
     fig=plt.figure(4)
-    plt.plot(mc['V'],mc['Slope'],label=name)
+    plt.plot(mc['V'],mc['Slope'],label=directory)
     plt.title('J Perimeter vs Volt')  
     plt.grid()
     plt.xlabel('Applied Bias (V)')
@@ -208,11 +211,17 @@ for directory in directorylist:
     
     fig=plt.figure(5)
     
-    plt.plot(mc['V'],mc['Intercept'],label=name)   
+    plt.plot(mc['V'],mc['Intercept'],label=directory)   
     plt.title('J Diode vs Volt')  
     plt.xlabel('Applied Bias (V)')
     plt.grid()
     plt.ylabel('$J_{diode}$ (A/cm$^{2}$)') 
-
+    
+    filedict[name]=mc
+#    
+#    fig=plt.figure(6)
+#    
+#    plt.plot(mc['V'],mc['Intercept'],label='J$^_{diode}')  
+#    plt.plot(mc['V'],mc['Slope'],label='J$^_{perimeter}')  
              
 # mc.to_csv('C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\Reference.csv')       

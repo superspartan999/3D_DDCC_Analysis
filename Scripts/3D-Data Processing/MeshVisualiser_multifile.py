@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Mon Jan 24 19:52:49 2022
+
+@author: me_hi
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Mar 26 21:45:24 2020
 
 @author: Clayton
@@ -35,8 +42,8 @@ import matplotlib.colors as colors
 #
 #animation=VideoClip(make_frame,duration=duration)
 
-material_list=['AlGaAs', 'AlGaN']
-comp='0.2'
+material_list=[ 'InGaN']
+comp='0.3'
 
 for material in material_list:
     directory = 'C:\\Users\\me_hi\\Downloads\\Research\\'+material+'_M1com'+comp
@@ -84,40 +91,7 @@ for material in material_list:
     #
     #listofz=listofz[listofz%10==0]
     
-    def plotsurf(surf,Var):
-    
-        zmap=surf[[surf.columns[1],surf.columns[2], Var ]].reset_index().round({'x':10,'y':10,'z':10})
-        
-        
-        x=zmap[zmap.columns[1]].values
-        
-        y=zmap[zmap.columns[2]].values
-        
-        z=zmap[Var].values
-        
-        x_vals, x_idx = np.unique(x, return_inverse=True)
-        y_vals, y_idx = np.unique(y, return_inverse=True)
-        
-        Ec_array = np.empty(x_vals.shape + y_vals.shape)
-        
-        Ec_array.fill(np.nan)
-        
-        Ec_array[x_idx, y_idx] = zmap[Var].values
-        
-        cmap=cm.viridis
-        
-        
-    #    fig = plt.figure(figsize=(len(y_vals)/10, len(x_vals)/10))
-        if len(y_vals)==len(x_vals):
-                fig = plt.figure()
-        else:
-           fig = plt.figure(figsize=(len(y_vals)/20, len(x_vals)/20)) 
-    
-    
-        plt.contourf(y_vals/10e-7,x_vals/10e-7,Ec_array,500,cmap=cmap) 
-    
-        plt.colorbar(orientation='horizontal')
-        plt.axis('off')
+
             
         
     #    
@@ -125,59 +99,7 @@ for material in material_list:
     var='Comp'
     
     
-    def  volume_slicer(axes,var):
-        val_array=sorted_data[['x','y','z',var]].copy()
-        x=val_array['x'].values
-        #
-        y=val_array['y'].values
-        
-        z=val_array['z'].values
-        
-        val=val_array[var].values
-        
-        x_vals, x_idx = np.unique(x, return_inverse=True)
-        y_vals, y_idx = np.unique(y, return_inverse=True)
-        z_vals, z_idx = np.unique(z, return_inverse=True)
-        
-        xx,yy,zz= np.meshgrid(x_vals, y_vals, z_vals, sparse=True)
-        
-        
-        Ec_array = np.empty(x_vals.shape + y_vals.shape+z_vals.shape)
-        Ec_array.fill(np.nan)
-        Ec_array[x_idx, y_idx,z_idx] = val
-        cmap=cm.viridis
-        volume_slice(Ec_array, plane_orientation=axes,colormap='viridis')
-    
-    #volume_slicer('z_axes','Ev')
-    def volumeplot(sorted_data):   
-    
-        val_array=sorted_data[['x','y','z',var]].copy()
-        x=val_array['x'].values
-        #
-        y=val_array['y'].values
-        
-        z=val_array['z'].values
-        
-        val=val_array[var].values
-        
-        x_vals, x_idx = np.unique(x, return_inverse=True)
-        y_vals, y_idx = np.unique(y, return_inverse=True)
-        z_vals, z_idx = np.unique(z, return_inverse=True)
-        
-        xx,yy,zz= np.meshgrid(x_vals, y_vals, z_vals, sparse=True)
-        
-        values = np.linspace(0., 1., 256)
-        Ec_array = np.empty(x_vals.shape + y_vals.shape+z_vals.shape)
-        Ec_array.fill(np.nan)
-        Ec_array[x_idx, y_idx,z_idx] = val
-        cmap=cm.viridis
-        volume= pipeline.volume(pipeline.scalar_field(Ec_array),vmin=Ec_array.min(),vmax=Ec_array.max())
-        #c = ctf.save_ctfs(volume._volume_property)
-        #c['rgb']=cm.get_cmap('viridis')(values.copy())
-        #ctf.load_ctfs(c, volume._volume_property)
-        #volume.update_ctf = True
-    
-    def returnmat(surf_type):
+    def returnmat(surf_type,var):
         surf=surf_type
         factor=5
         zmap=surf[[surf.columns[1],surf.columns[2], var ]].reset_index().round({'x':10,'y':10,'z':10})
@@ -203,31 +125,38 @@ for material in material_list:
         
         return x_vals, y_vals, X, Y, Ec_array
         
-    x_vals, y_vals, X, Y, Ec_array=returnmat(cross_section)
+    x_vals, y_vals, X, Y, Ec_array=returnmat(cross_section,'Ec')
+    x_vals, y_vals, X, Y, Ev_array=returnmat(cross_section,'Ev')
+    
+    x_vals, y_vals, X, Y, Ln_array=returnmat(cross_section,'Landscape_Electrons')
+    
+    normal_array=(Ec_array-Ec_array.min())
+    # normal_array=(Ec_array-Ec_array.mean())/(Ec_array-Ev_array)
+    
     cmap=cm.viridis
     
     if len(y_vals)==len(x_vals):
             fig = plt.figure()
     else:
         fig = plt.figure(figsize=(len(x_vals)/5, len(y_vals)/5)) 
-    CS=plt.contourf(x_vals/1e-7,y_vals/1e-7,Ec_array-Ec_array.min(), 100, cmap=cm.viridis)
+    CS=plt.contourf(x_vals/1e-7,y_vals/1e-7,Ec_array-Ec_array.min(), 50, cmap=cm.viridis)
     cbar=plt.colorbar()
 
-    # plt.clim(0,0.7)
-    plt.xlabel('x (nm)')
-    plt.ylabel('y (nm)')
-    plt.tight_layout()
+#     # plt.clim(0,0.7)
+#     plt.xlabel('x (nm)')
+#     plt.ylabel('y (nm)')
+#     plt.tight_layout()
     
     fig=plt.figure()
     ax = fig.subplots(subplot_kw={"projection": "3d"})
-    surf = ax.plot_surface(X/1e-7, Y/1e-7, Ec_array-Ec_array.min(), cmap=cm.viridis, linewidth=0, vmin=0, vmax=2)
+    surf = ax.plot_surface(X/1e-7, Y/1e-7, normal_array, cmap=cm.viridis, linewidth=0)#, vmin=-0.01, vmax=0.02)
 #     fig.colorbar(surf)
 # colo
-    # ax.set_zlim(0,0.7)
+    # ax.set_zlim(0,0.010)
     ax.set_xlabel('x(nm)')
     ax.set_ylabel('y(nm)')
     # ax.set_zscale('log')
-    ax.set_zlabel('Landscape Energy fluctuations')
+    ax.set_zlabel(material+' Landscape Energy fluctuations')
     plt.tight_layout()
     
     
