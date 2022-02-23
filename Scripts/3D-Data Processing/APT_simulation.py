@@ -138,9 +138,20 @@ for i in range(iterations):
     init_b=200
     init_r=100
     M=rand_init(N, B_to_R,init_b,init_r)
-    M=np.indices((N,N)).sum(axis=0)%2
-    M=np.where(M==1,init_b,M)
-    M=np.where(M==0,init_r,M)
+    
+    # #checkerboard alloy
+    # M=np.indices((N,N)).sum(axis=0)%2
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
+    
+    # #columnar alloy
+    # a=[True,False]
+    # M=np.tile(a,(N,N))
+    # M=M[:,:51]
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
+    
+    
     count1=np.count_nonzero(M==init_b)
     # plt.figure(1)
     
@@ -172,10 +183,10 @@ for i in range(iterations):
     
     
     random_sample=M.copy()
-    # sample_coords=np.array(np.where(bool_arr==False)).T
+    sample_coords=np.array(np.where(bool_arr==False)).T
     
-    # for coord in sample_coords:
-    #     random_sample[coord[0],coord[1]]=0
+    for coord in sample_coords:
+        random_sample[coord[0],coord[1]]=0
         
     random_sample_block=blockshaped(random_sample, N/3, N/3)
     # # # plt.imshow(random_sample)
