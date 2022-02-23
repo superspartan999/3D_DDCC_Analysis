@@ -138,18 +138,18 @@ for i in range(iterations):
     init_b=200
     init_r=100
     M=rand_init(N, B_to_R,init_b,init_r)
-    # M=np.indices((N,N)).sum(axis=0)%2
-    # M=np.where(M==1,init_b,M)
-    # M=np.where(M==0,init_r,M)
+    M=np.indices((N,N)).sum(axis=0)%2
+    M=np.where(M==1,init_b,M)
+    M=np.where(M==0,init_r,M)
     count1=np.count_nonzero(M==init_b)
     # plt.figure(1)
     
     # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    timestep=5
-    for i in range(0,timestep):
-        evolve(M,init_b,init_r)
+    # timestep=5
+    # for i in range(0,timestep):
+    #     evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
