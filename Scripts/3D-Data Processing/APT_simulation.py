@@ -42,25 +42,39 @@ def rand_init(N, B_to_R,init_b,init_r):
     np.random.shuffle(M)
     return M.reshape(N,N)
 
+# KERNEL = np.array([[1, 1, 1, 1, 1],
+#                    [1, 1, 1, 1, 1],
+#                    [1, 1, 0, 1, 1],
+#                    [1, 1, 1, 1, 1],
+#                    [1,1, 1, 1, 1, 1,1],
+#                    [1,1, 1, 1, 1, 1,1]], dtype=np.int8)
+
 KERNEL = np.array([[1, 1, 1, 1, 1],
+                   [1, 1, 1, 1, 1],
                    [1, 1, 0, 1, 1],
+                   [1, 1, 1, 1, 1],
                    [1, 1, 1, 1, 1]], dtype=np.int8)
 
 
 KERNEL = np.array([[ 1, 1, 1],
-                   [ 1, 0, 1],
-                   [ 1, 1, 1]], dtype=np.int8)
-def evolve(M):
+                    [ 1, 0, 1],
+                    [ 1, 1, 1]], dtype=np.int8)
+
+l=3
+KERNEL=np.ones(shape=(l,l))
+KERNEL[int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
+
+def evolve(M,init_b,init_r):
 
     kws = dict(mode='same', boundary='wrap')
-    b_neighs = convolve2d(M == 200, KERNEL, **kws)
-    r_neighs = convolve2d(M == 100, KERNEL, **kws)
+    b_neighs = convolve2d(M == init_b, KERNEL, **kws)
+    r_neighs = convolve2d(M == init_r, KERNEL, **kws)
     neighs   = convolve2d(M !=-1,  KERNEL, **kws)
     
-    b_dissatisfied = (b_neighs / neighs < SIM_T) & (M == 200)
-    b_satisfied=(b_neighs / neighs > SIM_T) & (M == 200)
-    r_dissatisfied = (r_neighs / neighs < SIM_T) & (M == 100)
-    r_satisfied=(r_neighs / neighs > SIM_T) & (M == 100)
+    b_dissatisfied = (b_neighs / neighs < SIM_T) & (M == init_b)
+    b_satisfied=(b_neighs / neighs > SIM_T) & (M == init_b)
+    r_dissatisfied = (r_neighs / neighs < SIM_T) & (M == init_r)
+    r_satisfied=(r_neighs / neighs > SIM_T) & (M == init_r)
     
 
     bdcoords=np.array(np.where(b_dissatisfied)).T
@@ -120,21 +134,22 @@ for i in range(iterations):
     SIM_T = 0.3  # Similarity threshold (that is 1-τ)
     
     
-    B_to_R = 0.3   # Ratio of blue to red people
-    
-    M=rand_init(N, B_to_R,200,100)
+    B_to_R = 0.5   # Ratio of blue to red people
+    init_b=200
+    init_r=100
+    M=rand_init(N, B_to_R,init_b,init_r)
     # M=np.indices((N,N)).sum(axis=0)%2
-    # M=np.where(M==1,200,M)
-    # M=np.where(M==0,100,M)
-    count1=np.count_nonzero(M==200)
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
+    count1=np.count_nonzero(M==init_b)
     # plt.figure(1)
     
     # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    # timestep=10
-    # for i in range(0,timestep):
-    #     evolve(M)
+    timestep=5
+    for i in range(0,timestep):
+        evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
@@ -157,19 +172,19 @@ for i in range(iterations):
     
     
     random_sample=M.copy()
-    sample_coords=np.array(np.where(bool_arr==False)).T
+    # sample_coords=np.array(np.where(bool_arr==False)).T
     
-    for coord in sample_coords:
-        random_sample[coord[0],coord[1]]=0
+    # for coord in sample_coords:
+    #     random_sample[coord[0],coord[1]]=0
         
     random_sample_block=blockshaped(random_sample, N/3, N/3)
-    # # plt.imshow(random_sample)
+    # # # plt.imshow(random_sample)
     
     ratiolist=np.zeros(len(random_sample_block)-1)
     for i in range(len(random_sample_block)-1):
-        nbr=np.count_nonzero(random_sample_block[i]==200)
-        nbb=np.count_nonzero(random_sample_block[i]==100)
-        n_total=np.count_nonzero(random_sample_block[i])
+        nbr=np.count_nonzero(random_sample_block[i]==init_b)
+        nbb=np.count_nonzero(random_sample_block[i]==init_r)
+        n_total=nbb+nbr
         
         ratio=nbr/n_total
         ratiolist[i]=ratio
