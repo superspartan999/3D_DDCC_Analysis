@@ -134,7 +134,7 @@ def plotsurf(surf,Var):
     
 #    
 #p=plotsurf(cross_section,'Ev')
-var='Landscape_Electrons'
+var='n'
 
 
 def  volume_slicer(axes,var):
