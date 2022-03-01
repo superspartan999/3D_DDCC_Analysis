@@ -33,10 +33,10 @@ directory ='C:\\Users\\Clayton\\Downloads\\InGaAs0.1'
 
 #directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-
+directory = 'C:\\Users\\me_hi\\Downloads\\Research\\\InGaN_M1com0.3'
 os.chdir(directory)
 
-
+filelist=['InGaN_M1com0.3-out.vg_    0.000.vd_    0.000.vs_    0.000']
 def write_space_df(file, head_len=5):
 
     """
@@ -251,16 +251,17 @@ def composition(file):
 #extract map of nodes
 node_map = write_space_df('LED_PBC2.msh')
 
-#detect files in directory
-filelist=[]
-for fname in os.listdir(directory):
-            if 'n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_' in fname:
-               filelist.append(fname[0:50])
+# #detect files in directory
+# filelist=[]
+# for fname in os.listdir(directory):
+#             if 'n_type_AlGaN_0.30_40nm-out.vg_0.00.vd_' in fname:
+#                filelist.append(fname[0:50])
 
 #extract different filenames               
-filelist = list(dict.fromkeys(filelist))
+# filelist = list(dict.fromkeys(filelist))
 
 filelist=['InGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000']
+
 #model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
 ##mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
 

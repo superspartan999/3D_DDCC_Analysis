@@ -103,6 +103,30 @@ def band_diagram_z(df1):
 
     return Ecvalues,Evvalues
 
+def av_values(df1,var):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    cols={}
+    #create dataframe for conduction band and valence band
+    Ecvalues=pd.DataFrame(columns=['z',var])
+    i=0
+    #loop through different z values along the device
+    for z in zvalues:
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average
+        averagezsliceEc=zslice[var].mean()
+        d1={'z':z,var:averagezsliceEc}
+
+        Ecvalues.loc[i]=d1
+
+        i=i+1
+
+
+
+    return Ecvalues
+
 
 def low_energy_path(G,source,target):
     pathlist=[]
@@ -156,7 +180,7 @@ def extract_slice(data, slice_var, slice_val, drop=False):
         print('Input parameters of incorrect type.')
         return
 
-    print("Slicing data...")
+    # print("Slicing data...")
     my_filter = data[slice_var] == slice_val
     slice_data = data[my_filter]
 
