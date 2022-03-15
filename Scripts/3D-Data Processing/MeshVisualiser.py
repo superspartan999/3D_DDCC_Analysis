@@ -29,9 +29,28 @@ import matplotlib.colors as colors
 # from matplotlib.mlab import griddata
 
 #
-#def make_frame(t):
-#    
-#    return frame_for_time_t
+
+#function to obtain in-plane averaged values. takes a dataframe and a string to denote the value that is chosen 
+def inplane(df1,variable):
+    #find all the values of z and put them in a list
+    zvalues = df1['z'].unique()
+    #create dataframe for z values and in plane average values
+    df=pd.DataFrame(columns=['z',variable])
+    #loop through different z values along the device
+    for i, z in enumerate(zvalues):
+        #extract x-y plane for a z value
+        zslice=extract_slice(df1,'z',z, drop=True)
+        
+        #average the values in the plane and insert them into dataframe
+        averagezsliceEc=zslice[variable].mean()
+        d1={'z':z,variable:averagezsliceEc}
+        df.loc[i]=d1
+        
+
+
+    return df
+directory = 'C:\\Users\\Clayton\\Downloads\\InGaAs0.1'
+file = 'InGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000.unified'
 #
 #animation=VideoClip(make_frame,duration=duration)
 

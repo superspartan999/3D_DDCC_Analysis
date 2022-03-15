@@ -25,7 +25,8 @@ directory = 'D:\\30nmAlGaN'+str(comp)
 directory= 'D:\\20nmAlGaN0.5'
 directory= 'D:\\Bias10'
 
-directory = 'D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
+directory ='C:\\Users\\Clayton\\Downloads\\InGaAs0.1'
+
 
 #directory='D:\\Guillaume Data\\LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_\\Bias3'
 #directory = 'C:\\Users\\Clayton\\Google Drive\Research\\Transport Structure Project\\3D data\\Bias10'
@@ -259,6 +260,7 @@ node_map = write_space_df('LED_PBC2.msh')
 #extract different filenames               
 # filelist = list(dict.fromkeys(filelist))
 
+filelist=['InGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000']
 
 #model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
 ##mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
