@@ -125,7 +125,7 @@ def blockshaped(arr, nrows, ncols):
                .swapaxes(1,2)
                .reshape(-1, int(nrows), int(ncols)))    
    
-iterations=277
+iterations=100
 
 cg_full_ratio_list=np.array([])
 for i in range(iterations):
@@ -139,7 +139,7 @@ for i in range(iterations):
     init_r=100
     M=rand_init(N, B_to_R,init_b,init_r)
     
-    # #checkerboard alloy
+    #checkerboard alloy
     # M=np.indices((N,N)).sum(axis=0)%2
     # M=np.where(M==1,init_b,M)
     # M=np.where(M==0,init_r,M)
@@ -158,9 +158,9 @@ for i in range(iterations):
     # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    # timestep=5
-    # for i in range(0,timestep):
-    #     evolve(M,init_b,init_r)
+    timestep=5
+    for i in range(0,timestep):
+        evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
@@ -202,6 +202,6 @@ for i in range(iterations):
     cg_full_ratio_list=np.append(cg_full_ratio_list,ratiolist)
 
 cg_random_sample=random_sample.copy()
-plt.figure(1)     
+# plt.figure(1)     
     # plt.figure(3)
 # cluster_generator=np.histogram(full_ratio_list,bins=20)
