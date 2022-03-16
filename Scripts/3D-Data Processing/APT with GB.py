@@ -28,24 +28,6 @@ def blockshaped(arr, nrows, ncols):
 
 os.chdir('C:\\Users\\me_hi\\Downloads')
 dat=pd.read_csv('APT_In_map_0.5_30nm_gaussian.csv', header=None)
-=======
-Created on Tue Feb 15 13:50:19 2022
-
-@author: Clayton
-"""
-
-import pandas as pd
-import numpy as np
-import scipy as scp
-import matplotlib.pyplot as plt
-import scipy.ndimage as ndimage
-
-from scipy.spatial import KDTree
-from scipy.spatial import cKDTree
-N=100
-
-p=0.8
->>>>>>> 3a5cd370a28d27c3d1ba0ae3701730af5c94a5cf
 
 dat=dat.rename(columns={0:'x',1:'y',2:'z',3:'Comp'})
 df=dat.iloc[::2]
@@ -76,7 +58,6 @@ yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 comp=0.5
 
-<<<<<<< HEAD
 gb_full_ratio_list=np.array([])
 for z_ind in range(0,len(zvalues)-1):
     # print(z_ind)
@@ -108,17 +89,8 @@ for z_ind in range(0,len(zvalues)-1):
     x=zmap[zmap.columns[1]].values
     
     y=zmap[zmap.columns[2]].values
-=======
-random_x_list = np.random.randint(0,100,size=N)
-random_y_list = np.random.randint(0,100,size=N)
 
 
-#def find_neighbours(alloy,x,y):
-#    
-#    
-
-        PtoA=2/((diameter[0])*1e-4/2)
->>>>>>> 3a5cd370a28d27c3d1ba0ae3701730af5c94a5cf
     
     z=zmap[var].values
     
@@ -156,7 +128,6 @@ random_y_list = np.random.randint(0,100,size=N)
     for coord in sample_coords:
         random_sample[coord[0],coord[1]]=0
 
-<<<<<<< HEAD
     random_sample_block=blockshaped(random_sample, N/3, N/3)
     # # plt.imshow(random_sample)
     
@@ -173,59 +144,4 @@ random_y_list = np.random.randint(0,100,size=N)
     
 gb_random_sample=random_sample.copy()
 gb_histogram=np.histogram(gb_full_ratio_list,bins=20)
-=======
-    fig=plt.figure(7)
-    plt.scatter(voltages,np.array(contribution)*100, label=size)
-    plt.title('Percentage Contribution of J$_{perimeter}$ for 200 micron device')
-    plt.xlabel('Voltage (V)')
-    plt.yticks(np.arange(0, 100, step=10))
-    plt.ylim(0,100)
-    plt.xlim(-4,2.5)
-    plt.ylabel('Percentage Contribution of J$_{perimeter}$ (%)')
-    plt.grid()
-    name=directory
-    name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
-       
-    colors = plt.cm.jet(np.linspace(0,1,np.size(voltages)+1))
-    poslist=[x for x in fits.keys() if x > 0]
-    neglist=[x for x in fits.keys() if x < 0]
-    neglist.sort(reverse=True)
-    pos={}
-    neg={}
-    for i,key in enumerate(fits.keys()):   
-        if key<0:
-            neg[key]=fits[key]
-    for i,key in enumerate(fits.keys()):  
-        if key>0:
-            pos[key]=fits[key]
-    fig=plt.figure(3)  
-    # neg=sorted(neg.items(),key=operator.itemgetter(1),reverse=True)
-    for i,key in enumerate(poslist):   
-            plt.plot(pos[key]['p/a'],abs(pos[key]['j']),label=str(key)+' V',color=colors[i])
-            
-    # for i,key in enumerate(neglist):   
-    #         plt.semilogy(neg[key]['p/a'],abs(neg[key]['j']),label=str(key)+' V',linestyle='dashed',color=colors[i])
-            
-    plt.title('J vs P/A')
-    plt.xlabel('P/A (cm$^{-1}$)')
-    plt.ylabel('J (A/cm$^2$')
-    fig=plt.figure(4)
-    plt.plot(mc['V'],mc['Slope'],label=directory)
-    plt.title('J Perimeter vs Volt')  
-    plt.grid()
-    plt.xlabel('Applied Bias (V)')
-    plt.ylabel('$J_{perimeter}$ (A/cm)')    
-    
-    fig=plt.figure(5)
-    
-    plt.plot(mc['V'],mc['Intercept'],label=directory)   
-    plt.title('J Diode vs Volt')  
-    plt.xlabel('Applied Bias (V)')
-    plt.grid()
-    plt.ylabel('$J_{diode}$ (A/cm$^{2}$)') 
-    
-    filedict[name]=mc
-#    
 
-    
->>>>>>> 3a5cd370a28d27c3d1ba0ae3701730af5c94a5cf
