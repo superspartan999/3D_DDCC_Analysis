@@ -130,7 +130,7 @@ iterations=100
 cg_full_ratio_list=np.array([])
 for i in range(iterations):
 
-    N = 51    # Grid will be N x N
+    N = 50    # Grid will be N x N
     SIM_T = 0.3  # Similarity threshold (that is 1-τ)
     
     
@@ -139,10 +139,10 @@ for i in range(iterations):
     init_r=100
     M=rand_init(N, B_to_R,init_b,init_r)
     
-    #checkerboard alloy
-    # M=np.indices((N,N)).sum(axis=0)%2
-    # M=np.where(M==1,init_b,M)
-    # M=np.where(M==0,init_r,M)
+    # checkerboard alloy
+    M=np.indices((N,N)).sum(axis=0)%2
+    M=np.where(M==1,init_b,M)
+    M=np.where(M==0,init_r,M)
     
     # #columnar alloy
     # a=[True,False]
@@ -158,9 +158,9 @@ for i in range(iterations):
     # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    timestep=5
-    for i in range(0,timestep):
-        evolve(M,init_b,init_r)
+    # timestep=5
+    # for i in range(0,timestep):
+    #     evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
@@ -188,7 +188,7 @@ for i in range(iterations):
     for coord in sample_coords:
         random_sample[coord[0],coord[1]]=0
         
-    random_sample_block=blockshaped(random_sample, N/3, N/3)
+    random_sample_block=blockshaped(random_sample, N/5, N/5)
     # # # plt.imshow(random_sample)
     
     ratiolist=np.zeros(len(random_sample_block)-1)

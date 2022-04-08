@@ -34,7 +34,8 @@ def interpolator(datt):
 directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072320AB  - 1 x 5nm QW','G:\My Drive\Research\Transport Structure 2020\\072420AC - 3 x 5nm QW']
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN'
 # directory='G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN'
-directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference','G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
+directorylist=['G:\My Drive\Research\Transport Structure 2020\\071420AA - Reference']#,'G:\My Drive\Research\Transport Structure 2020\\072120AA - 15nm InGaN','G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
+directorylist=['G:\My Drive\Research\Transport Structure 2020\\072120AB - 30nm InGaN']
 #directorylist=['C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\071420AA - Reference',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AA - 15nm InGaN',
 #               'C:\\Users\\Clayton\\Google Drive\\Research\\Transport Structure 2020\\072120AB - 30nm InGaN']
@@ -109,7 +110,7 @@ for directory in directorylist:
         
     contribution=[]
         
-    voltages=np.linspace(-5,5,11) 
+    voltages=np.linspace(-5,5,200) 
     # voltages=[5]
     voltages=np.delete(voltages,np.where(voltages == 0))
     
@@ -153,8 +154,8 @@ for directory in directorylist:
           # ss_tot = np.sum((jplist - np.mean(jplist)) ** 2)
           # r2 = 1 - (ss_res / ss_tot)
   
-          plt.plot(x,y, linestyle='dashed')
-          plt.scatter(ptoalist1,jplist,label=str(volt)+' V')
+          # plt.plot(x,y, linestyle='dashed')
+          # plt.scatter(ptoalist1,jplist,label=str(volt)+' V')
           regression=r2_score(jplist,f(x))
 #          plt.scatter(ptoalist1,jlist)
           plt.grid()
@@ -169,13 +170,13 @@ for directory in directorylist:
     # plt.xlabel('P/A (cm$^{-1}$)')
     # plt.ylabel('J (A/cm$^2$')
 #          rr=rr.append(drrow, ignore_index= True)
-#    plt.title('Percentage Contribution of Jperimeter for 200 micron device')
-#    plt.xlabel('Voltage (V)')
+    plt.title('Percentage Contribution of Jperimeter for 200 micron device')
+    plt.xlabel('Voltage (V)')
 #    plt.ylabel('Percentage Contribution of Jperimeter (%)')
     plt.grid()
     name=directory
     name=name.replace('G:\My Drive\Research\Transport Structure 2020\\', '')
-#    plt.scatter(voltages,np.array(contribution)*100, label=name)   
+    plt.scatter(voltages,np.array(contribution), label=name)   
     colors = plt.cm.jet(np.linspace(0,1,np.size(voltages)+1))
     poslist=[x for x in fits.keys() if x > 0]
     neglist=[x for x in fits.keys() if x < 0]

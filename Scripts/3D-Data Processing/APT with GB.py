@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-<<<<<<< HEAD
+
 Created on Wed Mar  9 17:38:02 2022
 
 @author: me_hi
@@ -39,8 +39,8 @@ rounded_nodes=node_map.round(decimals=10)
 sorted_nodes=rounded_nodes.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
 sorted_data=df.round({'x':10,'y':10,'z':10})
 sorted_data=sorted_data.sort_values(['x','y','z'],ascending=[True,True,True]).reset_index(drop=True)
-sorted_data=sorted_data.loc[sorted_data['y']<1.42e-6]
-sorted_data=sorted_data.loc[sorted_data['x']<1.42e-6]
+sorted_data=sorted_data.loc[sorted_data['y']<1.40e-6]
+sorted_data=sorted_data.loc[sorted_data['x']<1.40e-6]
 
 #sorted_data=sorted_data[(sorted_data['z']>3e-6) & (sorted_data['z']<7e-6)]
 #sorted_data=sorted_data[sorted_data['z']<5.6e-6]
@@ -59,6 +59,7 @@ zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=
 comp=0.5
 
 gb_full_ratio_list=np.array([])
+z_ratio_list=np.array([])
 for z_ind in range(0,len(zvalues)-1):
     # print(z_ind)
     cross_section=extract_slice(sorted_data,'z',zvalues.iloc[1][0],drop=True)
@@ -105,7 +106,7 @@ for z_ind in range(0,len(zvalues)-1):
     
     Ec_array[x_idx, y_idx] = zmap[var].values
     
-    plt.imshow(Ec_array)
+    # plt.imshow(Ec_array)
     N=len(Ec_array) 
     bool_arr = np.full((N,N), False)
     
@@ -128,18 +129,23 @@ for z_ind in range(0,len(zvalues)-1):
     for coord in sample_coords:
         random_sample[coord[0],coord[1]]=0
 
-    random_sample_block=blockshaped(random_sample, N/3, N/3)
+    random_sample_block=blockshaped(random_sample, N/5, N/5)
     # # plt.imshow(random_sample)
     
     ratiolist=np.zeros(len(random_sample_block)-1)
+    zratiolist=np.zeros(len(random_sample_block)-1)
     for i in range(len(random_sample_block)-1):
         nbr=np.count_nonzero(random_sample_block[i]==200)
         nbb=np.count_nonzero(random_sample_block[i]==100)
+        nz=np.sum(random_sample_block[i]==0)
         n_total=np.count_nonzero(random_sample_block[i])
         
         ratio=nbr/n_total
+        ratioz=nz/n_total
         ratiolist[i]=ratio
+        zratiolist[i]=ratioz
     gb_full_ratio_list=np.append(gb_full_ratio_list,ratiolist)
+    z_ratio_list=np.append(z_ratio_list,zratiolist)
     
     
 gb_random_sample=random_sample.copy()
