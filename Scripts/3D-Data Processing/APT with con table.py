@@ -1,23 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Feb 18 21:20:38 2022
+Created on Wed Apr 13 00:01:01 2022
 
 @author: me_hi
 """
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 17 23:48:27 2022
-
-@author: me_hi
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Feb 17 15:26:08 2022
-
-@author: me_hi
-"""
-
 
 import numpy as np
 from scipy.signal import convolve2d
@@ -129,6 +115,7 @@ iterations=100
 con_table=pd.DataFrame()
 
 cg_full_ratio_list=np.array([])
+fullratiolist=pd.DataFrame(columns=['nb','nr','nz'])
 for i in range(iterations):
 
     N = 50    # Grid will be N x N
@@ -186,23 +173,35 @@ for i in range(iterations):
     random_sample=M.copy()
     sample_coords=np.array(np.where(bool_arr==False)).T
     
-    for coord in sample_coords:
-        random_sample[coord[0],coord[1]]=0
+    # for coord in sample_coords:
+    #     random_sample[coord[0],coord[1]]=0
         
-    random_sample_block=blockshaped(random_sample, N/5, N/5)
-    # # # plt.imshow(random_sample)
+    atom_stream=random_sample.flatten()
+    indices=np.random.choice(np.arange(atom_stream.size), replace=False,size=int(atom_stream.size * p))
+    atom_stream[indices]=0
+    # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
+    block_num=25
+    block_list=np.split(atom_stream,block_num)
+    block_size=len(block_list[1])   
+    ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
     
-    ratiolist=np.zeros(len(random_sample_block)-1)
-    for i in range(len(random_sample_block)-1):
-        nbr=np.count_nonzero(random_sample_block[i]==init_b)
-        nbb=np.count_nonzero(random_sample_block[i]==init_r)
-        n_total=nbb+nbr
-        
-        ratio=nbr/n_total
-        ratiolist[i]=ratio
-    cg_full_ratio_list=np.append(cg_full_ratio_list,ratiolist)
+    for i,block in enumerate(block_list):
+        nb=np.count_nonzero(block==init_b)
+        nr=np.count_nonzero(block==init_r)
+        nz=np.count_nonzero(block)
+        nb_ratio=nb/block_size
+        nr_ratio=nr/block_size
+        n_non_zero_ratio=nz/block_size
+        ratiolist['nb'].iloc[i]=nb
+        ratiolist['nr'].iloc[i]=nr
+        ratiolist['nz'].iloc[i]=nz
+    
+    fullratiolist=pd.concat([fullratiolist,ratiolist])
 
-cg_random_sample=random_sample.copy()
-# plt.figure(1)     
+fullratiolist['nbratio']=fullratiolist['nb']/(fullratiolist['nb']+fullratiolist['nr'])
+fullratiolist['nrratio']=fullratiolist['nr']/(fullratiolist['nb']+fullratiolist['nr'])
+con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)
+# cg_random_sample=random_sample.copy()
+# # plt.figure(1)     
     # plt.figure(3)
 # cluster_generator=np.histogram(full_ratio_list,bins=20)
