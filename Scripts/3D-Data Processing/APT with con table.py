@@ -127,10 +127,10 @@ for i in range(iterations):
     init_r=100
     M=rand_init(N, B_to_R,init_b,init_r)
     
-    # checkerboard alloy
-    M=np.indices((N,N)).sum(axis=0)%2
-    M=np.where(M==1,init_b,M)
-    M=np.where(M==0,init_r,M)
+    # # checkerboard alloy
+    # M=np.indices((N,N)).sum(axis=0)%2
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
     
     # #columnar alloy
     # a=[True,False]
@@ -143,12 +143,12 @@ for i in range(iterations):
     count1=np.count_nonzero(M==init_b)
     # plt.figure(1)
     
-    # plt.imshow(M)
+    # # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    # timestep=5
-    # for i in range(0,timestep):
-    #     evolve(M,init_b,init_r)
+    timestep=5
+    for i in range(0,timestep):
+        evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
@@ -162,7 +162,7 @@ for i in range(iterations):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=2/3
+    p=1
     bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
@@ -177,8 +177,8 @@ for i in range(iterations):
     #     random_sample[coord[0],coord[1]]=0
         
     atom_stream=random_sample.flatten()
-    indices=np.random.choice(np.arange(atom_stream.size), replace=False,size=int(atom_stream.size * p))
-    atom_stream[indices]=0
+    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * p))
+    # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
     block_num=25
     block_list=np.split(atom_stream,block_num)
@@ -200,6 +200,13 @@ for i in range(iterations):
 
 fullratiolist['nbratio']=fullratiolist['nb']/(fullratiolist['nb']+fullratiolist['nr'])
 fullratiolist['nrratio']=fullratiolist['nr']/(fullratiolist['nb']+fullratiolist['nr'])
+expected=len(fullratiolist)*(B_to_R)**(block_size)
+class_size=100
+expected_list=np.array([expected])
+for i in np.linspace(1,class_size-1,class_size-1):
+    expected=expected*(B_to_R)/(1-(B_to_R))*(block_size+1-i)/i
+    expected_list=np.append(expected_list,expected)
+    
 con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)
 # cg_random_sample=random_sample.copy()
 # # plt.figure(1)     
