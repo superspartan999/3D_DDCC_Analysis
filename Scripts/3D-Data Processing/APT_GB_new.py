@@ -11,6 +11,23 @@ import pandas as pd
 import os
 from functions import *
 import numpy as np
+
+
+def blockshaped(arr, nrows, ncols):
+    """
+    Return an array of shape (n, nrows, ncols) where
+    n * nrows * ncols = arr.size
+
+    If arr is a 2D array, the returned array should look like n subblocks with
+    each subblock preserving the "physical" layout of arr.
+    """
+    h, w = arr.shape
+    assert h % nrows == 0, f"{h} rows is not evenly divisible by {nrows}"
+    assert w % ncols == 0, f"{w} cols is not evenly divisible by {ncols}"
+    return (arr.reshape(h//int(nrows), int(nrows), -1, int(ncols))
+               .swapaxes(1,2)
+               .reshape(-1, int(nrows), int(ncols)))    
+
 os.chdir('C:\\Users\\me_hi\\Downloads')
 dat=pd.read_csv('APT_In_map_0.5_30nm_gaussian.csv', header=None)
 
@@ -42,9 +59,12 @@ xvalues=pd.DataFrame(unique_x).sort_values([0],ascending=True).reset_index(drop=
 yvalues=pd.DataFrame(unique_y).sort_values([0],ascending=True).reset_index(drop=True)
 zvalues=pd.DataFrame(unique_z).sort_values([0],ascending=True).reset_index(drop=True)
 comp=0.5
-
+init_b=200
+init_r=100
 gb_full_ratio_list=np.array([])
 z_ratio_list=np.array([])
+fullratiolist=pd.DataFrame(columns=['nb','nr','nz'])
+B_to_R=0.5
 for z_ind in range(0,len(zvalues)-1):
     # print(z_ind)
     cross_section=extract_slice(sorted_data,'z',zvalues.iloc[1][0],drop=True)
@@ -58,11 +78,11 @@ for z_ind in range(0,len(zvalues)-1):
     atom_map=cross_section.copy()
     for index, row in atom_map.iterrows():
         if atom_map['Comp'].loc[index] > crit:
-            atom_map['Comp'].loc[index]=100
+            atom_map['Comp'].loc[index]=init_r
             
         else:
             
-            atom_map['Comp'].loc[index]=200
+            atom_map['Comp'].loc[index]=init_b
     
     var='Comp'
     # surf=atom_map
@@ -102,7 +122,7 @@ for z_ind in range(0,len(zvalues)-1):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=2/3
+    p=3/4
     bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
@@ -111,27 +131,38 @@ for z_ind in range(0,len(zvalues)-1):
     random_sample=Ec_array.copy()
     sample_coords=np.array(np.where(bool_arr==False)).T
     
-    for coord in sample_coords:
-        random_sample[coord[0],coord[1]]=0
-
-    random_sample_block=blockshaped(random_sample, N/5, N/5)
-    # # plt.imshow(random_sample)
-    
-    ratiolist=np.zeros(len(random_sample_block)-1)
-    zratiolist=np.zeros(len(random_sample_block)-1)
-    for i in range(len(random_sample_block)-1):
-        nbr=np.count_nonzero(random_sample_block[i]==200)
-        nbb=np.count_nonzero(random_sample_block[i]==100)
-        nz=np.sum(random_sample_block[i]==0)
-        n_total=np.count_nonzero(random_sample_block[i])
+    # for coord in sample_coords:
+    #     random_sample[coord[0],coord[1]]=0
         
-        ratio=nbr/n_total
-        ratioz=nz/n_total
-        ratiolist[i]=ratio
-        zratiolist[i]=ratioz
-    gb_full_ratio_list=np.append(gb_full_ratio_list,ratiolist)
-    z_ratio_list=np.append(z_ratio_list,zratiolist)
+    atom_stream=random_sample.flatten()
+    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * p))
+    # atom_stream[indices]=0
+    # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
+    block_num=125
+    block_list=np.split(atom_stream,block_num)
+    block_size=len(block_list[1])   
+    ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
     
+    for i,block in enumerate(block_list):
+        nb=np.count_nonzero(block==init_b)
+        nr=np.count_nonzero(block==init_r)
+        nz=np.count_nonzero(block)
+        nb_ratio=nb/block_size
+        nr_ratio=nr/block_size
+        n_non_zero_ratio=nz/block_size
+        ratiolist['nb'].iloc[i]=nb
+        ratiolist['nr'].iloc[i]=nr
+        ratiolist['nz'].iloc[i]=nz
     
-gb_random_sample=random_sample.copy()
-gb_histogram=np.histogram(gb_full_ratio_list,bins=20)
+    fullratiolist=pd.concat([fullratiolist,ratiolist])
+
+fullratiolist['nbratio']=fullratiolist['nb']/(fullratiolist['nb']+fullratiolist['nr'])
+fullratiolist['nrratio']=fullratiolist['nr']/(fullratiolist['nb']+fullratiolist['nr'])
+expected=len(fullratiolist)*(B_to_R)**(block_size)
+class_size=block_size
+expected_list=np.array([expected])
+for i in np.linspace(1,class_size,class_size):
+    expected=expected*(B_to_R)/(1-(B_to_R))*(block_size+1-i)/i
+    expected_list=np.append(expected_list,expected)
+    
+con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)

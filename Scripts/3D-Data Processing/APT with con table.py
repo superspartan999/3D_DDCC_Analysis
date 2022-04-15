@@ -122,7 +122,7 @@ for i in range(iterations):
     SIM_T = 0.3  # Similarity threshold (that is 1-τ)
     
     
-    B_to_R = 0.5   # Ratio of blue to red people
+    B_to_R = 0.4   # Ratio of blue to red people
     init_b=200
     init_r=100
     M=rand_init(N, B_to_R,init_b,init_r)
@@ -146,9 +146,9 @@ for i in range(iterations):
     # # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    timestep=5
-    for i in range(0,timestep):
-        evolve(M,init_b,init_r)
+    # timestep=10
+    # for i in range(0,timestep):
+    #     evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
@@ -162,7 +162,7 @@ for i in range(iterations):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=1
+    p=2/3
     bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
@@ -180,7 +180,7 @@ for i in range(iterations):
     atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * p))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
-    block_num=25
+    block_num=119
     block_list=np.split(atom_stream,block_num)
     block_size=len(block_list[1])   
     ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
@@ -201,7 +201,7 @@ for i in range(iterations):
 fullratiolist['nbratio']=fullratiolist['nb']/(fullratiolist['nb']+fullratiolist['nr'])
 fullratiolist['nrratio']=fullratiolist['nr']/(fullratiolist['nb']+fullratiolist['nr'])
 expected=len(fullratiolist)*(B_to_R)**(block_size)
-class_size=100
+class_size=block_size
 expected_list=np.array([expected])
 for i in np.linspace(1,class_size-1,class_size-1):
     expected=expected*(B_to_R)/(1-(B_to_R))*(block_size+1-i)/i
