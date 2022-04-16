@@ -122,12 +122,12 @@ for i in range(iterations):
     SIM_T = 0.3  # Similarity threshold (that is 1-τ)
     
     
-    B_to_R = 0.4   # Ratio of blue to red people
-    init_b=200
-    init_r=100
+    B_to_R = 0.5   # Ratio of blue to red people
+    init_b=1
+    init_r=0
     M=rand_init(N, B_to_R,init_b,init_r)
     
-    # # checkerboard alloy
+    # # # checkerboard alloy
     # M=np.indices((N,N)).sum(axis=0)%2
     # M=np.where(M==1,init_b,M)
     # M=np.where(M==0,init_r,M)
@@ -200,13 +200,23 @@ for i in range(iterations):
 
 fullratiolist['nbratio']=fullratiolist['nb']/(fullratiolist['nb']+fullratiolist['nr'])
 fullratiolist['nrratio']=fullratiolist['nr']/(fullratiolist['nb']+fullratiolist['nr'])
-expected=len(fullratiolist)*(B_to_R)**(block_size)
+# expected=len(block_list)*(B_to_R)**(block_size)
 class_size=block_size
-expected_list=np.array([expected])
-for i in np.linspace(1,class_size-1,class_size-1):
-    expected=expected*(B_to_R)/(1-(B_to_R))*(block_size+1-i)/i
-    expected_list=np.append(expected_list,expected)
-    
+expected_list=np.array([])
+p=B_to_R
+# for i in np.linspace(1,class_size-1,class_size-1):
+#     expected=expected*(B_to_R)/(1-(B_to_R))*(block_size+1-i)/i
+#     expected_list=np.append(expected_list,expected)
+prob_list=pd.DataFrame(0, index=np.arange(class_size),columns=['i','P','Exp'])
+for i in np.arange(0,class_size):
+    perm=np.math.factorial(int(block_size))/(np.math.factorial(int(i))*np.math.factorial(int(block_size-i)))
+    print(i)
+    P=perm*(p**i)*((1-p)**(block_size-i))
+    prob_list['i'].loc[i]=i
+    prob_list['P'].loc[i]=P
+    expect=len(fullratiolist)*P
+    # expect=expect*(p/(1-p))*(Nb+1-i)/i
+    expected_list=np.append(expected_list,expect)
 con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)
 # cg_random_sample=random_sample.copy()
 # # plt.figure(1)     
