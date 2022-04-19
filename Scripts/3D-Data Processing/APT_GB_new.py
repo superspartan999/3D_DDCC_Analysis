@@ -28,7 +28,7 @@ def blockshaped(arr, nrows, ncols):
                .swapaxes(1,2)
                .reshape(-1, int(nrows), int(ncols)))    
 
-os.chdir('C:\\Users\\Clayton\\Downloads')
+os.chdir('C:\\Users\\me_hi\\Downloads')
 dat=pd.read_csv('APT_In_map_0.5_30nm_gaussian.csv', header=None)
 
 dat=dat.rename(columns={0:'x',1:'y',2:'z',3:'Comp'})
@@ -79,53 +79,6 @@ for index, row in sorted_data.iterrows():
         
         sorted_data['Comp'].loc[index]=init_b
         
-# bottom_surf=extract_slice(sorted_data,'z',zvalues.iloc[0][0],drop=True)
-# top_surf=extract_slice(sorted_data,'z',zvalues.iloc[-1][0],drop=True)
-# cross_section=extract_slice(sorted_data,'z',zvalues.iloc[int((len(zvalues)-1)/2)][0],drop=True)
-# p_section=extract_slice(sorted_data,'z',9e-6,drop=True)
-# s1_surf=extract_slice(sorted_data,'x',xvalues.iloc[0][0],drop=True)
-# s2_surf=extract_slice(sorted_data,'x',xvalues.iloc[-1][0],drop=True)
-# s3_surf=extract_slice(sorted_data,'y',yvalues.iloc[0][0],drop=True)
-# s4_surf=extract_slice(sorted_data,'y',yvalues.iloc[-1][0],drop=True)
-
-
-# surf=s2_surf
-# factor=5
-
-# var='Comp'
-# zmap=surf[[surf.columns[0],surf.columns[1], var ]].reset_index().round({'x':10,'y':10,'z':10})
-
-
-# x=zmap[zmap.columns[1]].values
-
-# y=zmap[zmap.columns[2]].values
-
-
-
-# z=zmap[var].values
-
-# x_vals, x_idx = np.unique(x, return_inverse=True)
-# y_vals, y_idx = np.unique(y, return_inverse=True)
-
-# X,Y=np.meshgrid(x_vals,y_vals)
-
-# Ec_array = np.empty(x_vals.shape + y_vals.shape)
-
-# Ec_array.fill(np.nan)
-
-# Ec_array[x_idx, y_idx] = zmap[var].values
-
-# cmap=cm.viridis
-
-# if len(y_vals)==len(x_vals):
-#         fig = plt.figure()
-# else:
-#    fig = plt.figure(figsize=(len(y_vals)/30, len(x_vals)/30)) 
-# CS=plt.contourf(y_vals/1e-7,x_vals/1e-7,Ec_array*100,100,cmap=cm.viridis) 
-# cbar=plt.colorbar(orientation='horizontal')
-# ticks=np.linspace(surf[var].min()*100,surf[var].max()*100,5)
-# cbar.set_ticks(ticks)
-# cbar.ax.tick_params(labelsize=18)
 
 for z_ind in range(0,len(zvalues)-1):
     # print(z_ind)
@@ -236,4 +189,5 @@ for i in np.arange(0,class_size):
     # expected_list=np.append(expected_list,expect)
     prob_list['Exp'].loc[i]=expect
 hist_values=np.histogram(fullratiolist['nb'],bins=np.arange(0,class_size))   
+prob_list["sum"] = prob_list['Exp'].cumsum()
 # con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)

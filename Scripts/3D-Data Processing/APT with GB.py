@@ -117,8 +117,8 @@ for z_ind in range(0,len(zvalues)-1):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=2/3
-    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
+    ed=2/3
+    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[ed, 1-ed])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
     bool_arr = np.random.choice(sample_arr, size=(N,N))

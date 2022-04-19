@@ -162,8 +162,8 @@ for i in range(iterations):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=2/3
-    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
+    ed=2/3
+    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[ed, 1-ed])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
     bool_arr = np.random.choice(sample_arr, size=(N,N))
@@ -177,7 +177,7 @@ for i in range(iterations):
     #     random_sample[coord[0],coord[1]]=0
         
     atom_stream=random_sample.flatten()
-    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * p))
+    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
     block_num=119
@@ -218,6 +218,7 @@ for i in np.arange(0,class_size):
     # expect=expect*(p/(1-p))*(Nb+1-i)/i
     expected_list=np.append(expected_list,expect)
 con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)
+
 # cg_random_sample=random_sample.copy()
 # # plt.figure(1)     
     # plt.figure(3)
