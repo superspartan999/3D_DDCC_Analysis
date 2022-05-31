@@ -128,9 +128,9 @@ for i in range(iterations):
     M=rand_init(N, B_to_R,init_b,init_r)
     
     # # # checkerboard alloy
-    # M=np.indices((N,N)).sum(axis=0)%2
-    # M=np.where(M==1,init_b,M)
-    # M=np.where(M==0,init_r,M)
+    M=np.indices((N,N)).sum(axis=0)%2
+    M=np.where(M==1,init_b,M)
+    M=np.where(M==0,init_r,M)
     
     # #columnar alloy
     # a=[True,False]
@@ -177,7 +177,7 @@ for i in range(iterations):
     #     random_sample[coord[0],coord[1]]=0
         
     atom_stream=random_sample.flatten()
-    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
+    # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
     block_num=119
@@ -217,8 +217,9 @@ for i in np.arange(0,class_size):
     expect=len(fullratiolist)*P
     # expect=expect*(p/(1-p))*(Nb+1-i)/i
     expected_list=np.append(expected_list,expect)
-con_table=np.histogram2d(fullratiolist['nb'],fullratiolist['nr'],bins=5)
-
+    prob_list['Exp'].loc[i]=expect
+con_table=np.histogram(fullratiolist['nr'],bins=block_size+1)
+plt.plot(prob_list['i'],prob_list['Exp'])
 # cg_random_sample=random_sample.copy()
 # # plt.figure(1)     
     # plt.figure(3)
