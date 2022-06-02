@@ -177,7 +177,7 @@ for i in range(iterations):
     #     random_sample[coord[0],coord[1]]=0
         
     atom_stream=random_sample.flatten()
-    # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
+    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
     block_num=119
