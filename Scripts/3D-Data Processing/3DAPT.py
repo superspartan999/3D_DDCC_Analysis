@@ -61,26 +61,26 @@ rscoords=np.array(np.where(r_satisfied)).T
 rsdf=pd.DataFrame(rscoords, columns=['x','y','z'])
 bsdf=pd.DataFrame(bscoords, columns=['x','y','z'])
 
-# for coord in bdcoords:
+for coord in bdcoords:
     
-#     random_rs=rsdf.sample()
-#     a=M[random_rs.values[0][0],random_rs.values[0][1]]
-#     b=M[coord[0],coord[1]]
+    random_rs=rsdf.sample()
+    a=M[random_rs.values[0][0],random_rs.values[0][1]]
+    b=M[coord[0],coord[1]]
         
         
-#     M[coord[0],coord[1]]=a
-#     M[random_rs.values[0][0],random_rs.values[0][1]]=b
+    M[coord[0],coord[1]]=a
+    M[random_rs.values[0][0],random_rs.values[0][1]]=b
     
-#     rsdf=rsdf.drop(random_rs.index)
+    rsdf=rsdf.drop(random_rs.index)
     
-# for coord in rdcoords:
+for coord in rdcoords:
     
-#     random_bs=bsdf.sample()
-#     a=M[random_bs.values[0][0],random_bs.values[0][1]]
-#     b=M[coord[0],coord[1]]
+    random_bs=bsdf.sample()
+    a=M[random_bs.values[0][0],random_bs.values[0][1]]
+    b=M[coord[0],coord[1]]
     
     
-#     M[coord[0],coord[1]]=a
-#     M[random_bs.values[0][0],random_bs.values[0][1]]=b
+    M[coord[0],coord[1]]=a
+    M[random_bs.values[0][0],random_bs.values[0][1]]=b
     
-#     bsdf=bsdf.drop(random_bs.index)
+    bsdf=bsdf.drop(random_bs.index)
