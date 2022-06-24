@@ -127,10 +127,10 @@ for i in range(iterations):
     init_r=0
     M=rand_init(N, B_to_R,init_b,init_r)
     
-    # # # checkerboard alloy
-    M=np.indices((N,N)).sum(axis=0)%2
-    M=np.where(M==1,init_b,M)
-    M=np.where(M==0,init_r,M)
+    # checkerboard alloy
+    # M=np.indices((N,N)).sum(axis=0)%2
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
     
     # #columnar alloy
     # a=[True,False]
@@ -139,6 +139,10 @@ for i in range(iterations):
     # M=np.where(M==1,init_b,M)
     # M=np.where(M==0,init_r,M)
     
+    #phase separated alloy
+    M=np.zeros(shape=(N,N))
+    M[0:int(N/2)]=init_r
+    M[int(N/2):]=init_b
     
     count1=np.count_nonzero(M==init_b)
     # plt.figure(1)
@@ -162,11 +166,11 @@ for i in range(iterations):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    ed=2/3
-    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[ed, 1-ed])
-    # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
-    sample_arr=[True,False]
-    bool_arr = np.random.choice(sample_arr, size=(N,N))
+    ed=1/3
+    # bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[ed, 1-ed])
+    # # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
+    # sample_arr=[True,False]
+    # bool_arr = np.random.choice(sample_arr, size=(N,N))
 
     
     
@@ -177,10 +181,13 @@ for i in range(iterations):
     #     random_sample[coord[0],coord[1]]=0
         
     atom_stream=random_sample.flatten()
-    atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
+    # atom_stream=atom_stream[:-1]
+    randomlist=random.sample(range(atom_stream.size), int(atom_stream.size*(1-ed))+1)
+    atom_stream=np.delete(atom_stream,randomlist)
+    # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
-    block_num=119
+    block_num=17
     block_list=np.split(atom_stream,block_num)
     block_size=len(block_list[1])   
     ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
@@ -200,6 +207,7 @@ for i in range(iterations):
 
 fullratiolist['nbratio']=fullratiolist['nb']/(fullratiolist['nb']+fullratiolist['nr'])
 fullratiolist['nrratio']=fullratiolist['nr']/(fullratiolist['nb']+fullratiolist['nr'])
+fullratiolist['nzratio']=fullratiolist['nz']/(fullratiolist['nb']+fullratiolist['nr'])
 # expected=len(block_list)*(B_to_R)**(block_size)
 class_size=block_size
 expected_list=np.array([])
@@ -218,8 +226,15 @@ for i in np.arange(0,class_size):
     # expect=expect*(p/(1-p))*(Nb+1-i)/i
     expected_list=np.append(expected_list,expect)
     prob_list['Exp'].loc[i]=expect
-con_table=np.histogram(fullratiolist['nr'],bins=block_size+1)
+con_table=np.histogram(fullratiolist['nr'],bins=block_size)
+con_table=np.histogram(fullratiolist['nr'],bins=np.linspace(0,block_size,51))
+
 plt.plot(prob_list['i'],prob_list['Exp'])
+# plt.hist(fullratiolist['nr'],bins=np.linspace(0,block_size,50))
+plt.hist(fullratiolist['nr'],bins=np.linspace(0,block_size,51))
+plt.xlabel('Box Size')
+plt.ylabel('Counts')
+lis=fullratiolist['nr']
 # cg_random_sample=random_sample.copy()
 # # plt.figure(1)     
     # plt.figure(3)
