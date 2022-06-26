@@ -20,7 +20,7 @@ M = np.full(L*N*N, i_Ga) #
 
 l=3
 kernel=np.ones(shape=(l,l,l))
-kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
+kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
 tot=M.size
 composition=0.3
@@ -46,9 +46,15 @@ kws = dict(mode='same')
 Ga_neighs = convolve(M == i_Ga, kernel, **kws)
 In_neighs = convolve(M == i_In, kernel, **kws)
 
-for i in range(int(remainder)):
-    random=Gadf.sample()
-    
+In_neighs[In_neighs<0.00001]=0
+neighs = convolve(M != 1000, kernel, **kws)
+
+spatial_probability=In_neighs/neighs
+spatial_probability[spatial_probability<0.0001]=0
+
+test=spatial_probability/np.sum(spatial_probability)
+num=test*remainder
+unique,counts=np.unique(num,return_counts=True)
 
 
 # for i in range(remainder):
