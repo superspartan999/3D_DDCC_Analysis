@@ -12,7 +12,7 @@ import pandas as pd
 
 import numpy as np
 
-N=50
+N=10
 L=1000
 i_Ga=0
 i_In=1
@@ -39,30 +39,41 @@ remainder=int(composition*tot-init_In)
 # Ga=M==i_Ga
 
 
-Ga_coords=np.array(np.where(M==i_Ga)).T
-In_coords=np.array(np.where(M==i_In)).T    
+# Ga_coords=np.array(np.where(M==i_Ga)).T
+# In_coords=np.array(np.where(M==i_In)).T    
 
-Gadf=pd.DataFrame(Ga_coords, columns=['x','y','z'])
+# Gadf=pd.DataFrame(Ga_coords, columns=['x','y','z'])
 kws = dict(mode='same')
 Ga_neighs = convolve(M == i_Ga, kernel, **kws)
 In_neighs = convolve(M == i_In, kernel, **kws)
-
+Ga_neighs[Ga_neighs<0.00001]=0
 In_neighs[In_neighs<0.00001]=0
 neighs = convolve(M != 1000, kernel, **kws)
-
 spatial_probability=In_neighs/neighs
 spatial_probability[spatial_probability<0.0001]=0
+
+isGa=(M==i_Ga)
+Ga_coords=np.array(np.where(M==i_Ga)).T
+Gadf=pd.DataFrame(Ga_coords, columns=['x','y','z'])
 spatial_list=np.zeros(shape=len(Gadf.index))
 
 for i, Ga_coord in enumerate(Ga_coords):
-    spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
+     spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
 
 
 # Gadf['weights']=spatial_list
-# remainder_list=np.array(random.choices(Ga_coords,weights=spatial_list,k=int(remainder)))
-
-# for switch in remainder_list:
-#     M[switch[0],switch[1],switch[2]]=1
+remainder_list=np.array(np.random.choice(Ga_coords,p=spatial_list/np.sum(spatial_list),k=int(remainder)))
+ 
+i=0
+j=0
+for switch in remainder_list:
+    if M[switch[0],switch[1],switch[2]]==0:
+        # M[switch[0],switch[1],switch[2]]=1
+        print(i)
+        i+=1
+    else:
+        print(j)
+        j+=1
     
 # In_coords=np.array(np.where(M==i_In)).T    
 
