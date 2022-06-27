@@ -46,7 +46,7 @@ KERNEL = np.array([[ 1, 1, 1],
                     [ 1, 0, 1],
                     [ 1, 1, 1]], dtype=np.int8)
 
-l=3
+l=4
 KERNEL=np.ones(shape=(l,l))
 KERNEL[int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
@@ -140,19 +140,19 @@ for i in range(iterations):
     # M=np.where(M==0,init_r,M)
     
     #phase separated alloy
-    M=np.zeros(shape=(N,N))
-    M[0:int(N/2)]=init_r
-    M[int(N/2):]=init_b
+    # M=np.zeros(shape=(N,N))
+    # M[0:int(N/2)]=init_r
+    # M[int(N/2):]=init_b
     
-    count1=np.count_nonzero(M==init_b)
+    # count1=np.count_nonzero(M==init_b)
     # plt.figure(1)
     
     # # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    # timestep=10
-    # for i in range(0,timestep):
-    #     evolve(M,init_b,init_r)
+    timestep=10
+    for i in range(0,timestep):
+        evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()
