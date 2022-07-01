@@ -12,7 +12,7 @@ import pandas as pd
 
 import numpy as np
 
-N=10
+N=100
 L=1000
 i_Ga=0
 i_In=1
@@ -23,8 +23,8 @@ kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
 tot=M.size
-composition=0.2
-uniformity=0.8
+composition=0.5
+uniformity=0.3
 
 init_In=int(composition*uniformity*tot)
 
@@ -62,25 +62,27 @@ for i, Ga_coord in enumerate(Ga_coords):
 
 
 # Gadf['weights']=spatial_list
-remainder_list=np.array(np.random.choice(Ga_coords,p=spatial_list/np.sum(spatial_list),k=int(remainder)))
- 
-i=0
-j=0
+remainder_list=np.array(random.choices(Ga_coords,weights=spatial_list,k=remainder*2))
+remainder_list=np.unique(remainder_list,axis=0)[:remainder]
+np.random.shuffle(remainder_list)
+# i=0
+# j=0
 for switch in remainder_list:
     if M[switch[0],switch[1],switch[2]]==0:
-        # M[switch[0],switch[1],switch[2]]=1
-        print(i)
-        i+=1
-    else:
-        print(j)
-        j+=1
+        M[switch[0],switch[1],switch[2]]=1
+        # print(i)
+        # i+=1
+
+        # print(j)
+        # j+=1
     
 # In_coords=np.array(np.where(M==i_In)).T    
-
+# plt.imshow(M[100])
 # Indf=pd.DataFrame(In_coords, columns=['x','y','z'])
 
 # fig = plt.figure()
 # ax = fig.add_subplot(111,projection='3d')
-# pos = np.where(M==i_In)
-# ax.scatter(pos[0], pos[1], pos[2], c='black')
+# z,x,y=M.nonzero()
+# ax.scatter(x, y, -z, zdir='z', c= 'red')
+# # ax.scatter(pos[0], pos[1], pos[2])
 # plt.show()
