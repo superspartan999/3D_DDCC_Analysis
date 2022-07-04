@@ -141,9 +141,9 @@ for i in range(iterations):
     M=rand_init(N, B_to_R,init_b,init_r)
     
     # checkerboard alloy
-    M=np.indices((N,N)).sum(axis=0)%2
-    M=np.where(M==1,init_b,M)
-    M=np.where(M==0,init_r,M)
+    # M=np.indices((N,N)).sum(axis=0)%2
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
     
     # #columnar alloy
     # a=[True,False]
@@ -175,11 +175,11 @@ for i in range(iterations):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=2/3
-    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
+    prob=2/3
+    bool_arr=np.random.choice([True, False], size=(N, N), p=[prob, 1-prob])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
-    bool_arr = np.random.choice(sample_arr, size=(N,N))
+    # bool_arr = np.random.choice(sample_arr, size=(N,N))
 
     
     

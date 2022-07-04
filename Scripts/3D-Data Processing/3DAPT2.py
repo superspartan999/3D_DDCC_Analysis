@@ -12,7 +12,7 @@ import pandas as pd
 
 import numpy as np
 
-N=100
+N=10
 L=1000
 i_Ga=0
 i_In=1
@@ -23,8 +23,8 @@ kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
 tot=M.size
-composition=0.5
-uniformity=0.3
+composition=0.1
+uniformity=1
 
 init_In=int(composition*uniformity*tot)
 
@@ -58,18 +58,25 @@ Gadf=pd.DataFrame(Ga_coords, columns=['x','y','z'])
 spatial_list=np.zeros(shape=len(Gadf.index))
 
 for i, Ga_coord in enumerate(Ga_coords):
-     spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
+      spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
+for i in range (remainder):
+    
+    random.choice(Ga_coords,p=spatial_list/np.sum(spatial_list))
+    
+
+# for i, Ga_coord in enumerate(Ga_coords):
+#      spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
 
 
-# Gadf['weights']=spatial_list
-remainder_list=np.array(random.choices(Ga_coords,weights=spatial_list,k=remainder*2))
-remainder_list=np.unique(remainder_list,axis=0)[:remainder]
-np.random.shuffle(remainder_list)
-# i=0
-# j=0
-for switch in remainder_list:
-    if M[switch[0],switch[1],switch[2]]==0:
-        M[switch[0],switch[1],switch[2]]=1
+# # Gadf['weights']=spatial_list
+# remainder_list=np.array(random.choices(Ga_coords,weights=spatial_list,k=remainder*2))
+# remainder_list=np.unique(remainder_list,axis=0)[:remainder]
+# np.random.shuffle(remainder_list)
+# # i=0
+# # j=0
+# for switch in remainder_list:
+#     if M[switch[0],switch[1],switch[2]]==0:
+#         M[switch[0],switch[1],switch[2]]=1
         # print(i)
         # i+=1
 
