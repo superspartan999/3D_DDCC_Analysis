@@ -10,52 +10,88 @@ import matplotlib.pyplot as plt
 import random
 import pandas as pd
 
-l=7
+l=5
 kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
-def rand_init(width, length, B_to_R,init_b,init_r):
+def rand_init(width, length, B_to_R,init_b,init_r,init_empty,empty):
     """ Random system initialisation.
     BLUE  =  0
     RED   =  1
     """
-    
-    population = length * width * width #population size
+    vacant= int(length*width*width*empty)
+    population = length * width * width -vacant #population size
     
     blues = int(population *B_to_R) #number of blues
     reds = population - blues #number of reds
     M = np.full(length * width * width, init_b) #
     M[:int(reds)] = init_r
+    M[-vacant:]=init_empty
     np.random.shuffle(M)
     return M.reshape(length,width,width)
+
+# def rand_init(N, B_to_R, EMPTY):
+#     """ Random system initialisation.
+#     BLUE  =  0
+#     RED   =  1
+#     EMPTY = -1
+#     """
+#     vacant = int(N * N * EMPTY)
+#     population = N * N - vacant
+#     blues = int(population * 1 / (1 + 1/B_to_R))
+#     reds = population - blues
+#     M = np.zeros(N*N, dtype=np.int8)
+#     M[:reds] = 1
+#     M[-vacant:] = -1
+#     np.random.shuffle(M)
+#     return M.reshape(N,N)
 
 N = 50    # Grid will be N x N
 L=100 #height/length of the film in the z-direction
 
 SIM_T = 0.4   # Similarity threshold (that is 1-τ)
-
+empty=0.1
 
 B_to_R = 0.5   # Ratio of blue to red people
-init_b=1
-init_r=0
+init_b=0
+init_r=1
+init_empty=-1
 
-M=rand_init(N, L, B_to_R, init_b, init_r)
 
-kws = dict(mode='same')
-iterations=30
+M=rand_init(N, L, B_to_R, init_b, init_r,init_empty,empty)
+iterations=100
+
 for i in range(iterations):
-
+    kws = dict(mode='same')
+    iterations=30
+    
+    kws = dict(mode='same')
     b_neighs = convolve(M == init_b, kernel, **kws)
     r_neighs = convolve(M == init_r, kernel, **kws)
-    neighs   = convolve(M !=-1,  kernel, **kws)
-    b_dissatisfied = (b_neighs / neighs < SIM_T) & (M == init_b)
-    b_satisfied=(b_neighs / neighs > SIM_T) & (M == init_b)
-    r_dissatisfied = (r_neighs / neighs < SIM_T) & (M == init_r)
-    r_satisfied=(r_neighs / neighs > SIM_T) & (M == init_r)
-    n_b_dissatisfied, n_r_dissatisfied = b_dissatisfied.sum(), r_dissatisfied.sum()
-    compare_size= np.sort([n_b_dissatisfied, n_r_dissatisfied])
+    neighs   = convolve(M != init_empty,  kernel, **kws)
     
-    filling = -np.ones(compare_size[0])
+    b_dissatified = (b_neighs / neighs < SIM_T) & (M == init_b)
+    r_dissatified = (r_neighs / neighs < SIM_T) & (M == init_r)
+    M[r_dissatified | b_dissatified] = init_empty
+    vacant = (M == init_empty).sum()
+    
+    n_b_dissatified, n_r_dissatified = b_dissatified.sum(), r_dissatified.sum()
+    filling = -np.ones(vacant, dtype=np.int8)
+    filling[:n_b_dissatified] = init_b
+    filling[n_b_dissatified:n_b_dissatified + n_r_dissatified] = init_r
+    np.random.shuffle(filling)
+    M[M==init_empty] = filling
+
+# for i in range(iterations):
+
+#     b_neighs = convolve(M == init_b, kernel, **kws)
+#     r_neighs = convolve(M == init_r, kernel, **kws)
+#     neighs   = convolve(M !=-1,  kernel, **kws)
+#     b_dissatisfied = (b_neighs / neighs < SIM_T) & (M == init_b)
+#     b_satisfied=(b_neighs / neighs > SIM_T) & (M == init_b)
+#     r_dissatisfied = (r_neighs / neighs < SIM_T) & (M == init_r)
+#     r_satisfied=(r_neighs / neighs > SIM_T) & (M == init_r)
+    
     
     # bdcoords=np.array(np.where(b_dissatisfied)).T
     # bscoords=np.array(np.where(b_satisfied)).T

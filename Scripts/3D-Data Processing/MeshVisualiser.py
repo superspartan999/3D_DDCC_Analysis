@@ -15,8 +15,8 @@ import scipy as scp
 # from plotly.subplots import make_subplots
 from mpl_toolkits.mplot3d import axes3d, Axes3D 
 from math import floor, sqrt
-import networkx as nx
-from networkx.readwrite import json_graph
+# import networkx as nx
+# from networkx.readwrite import json_graph
 import simplejson as json
 from matplotlib import cm
 from itertools import *
