@@ -194,60 +194,10 @@ for key, n in list(G.nodes.items()):
         print(key)
 
        
-#source=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-#                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[0][0])]
-#
-#target=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])& \
-#                      (sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z']==zvalues.iloc[246][0])]      
-#source=source.index[0]
-#target=target.index[0]
-#h=mypath3(G,source,target)
-
 
 thickness=(length)*1e-7
     
-#
-#start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y']== yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 0)]
-#    
-#end=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y'] == yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == zvalues.iloc[len(zvalues)-1][0])]            
-##start=sorted_data.loc[(sorted_data['x'] == xvalues.iloc[int(len(xvalues)/2)][0])&(sorted_data['y']== yvalues.iloc[int(len(yvalues)/2)][0])&(sorted_data['z'] == 4E-6)]
-#h=mypath3(G,start.index[0],end.index[0])
-#
-#nodeweights=0
-##
-#for node in h:
-#    nodeweights=G.node[node]['pot']+nodeweights
-##    
-#averagenodeenergy=nodeweights/len(h)
-#
-#path=pd.DataFrame(index=range(len(h)),columns={'Node','x','y','z'})
-#
-#for i,val in enumerate(h):
-#    path.iloc[i]=sorted_data.iloc[val][['Node','x','y','z']]
-##
-#fig = plt.figure()
-#
-#ax = fig.add_subplot(111, projection='3d')
-#
-#path['x']=path['x'].astype(float)
-#path['y']=path['y'].astype(float)
-#path['z']=path['z'].astype(float)
-#
-#
-#x=path['x'].values
-#
-#y=path['y'].values
-#
-#z=path['z'].values
-#
-#
-##ax.set_xlim(0, xvalues[0].iat[-1]) 
-##ax.set_ylim(0,yvalues[0].iat[-1])
-##ax.set_zlim(4e-6,zvalues[0].iat[-1])
-#ax.scatter(x, y, z)
 
-
-#
 
 
 minindex = abs(zvalues[0]).idxmin()
@@ -256,8 +206,6 @@ maxindex=  abs(zvalues[0]-(zvalues.iloc[minindex][0]+thickness)).idxmin()
 start_slice=extract_slice(sorted_data,'z',zvalues.iloc[minindex][0])
 end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-11][0])
 
-#start_slice=extract_slice(sorted_data,'z',zvalues.iloc[0][0])
-#end_slice=extract_slice(sorted_data,'z',zvalues.iloc[len(zvalues)-1][0])
  
 start_node_list=np.array(start_slice.index)
 end_node_list=np.array(end_slice.index)
