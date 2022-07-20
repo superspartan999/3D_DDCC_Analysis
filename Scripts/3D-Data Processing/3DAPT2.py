@@ -23,8 +23,8 @@ kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
 tot=M.size
-composition=0.3
-uniformity=0.8
+composition=0.5
+uniformity=0.7
 
 init_In=int(composition*uniformity*tot)
 
@@ -122,13 +122,13 @@ for layer in M:
     #     random_sample[coord[0],coord[1]]=0
         
     atom_stream=random_sample.flatten()
-    # atom_stream=atom_stream[:-1]
+
     randomlist=random.sample(range(atom_stream.size), int(atom_stream.size*(1-ed))+1)
-    # atom_stream=np.delete(atom_stream,randomlist)
+    atom_stream=np.delete(atom_stream,randomlist)
     # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
-    block_num=200
+    block_num=101
     block_list=np.split(atom_stream,block_num)
     block_size=len(block_list[1])   
     ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
