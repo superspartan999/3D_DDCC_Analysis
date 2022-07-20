@@ -9,7 +9,7 @@ from scipy.signal import convolve
 import matplotlib.pyplot as plt
 import random
 import pandas as pd
-
+from scipy.stats import chisquare
 l=5
 kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
@@ -52,33 +52,33 @@ M=rand_init(N, L, B_to_R, init_b, init_r)
 # M=np.indices((L,N,N)).sum(axis=0)%2
 
 kws = dict(mode='same')
-# iterations=40
+iterations=5
 
-# for i in range(iterations):
+for i in range(iterations):
 
-#     b_neighs = convolve(M == init_b, kernel, **kws)
-#     r_neighs = convolve(M == init_r, kernel, **kws)
-#     neighs   = convolve(M !=-1,  kernel, **kws)
-#     b_dissatisfied = (b_neighs / neighs < SIM_T) & (M == init_b)
-#     b_satisfied=(b_neighs / neighs > SIM_T) & (M == init_b)
-#     r_dissatisfied = (r_neighs / neighs < SIM_T) & (M == init_r)
-#     r_satisfied=(r_neighs / neighs > SIM_T) & (M == init_r)
-#     n_b_dissatisfied, n_r_dissatisfied = b_dissatisfied.sum(), r_dissatisfied.sum()
-#     shorter,shorter_init,longer,longer_init=compare(b_dissatisfied,r_dissatisfied, init_b,init_r)
+    b_neighs = convolve(M == init_b, kernel, **kws)
+    r_neighs = convolve(M == init_r, kernel, **kws)
+    neighs   = convolve(M !=-1,  kernel, **kws)
+    b_dissatisfied = (b_neighs / neighs < SIM_T) & (M == init_b)
+    b_satisfied=(b_neighs / neighs > SIM_T) & (M == init_b)
+    r_dissatisfied = (r_neighs / neighs < SIM_T) & (M == init_r)
+    r_satisfied=(r_neighs / neighs > SIM_T) & (M == init_r)
+    n_b_dissatisfied, n_r_dissatisfied = b_dissatisfied.sum(), r_dissatisfied.sum()
+    shorter,shorter_init,longer,longer_init=compare(b_dissatisfied,r_dissatisfied, init_b,init_r)
     
-#     bdcoords=np.array(np.where(b_dissatisfied)).T
-#     bscoords=np.array(np.where(b_satisfied)).T
-#     rdcoords=np.array(np.where(r_dissatisfied)).T
-#     rscoords=np.array(np.where(r_satisfied)).T
+    bdcoords=np.array(np.where(b_dissatisfied)).T
+    bscoords=np.array(np.where(b_satisfied)).T
+    rdcoords=np.array(np.where(r_dissatisfied)).T
+    rscoords=np.array(np.where(r_satisfied)).T
     
-#     bdcoords=bdcoords[:shorter.sum()]
-#     rdcoords=rdcoords[:shorter.sum()]
+    bdcoords=bdcoords[:shorter.sum()]
+    rdcoords=rdcoords[:shorter.sum()]
     
-#     for coord in bdcoords:
-#         M[coord[0],coord[1],coord[2]]=init_r
+    for coord in bdcoords:
+        M[coord[0],coord[1],coord[2]]=init_r
     
-#     for coord in rdcoords:
-#         M[coord[0],coord[1],coord[2]]=init_b
+    for coord in rdcoords:
+        M[coord[0],coord[1],coord[2]]=init_b
     
 
 #     unique,counts=np.unique(M, return_counts=True)
@@ -185,12 +185,12 @@ p=B_to_R
 # for i in np.linspace(1,class_size-1,class_size-1):
 #     expected=expected*(B_to_R)/(1-(B_to_R))*(block_size+1-i)/i
 #     expected_list=np.append(expected_list,expected)
-prob_list=pd.DataFrame(0, index=np.arange(class_size),columns=['i','P','Exp'])
-for i in np.arange(0,class_size):
+prob_list=pd.DataFrame(0, index=np.arange(class_size+1),columns=['count','P','Exp'])
+for i in np.arange(0,class_size+1):
     perm=np.math.factorial(int(block_size))/(np.math.factorial(int(i))*np.math.factorial(int(block_size-i)))
-    print(i)
+
     P=perm*(p**i)*((1-p)**(block_size-i))
-    prob_list['i'].loc[i]=i
+    prob_list['count'].loc[i]=i
     prob_list['P'].loc[i]=P
     expect=len(fullratiolist)*P
     # expect=expect*(p/(1-p))*(Nb+1-i)/i
@@ -199,19 +199,63 @@ for i in np.arange(0,class_size):
 con_table=np.histogram(fullratiolist['nr'],bins=block_size)
 # con_table=np.histogram(fullratiolist['nr'],bins=np.linspace(0,block_size,51))
 
-plt.plot(prob_list['i'],prob_list['Exp'])
-
+plt.plot(prob_list['count'],prob_list['Exp'])
+num_of_atom, frequency=np.unique(fullratiolist['nr'].values,return_counts=True)
+combined_list=np.vstack((num_of_atom, frequency)).T
+plt.bar(num_of_atom, frequency)
 # plt.hist(fullratiolist['nr'],bins=np.linspace(0,block_size,51))
 plt.xlabel('Box Size')
 plt.ylabel('Counts')
 lis=fullratiolist['nr']
+prob_list['Sum']=prob_list['Exp'].cumsum()
+prob_list['Reverse Sum'] = prob_list.loc[::-1, 'Exp'].cumsum()[::-1]
+full_list_atoms=np.zeros(shape=class_size+1)
+for i,element in enumerate(full_list_atoms):
+    for element_atom in combined_list:
+        if i == element_atom[0]:
+            full_list_atoms[i]=element_atom[1]
+    #     print(i)
 
 
+#make a dataframe of observed atoms   
+observed_atoms=pd.DataFrame(np.vstack((np.arange(0,len(full_list_atoms)),full_list_atoms)).T,columns=['num of atoms','frequency'])
+#find cumulative sum and make a new column for it
+observed_atoms['Sum']=observed_atoms['frequency'].cumsum()
+
+#find a reversed cumulative sum and make a new column for it
+observed_atoms['Reverse Sum'] = observed_atoms.loc[::-1, 'frequency'].cumsum()[::-1]
+
+#returned a sliced probability dataframe with cumulative sum thats higher than 5. Chi-square analysis needs
+#column entry of value more than 5
+prob_list=prob_list.loc[prob_list['Sum']>5]
+
+#reset index
+prob_list=prob_list.reset_index(drop=True)
+
+#replace expected value in the first row with the sum of the first n rows,
+prob_list['Exp'].iloc[0]=prob_list['Sum'].iloc[0]
+
+#
+prob_list=prob_list.loc[prob_list['Reverse Sum']>5]
+prob_list['Exp'].iloc[-1]=prob_list['Reverse Sum'].iloc[-1]
 
 
+observed_atoms=observed_atoms.loc[0:prob_list['count'].iloc[-1]]
+observed_atoms=observed_atoms.loc[prob_list['count'].iloc[0]:]
+observed_atoms['frequency'].iloc[0]=observed_atoms['Sum'].iloc[0]
+observed_atoms['frequency'].iloc[-1]=observed_atoms['Reverse Sum'].iloc[-1]
+observed_atoms=observed_atoms.reset_index(drop=True)
 
 
+# observed_list=full_list_atoms[prob_list['count'].iloc[0]:prob_list['count'].iloc[-1]]
+# if len(frequency) < class_size:
 
+#     full_list_atoms=np.append(np.concatenate((np.arange(0,num_of_atom[0]),num_of_atom)),np.arange(num_of_atom[-1],class_size+1))
+    
+#     full_frequency=np.append(np.concatenate((np.zeros(shape=int(num_of_atom[0])).astype(int),frequency)),np.zeros(shape=class_size-int(num_of_atom[-1])))
+
+#     frequency=full_frequency
+chi,p_value=chisquare(observed_atoms['frequency'].values, f_exp=prob_list['Exp'].values)
 
 
 
