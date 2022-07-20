@@ -12,7 +12,7 @@ import pandas as pd
 from scipy.stats import chisquare
 import numpy as np
 
-N=50
+N=100
 L=1000
 i_Ga=0
 i_In=1
@@ -23,8 +23,8 @@ kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 
 tot=M.size
-composition=0.5
-uniformity=0.6
+composition=0.3
+uniformity=0.8
 
 init_In=int(composition*uniformity*tot)
 
@@ -61,7 +61,7 @@ for i, Ga_coord in enumerate(Ga_coords):
       spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
 
     
-spatiali_list=spatial_list*1000000
+spatial_list=spatial_list*1000000
 # for i, Ga_coord in enumerate(Ga_coords):
 #      spatial_list[i]=spatial_probability[Ga_coord[0],Ga_coord[1],Ga_coord[2]]
 
@@ -124,11 +124,11 @@ for layer in M:
     atom_stream=random_sample.flatten()
     # atom_stream=atom_stream[:-1]
     randomlist=random.sample(range(atom_stream.size), int(atom_stream.size*(1-ed))+1)
-    atom_stream=np.delete(atom_stream,randomlist)
+    # atom_stream=np.delete(atom_stream,randomlist)
     # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
-    block_num=34
+    block_num=200
     block_list=np.split(atom_stream,block_num)
     block_size=len(block_list[1])   
     ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
@@ -170,9 +170,11 @@ for i in np.arange(0,class_size+1):
 con_table=np.histogram(fullratiolist['nr'],bins=block_size)
 # con_table=np.histogram(fullratiolist['nr'],bins=np.linspace(0,block_size,51))
 
-plt.plot(prob_list['count'],prob_list['Exp'])
+
+
 num_of_atom, frequency=np.unique(fullratiolist['nr'].values,return_counts=True)
 combined_list=np.vstack((num_of_atom, frequency)).T
+plt.plot(prob_list['count'],prob_list['Exp'])
 plt.bar(num_of_atom, frequency)
 # plt.hist(fullratiolist['nr'],bins=np.linspace(0,block_size,51))
 plt.xlabel('Box Size')
@@ -228,3 +230,4 @@ observed_atoms=observed_atoms.reset_index(drop=True)
 #     frequency=full_frequency
 chi,p_value=chisquare(observed_atoms['frequency'].values, f_exp=prob_list['Exp'].values)
 
+chi_calculate=np.sum((observed_atoms['frequency'].values-prob_list['Exp'].values)**2/prob_list['Exp'].values)
