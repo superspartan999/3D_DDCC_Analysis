@@ -18,8 +18,9 @@ l=4
 kernel=np.ones(shape=(l,l,l))
 kernel[int(np.ceil(l/2-1)),int(np.ceil(l/2-1)),int(np.ceil(l/2-1))]=0
 p_values=[]
-cycle=20
-for cyc in range(cycle):
+uniformity_values=[1.0,0.95,0.9,0.85,0.8,0.75,0.7,0.65,0.6,0.5,0.4,0.3,0.2,0.1]
+for u in uniformity_values:
+# for cyc in range(cycle):
     N=100
     L=1000
     i_Ga=0
@@ -27,7 +28,7 @@ for cyc in range(cycle):
     M = np.full(L*N*N, i_Ga) #
     tot=M.size
     composition=0.5
-    uniformity=0.7
+    uniformity=u
     
     init_In=int(composition*uniformity*tot)
     
@@ -110,7 +111,7 @@ for cyc in range(cycle):
         bool_arr[range(N), idx] = True
         # Array for random sampling
         # sample_arr = [True, False]
-        ed=2/3
+        ed=1/3
         # bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[ed, 1-ed])
         # # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
         # sample_arr=[True,False]
@@ -127,11 +128,11 @@ for cyc in range(cycle):
         atom_stream=random_sample.flatten()
     
         randomlist=random.sample(range(atom_stream.size), int(atom_stream.size*(1-ed))+1)
-        # atom_stream=np.delete(atom_stream,randomlist)
+        atom_stream=np.delete(atom_stream,randomlist)
         # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
         # atom_stream[indices]=0
         # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
-        block_num=200
+        block_num=101
         block_list=np.split(atom_stream,block_num)
         block_size=len(block_list[1])   
         ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
