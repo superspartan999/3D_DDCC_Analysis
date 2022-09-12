@@ -52,7 +52,7 @@ M=rand_init(N, L, B_to_R, init_b, init_r)
 # M=np.indices((L,N,N)).sum(axis=0)%2
 
 kws = dict(mode='same')
-iterations=5
+iterations=0
 
 for i in range(iterations):
 

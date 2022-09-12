@@ -29,6 +29,7 @@ def get_potential(x,y,z):
 #     return np.exp(-(x-0.3)**2/(2*0.1**2))*np.exp(-(y-0.3)**2/(2*0.1**2))
 
 V = get_potential(X,Y,Z)
+V = 10
 V=np.random.choice(a=[0,10],size=(N,N,N))
 diag = np.ones([N])
 diags = np.array([diag, -2*diag, diag])
@@ -37,7 +38,7 @@ T = -1/2 * sparse.kronsum(sparse.kronsum(D,D),D)
 U = sparse.diags(V.reshape(N**3), (0))
 H = T+U
 
-eigenvalues, eigenvectors = eigsh(H, k=100, which='SM')
+eigenvalues, eigenvectors = eigsh(H, k=10, which='SM')
 
 
 def get_e(n):
