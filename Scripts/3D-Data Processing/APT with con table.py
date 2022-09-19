@@ -150,9 +150,9 @@ for i in range(iterations):
     # # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    timestep=10
-    for i in range(0,timestep):
-        evolve(M,init_b,init_r)
+    # timestep=10
+    # for i in range(0,timestep):
+    #     evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()

@@ -175,11 +175,11 @@ for i in range(iterations):
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    p=2/3
-    bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[p, 1-p])
+    prob=2/3
+    bool_arr=np.random.choice([True, False], size=(N, N), p=[prob, 1-prob])
     # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     sample_arr=[True,False]
-    bool_arr = np.random.choice(sample_arr, size=(N,N))
+    # bool_arr = np.random.choice(sample_arr, size=(N,N))
 
     
     
