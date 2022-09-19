@@ -141,9 +141,9 @@ for i in range(iterations):
     M=rand_init(N, B_to_R,init_b,init_r)
     
     # checkerboard alloy
-    M=np.indices((N,N)).sum(axis=0)%2
-    M=np.where(M==1,init_b,M)
-    M=np.where(M==0,init_r,M)
+    # M=np.indices((N,N)).sum(axis=0)%2
+    # M=np.where(M==1,init_b,M)
+    # M=np.where(M==0,init_r,M)
     
     # #columnar alloy
     # a=[True,False]
@@ -159,9 +159,9 @@ for i in range(iterations):
     # plt.imshow(M)
     # plt.colorbar()
     # plt.clim(0,200)
-    # timestep=5
-    # for i in range(0,timestep):
-    #     evolve(M,init_b,init_r)
+    timestep=15
+    for i in range(0,timestep):
+        evolve(M,init_b,init_r)
     
     
     # # plt.colorbar()

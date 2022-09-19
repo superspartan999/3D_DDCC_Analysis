@@ -27,7 +27,7 @@ def blockshaped(arr, nrows, ncols):
                .reshape(-1, int(nrows), int(ncols)))    
 
 os.chdir('C:\\Users\\me_hi\\Downloads')
-dat=pd.read_csv('APT_In_map_0.5_30nm_gaussian.csv', header=None)
+dat=pd.read_csv('APT_In_map_0.5_30nm_gaussian.csv', delimiter=',', header=None)
 
 dat=dat.rename(columns={0:'x',1:'y',2:'z',3:'Comp'})
 df=dat.iloc[::2]
