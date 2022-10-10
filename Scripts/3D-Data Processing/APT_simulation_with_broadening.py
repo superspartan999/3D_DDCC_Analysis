@@ -30,14 +30,19 @@ def blockshaped(arr, nrows, ncols):
     return (arr.reshape(h//int(nrows), int(nrows), -1, int(ncols))
                .swapaxes(1,2)
                .reshape(-1, int(nrows), int(ncols)))    
-comp=0.30
-directory='D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
+comp=0.5
+# directory='D:\\Research\\Simulation Data\\n_type_AlGaN_0.30_40nm'
 
-directory = 'H:\\My Drive\\30nmAlGaN32\\Bias2'
-file='AlGaN_32_30nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
+# directory = 'H:\\My Drive\\30nmAlGaN32\\Bias2'
+# file='AlGaN_32_30nm_-out.vg_0.00.vd_0.00.vs_0.00.unified'
 
-os.chdir(directory)
-df=pd.read_csv(file, delimiter=',')
+file='APT_In_map_0.5.csv'
+
+# os.chdir(directory)
+# df=pd.read_csv(file, delimiter=',')
+
+os.chdir('C:\\Users\\me_hi\\Downloads')
+df=pd.read_csv('APT_In_map_0.5.csv', delimiter=",", header=None)
 
 node_map=df[['x','y','z']].copy()
 #round up values in node map to prevent floating point errors
