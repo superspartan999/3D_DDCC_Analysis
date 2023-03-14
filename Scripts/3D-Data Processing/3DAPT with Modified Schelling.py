@@ -37,8 +37,8 @@ def compare(b_d,r_d,init_b,init_r):
     elif r_d.sum()> b_d.sum():
         return  b_d,init_b, r_d,init_r
         
-N = 50    # Grid will be N x N
-L=100 #height/length of the film in the z-direction
+N = 100    # Grid will be N x N
+L=1000 #height/length of the film in the z-direction
 
 SIM_T = 0.4   # Similarity threshold (that is 1-τ)
 
@@ -52,7 +52,7 @@ M=rand_init(N, L, B_to_R, init_b, init_r)
 # M=np.indices((L,N,N)).sum(axis=0)%2
 
 kws = dict(mode='same')
-iterations=5
+iterations=1
 
 for i in range(iterations):
 
@@ -81,7 +81,7 @@ for i in range(iterations):
         M[coord[0],coord[1],coord[2]]=init_b
     
 
-#     unique,counts=np.unique(M, return_counts=True)
+    unique,counts=np.unique(M, return_counts=True)
 
 # plt.imshow(M[50])
 # from scipy import ndimage 
@@ -108,7 +108,7 @@ for i in range(iterations):
 # plt.plot(np.linspace(0,len(cluster_sizes)-1,len(cluster_sizes)),cluster_sizes)
 # plt.ylim([0,10])
 # SIZE = L*N*N
-# SAMPLE_SIZE = int(SIZE*0.05)
+# SAMPLE_SIZE = int(SIZE*0.01)
 
 
 
@@ -136,7 +136,7 @@ for layer in M:
     bool_arr[range(N), idx] = True
     # Array for random sampling
     # sample_arr = [True, False]
-    ed=2/3
+    ed=1/3
     # bool_arr=np.random.choice(a=[True, False], size=(N, N), p=[ed, 1-ed])
     # # # Create a 2D numpy array or matrix of 3 rows & 4 columns with random True or False values
     # sample_arr=[True,False]
@@ -157,7 +157,7 @@ for layer in M:
     # atom_stream=np.random.choice(atom_stream, replace=False,size=int(atom_stream.size * ed))
     # atom_stream[indices]=0
     # atom_stream= np.random.choice(atom_stream, size=int(p*len(atom_stream)))
-    block_num=34
+    block_num=101
     block_list=np.split(atom_stream,block_num)
     block_size=len(block_list[1])   
     ratiolist=pd.DataFrame({'nb':np.zeros(len(block_list)),'nr':np.zeros(len(block_list)),'nz':np.zeros(len(block_list))})
