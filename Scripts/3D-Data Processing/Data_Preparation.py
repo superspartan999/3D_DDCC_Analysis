@@ -33,10 +33,10 @@ directory ='C:\\Users\\Clayton\\Downloads\\InGaAs0.1'
 
 #directory= 'C:\\Users\\Clayton\\Google Drive\\Research\\Guillaume'
 #directory = "/Users/claytonqwah/Documents/Google Drive/Research/Transport Structure Project/3D data/10nmAlGaN/Bias -42"
-directory = 'C:\\Users\\me_hi\\Downloads\\Research\\\InGaN_M1com0.3'
+directory = 'C:\\Users\\me_hi\\Downloads\\InGaN0.5nm'
 os.chdir(directory)
 
-filelist=['InGaN_M1com0.3-out.vg_    0.000.vd_    0.000.vs_    0.000']
+filelist=['InGaN_newmod_polar_strain_1L_alloyth_M1com0.3_alloy30.0nm_T300.0_1e16dop_N20200325_0.5nm_Vd_0_0_1-out.vg_0.000.vd_0.000.vs_0.000']
 def write_space_df(file, head_len=5):
 
     """
@@ -223,7 +223,7 @@ def create_unified_data_file(model_ID, node_map):
         success = True
     
     # Reorder the headers to be easier to read
-    output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Landscape_Electrons','Landscape_Holes']]
+    # output_data = output_data[['x', 'y', 'z', 'Ec', 'Ev', 'Ef', 'NDA', 'n','p', 'Radiative', 'Non-Radiative', 'Auger','Landscape_Electrons','Landscape_Holes']]
     
     output_data.to_csv(model_ID + '.unified', index_label='Node')
     return output_data
@@ -249,7 +249,7 @@ def composition(file):
     return my_data
 
 #extract map of nodes
-node_map = write_space_df('LED_PBC2.msh')
+node_map = write_space_df('LED_PBC.msh')
 
 # #detect files in directory
 # filelist=[]
@@ -260,7 +260,7 @@ node_map = write_space_df('LED_PBC2.msh')
 #extract different filenames               
 # filelist = list(dict.fromkeys(filelist))
 
-filelist=['InGaAs_M1com0.1-out.vg_    0.000.vd_    0.000.vs_    0.000']
+# filelist=['InGaN_newmod_polar_strain_1L_alloyth_M1com0.3_alloy30.0nm_T300.0_1e16dop_N20200325_Vd_0_0_1-out.vg_0.000.vd_0.000.vs_0.000']
 
 #model_ID='p_type_AlGaN_0.14_40nm_2-out.vg_0.00.vd_0.00.vs_0.00'
 ##mydf = create_unified_data_file('LEDIndiumCompo_'+str(comp)+'Al_'+str(thickness)+'Angs_-out.vg_0.00.vd_0.00.vs_0.00', node_map)
@@ -272,3 +272,5 @@ for file in filelist:
     composition_map=composition_map.set_index('Node')
     mydf=pd.concat([mydf,composition_map], axis=1, join='outer')
     mydf.to_csv(file + '.unified', index_label='Node')
+
+

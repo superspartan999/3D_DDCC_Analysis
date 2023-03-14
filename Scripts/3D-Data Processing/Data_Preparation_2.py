@@ -213,7 +213,7 @@ def create_unified_data_file(model_ID, node_map):
         
         if success:
             output_data = pd.concat([output_data, my_data], axis=1, join='outer')
-            print 'f'
+
             print len(output_data)
 
         success = True

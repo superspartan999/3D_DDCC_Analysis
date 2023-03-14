@@ -53,6 +53,7 @@ M=rand_init(N, L, B_to_R, init_b, init_r)
 
 kws = dict(mode='same')
 iterations=1
+iterations=0
 
 for i in range(iterations):
 
